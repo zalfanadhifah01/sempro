@@ -1,0 +1,201 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hallo",
+        "hai",
+        "hei",
+        "Hi",
+        "hi",
+        "hi, apa yang bisa saya bantu",
+        "Hi apa kabar",
+        "start",
+        "apa kabar",
+        "hy",
+        "pagi",
+        "morning",
+        "siang",
+        "afternoon",
+        "sore",
+        "malam"
+      ],
+      "responses": [
+        "Hi, Apa ada yang bisa saya bantu",
+        "Hai, adakah yang perlu saya bantu",
+        "Selamat datang di swakala",
+        "Halo, swakala ada disini!"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Dah",
+        "Dadah",
+        "see u",
+        "bye",
+        "selamat tinggal",
+        "see u next time",
+        "bye bye",
+        "See you"
+      ],
+      "responses": [
+        "Bye!",
+        "Dadahh!",
+        "Good bye!",
+        "semoga hari harimu menyenangkan",
+        "sehat sehat terus ya",
+        "Semoga happy terus"
+      ]
+    },
+    {
+      "tag": "terimakasih",
+      "patterns": [
+        "Thanks a lot",
+        "Thank you",
+        "makasih banyak",
+        "Makasih banget",
+        "Terima kasih"
+      ],
+      "responses": [
+        "tentu saja:)",
+        "You are welcome",
+        "sama sama",
+        "of course"
+      ]
+    },
+    {
+      "tag": "kesejahteraan anak",
+      "patterns": [
+        "Apa itu kesejahteraan anak?",
+        "Apa yang dimaksud kesejahteraan anak?",
+        "kesejahteraan anak adalah?"
+      ],
+      "responses": [
+        "Kesejahteraan anak adalah suatu tata kehidupan dan penghidupan anak yang dapat menjamin pertumbuhan dan perkembangannya dengan wajar, baik secara rohani, jasmani maupun sosial."
+      ]
+    },
+    {
+      "tag": "korban",
+      "patterns": [
+        "siapa yang bisa mengalami kekerasan?",
+        "Apa yang dapat dilakukan jika anak menjadi pelaku kekerasan?"
+      ],
+      "responses": [
+        "kekerasan bisa terjadi pada siapa saja dan kapanpun kita berada",
+        " Jika anak menjadi pelaku kekerasan, sebaiknya dilakukan pendekatan yang tepat dan terukur. Beberapa cara yang dapat dilakukan antara lain memberikan pengertian tentang dampak kekerasan yang ditimbulkan, mencari bantuan dari ahli atau konselor, dan membantu anak memahami dan mengelola emosinya dengan baik."
+      ]
+    },
+    {
+      "tag": "si_pelaku_kekerasan",
+      "patterns": [
+        "orang yang bisa menjadi pelaku kekerasan bagaimana?"
+      ],
+      "responses": [
+        "1. Mempermalukan Anak adalah perilaku mempermalukan dan merendahkan anak, baik dengan ucapan maupun sikap. 2. Memanggil anak dengan sebutan negatif atau membandingkan secara negatif dengan anak lain pun termasuk jenisnya. \n3. Membuat Anak Merasa Bersalah Menggunakan rasa bersalah supaya anak melakukan sesuatu sesuai keinginan orang tua.Contohnya “Pasti kamu berulah karena tidak sayang Moms” atau “Kalau masih mau disayang Moms, tidur sekarang.”Sering meneriaki, mengancam, mengkritik, atau merundung anak pun sering dialami dalam keluarga."
+      ]
+    },
+    {
+      "tag": "tanda_kekerasan",
+      "patterns": [
+        "tanda tanda kekerasan pada seseorang?"
+      ],
+      "responses": [
+        " 1. Memar pada tubuh secara tiba-tiba 2. Luka bakar 3. Patah tulang tanpa penyebab jelas 4. Rasa tidak percaya diri 5. Sakit perut 6. Rasa takut yang berlebihan"
+      ]
+    },
+    {
+      "tag": "pengaruh_kekerasan",
+      "patterns": [
+        "Dampak pada kekerasan untuk korban?"
+      ],
+      "responses": [
+        "1. Masalah gangguan perkembangan otak, sistem saraf, dan sistem imun. 2. Meningkatnya risiko masalah perilaku, kesehatan fisik, dan kesehatan mental"
+      ]
+    },
+    {
+      "tag": "pencegahan ",
+      "patterns": [
+        "bagaimana cara mencegah supaya tidak terjadi kembali kekerasan pada anak?"
+      ],
+      "responses": [
+        "1. lakukan konsultasi ke dokter. 2.harus mendapatkan konsultasi psikolog. 3. Ajak pendekatan dan komunikasi yang intens."
+      ]
+    },
+    {
+      "tag": "menolong_korban",
+      "patterns": [
+        "bagaimana cara menolong korban sesudah kejadian ?"
+      ],
+      "responses": [
+        "ajak bercerita dengan tenang supaya merasa nyaman. pulihkan dulu mentalnya dan tenangkan hati dan pikirannya. bawa ketempat yang membuat dia merasa nyaman. "
+      ]
+    },
+    {
+      "tag": "contoh_kekerasan",
+      "patterns": [
+        "Apa saja jenis-jenis kekerasan yang bisa dialami anak?"
+      ],
+      "responses": [
+        " Beberapa jenis kekerasan yang bisa dialami anak meliputi kekerasan fisik, kekerasan psikologis"
+      ]
+    },
+    {
+      "tag": "undang-undang",
+      "patterns": [
+        "undang undang yang terkait perlindungan kekerasan anak?"
+      ],
+      "responses": [
+        "Pasal 1 angka 15a Undang-Undang Republik Indonesia Nomor 35 Tahun 2014 tentang Perubahan Atas Undang-Undang Nomor 23 Tahun 2002 tentang Perlindungan Anak menyebutkan, bahwa Kekerasan adalah setiap perbuatan terhadap Anak yang berakibat timbulnya kesengsaraan atau penderitaan secara fisik, psikis, seksual, dan/atau penelantaran, termasuk ancaman untuk melakukan perbuatan, pemaksaan, atau perampasan kemerdekaan secara melawan hukum."
+      ]
+    },
+    {
+      "tag": "bercerita",
+      "patterns": [
+        "aku ingin curhat",
+        "aku ingin didengar",
+        "aku mau bercerita",
+        "tolong dengarkan aku",
+        "aku takut",
+        "merinding",
+        "sedih banget",
+        "mereka jahat"
+      ],
+      "responses": [
+        "apa yang ingin kamu ceritakan?",
+        "katakan saja",
+        "ayo bercerita lah",
+        "apa yang bisa kami dengar",
+        "jangan bersedih",
+        "ada apa? kami siap menolong"
+      ]
+    },
+    {
+      "tag": "perlakuan_Pelaku",
+      "patterns": [
+        "memukul",
+        "mendorong",
+        "menampar",
+        "melempar",
+        "mencekik",
+        "menjambak",
+        "memaksa",
+        "menarik"
+      ],
+      "responses": [
+        "yaampun aku sedih sekali mendendengarnya, tega sekali melakukan hal seperti itu. tidak apa apa kamu tenangkan saja dirimu. kalau boleh bertanya siapa yang memaksa. maaf bukan ingin mengingatkan kejadian hal itu tetapi semoga kamu bisa menenagkan dirimu."
+      ]
+    },
+    {
+      "tag": "wadah_curhat",
+      "patterns": [
+        "ingin didengar",
+        "ingin mengadu",
+        "ingin meluapkan isi hati"
+      ],
+      "responses": [
+        "hai, jika ingin bercerita silakan jadikan tempat ini cerita dan jangan lupa jadikan wadah sebagi temanmu dan satu lagi jangan lupa bahagia :)"
+      ]
+    }
+  ]
+}

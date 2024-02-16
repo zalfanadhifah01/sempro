@@ -20,12 +20,9 @@ def load_response():
     with open('dataset_swakala/swakala_chatbot.json', encoding="utf8") as content:
         data = json.load(content)
     for intent in data['intents']:
-        responses[intent['tag']]=intent['responses']
-        
+        responses[intent['tag']]=intent['responses']    
     print(content)  
     
-
-asde
 # import model dan download nltk file
 def preparation():
     load_response()

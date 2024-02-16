@@ -13,7 +13,67 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="static/css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <style>
+    /* Style untuk tombol info */
+.btn-info {
+  background-color: #17a2b8;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
+.btn-info:hover {
+  background-color: #138496;
+}
+
+/* Style untuk tombol peringatan */
+.btn-warning {
+  background-color: #ffc107;
+  color: #212529;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+}
+
+/* Style untuk tombol bahaya */
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+/* Style untuk tombol sukses */
+.btn-success {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+  </style>
 </head>
 
 <body>
@@ -40,14 +100,14 @@
           </div>
 
           <div class="msg-text">
-            Selamat Datang di SwakalaBot, SwakalaBot merupakan sebuah websitechatbot yang bisa membantu anak agar mereka
-            punya tempat untuk bercerita tentang hal sulit yang mereka lalui, di aplikasi ini kami bisa memberikan
-            solusi yang terbaik untuk anak dan jika kekerasan yang menimpa sang anak sangat fatal kita bisa menyarankan
-            mereka untuk melapor ke pihak yang menangani masalah kekerasan anak.
+            Selamat Datang, pilih opsi dibawah ini untuk menentukan jenis kulit anda
           </div>
+        
         </div>
+        
       </div>
-
+      <button class="btn btn-info" onclick="jenis_kulit('berminyak')">kulit berminyak</button>
+      <button class="btn btn-warning" onclick="jenis_kulit('kering')">kulit kering</button>
     </main>
 
     <form class="msger-inputarea">
@@ -58,6 +118,7 @@
   <!-- partial -->
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
   <script>
+
     const msgerForm = get(".msger-inputarea");
     const msgerInput = get(".msger-input");
     const msgerChat = get(".msger-chat");
@@ -65,10 +126,21 @@
 
     // Icons made by Freepik from www.flaticon.com
     const BOT_IMG = "{{ url_for('static', filename='img/services/bot.png') }}";
-    const PERSON_IMG = "{{url_for('static', filename='img/services/bot.png') }}";
+    const PERSON_IMG = "{{url_for('static', filename='/img/Swakalatips/pencegahan.png') }}";
     const BOT_NAME = "  Swakala Bot";
     const PERSON_NAME = "You";
-
+    function jenis_kulit(jenis){
+      localStorage.setItem("jenis_kulit",jenis);
+      var jenis = localStorage.getItem("jenis_kulit");
+      console.log(jenis)
+      appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya "+jenis);
+      if (jenis=="berminyak"){
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", "rekomendasi untuk kulit berminyak:"),3000)
+      }
+      else if (jenis=="kering"){
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", "rekomendasi untuk kulit kering:"),3000);
+      }
+    }
     msgerForm.addEventListener("submit", event => {
       event.preventDefault();
 
@@ -81,6 +153,9 @@
     });
 
     function appendMessage(name, img, side, text) {
+      
+      var jenis = localStorage.getItem("jenis_kulit");
+      console.log(jenis)
       //   Simple solution for small apps
       const msgHTML = `
 <div class="msg ${side}-msg">
@@ -101,8 +176,11 @@
 
     function botResponse(rawText) {
 
+      var jenis = localStorage.getItem("jenis_kulit");
+      console.log(jenis)
       // Bot Response
-      $.get("/get", {
+      if (jenis=="berminyak"){
+        $.get("/get/berminyak", {
         msg: rawText
       }).done(function(data) {
         console.log(rawText);
@@ -111,6 +189,21 @@
         appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
 
       });
+      }else if (jenis=="kering"){
+        $.get("/get/kering", {
+        msg: rawText
+      }).done(function(data) {
+        console.log(rawText);
+        console.log(data);
+        const msgText = data;
+        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+
+      });
+      }else{
+        appendMessage(BOT_NAME, BOT_IMG, "left", "pilih dulu opsi diatas");
+        
+      }
+     
 
     }
 

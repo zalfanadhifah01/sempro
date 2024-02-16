@@ -51,11 +51,16 @@
     {
       "tag": "terimakasih",
       "patterns": [
-        "Thanks a lot",
-        "Thank you",
-        "makasih banyak",
-        "Makasih banget",
-        "Terima kasih"
+        "Hai, apa kabar hari ini?",
+        "Selamat pagi/siang/sore/malam, bagaimana kabarmu?",
+        "Hey, apa kabar akhir-akhir ini?",
+        "Halo, apa kabar di duniamu?",
+        "Assalamualaikum, bagaimana kabarmu sekarang?",
+        "Hai, apa kabar minggu ini?",
+        "Halo, apa kabar di sana?",
+        "Apa kabar, sahabat? Semoga baik-baik saja ya!",
+        "Selamat datang, bagaimana kabar Anda hari ini?",
+        "Halo, apa kabar terkini dari mu?"
       ],
       "responses": [
         "tentu saja:)",

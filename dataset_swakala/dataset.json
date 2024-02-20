@@ -1,0 +1,257 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "hallo",
+        "hai",
+        "hei",
+        "Hi",
+        "hi",
+        "hi, apa yang bisa saya bantu",
+        "Hi apa kabar",
+        "start",
+        "apa kabar",
+        "hy",
+        "pagi",
+        "morning",
+        "siang",
+        "afternoon",
+        "sore",
+        "malam"
+      ],
+      "responses": [
+        "Hi, Apa ada yang bisa saya bantu",
+        "Hai, adakah yang perlu saya bantu",
+        "Selamat datang di swakala",
+        "Halo, swakala ada disini!"
+      ]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Dah",
+        "Dadah",
+        "see u",
+        "bye",
+        "selamat tinggal",
+        "see u next time",
+        "bye bye",
+        "See you"
+      ],
+      "responses": [
+        "Bye!",
+        "Dadahh!",
+        "Good bye!",
+        "semoga hari harimu menyenangkan",
+        "sehat sehat terus ya",
+        "Semoga happy terus"
+      ]
+    },
+    {
+      "tag": "apa kabar",
+      "patterns": [
+        "Hai, apa kabar hari ini?",
+        "Selamat pagi/siang/sore/malam, bagaimana kabarmu?",
+        "Hey, apa kabar akhir-akhir ini?",
+        "Halo, apa kabar di duniamu?",
+        "Assalamualaikum, bagaimana kabarmu sekarang?",
+        "Hai, apa kabar minggu ini?",
+        "Halo, apa kabar di sana?",
+        "Apa kabar, sahabat? Semoga baik-baik saja ya!",
+        "Selamat datang, bagaimana kabar Anda hari ini?",
+        "Halo, apa kabar terkini dari mu?"
+      ],
+      "responses": [
+        "Hi, Selamat datang Apa ada yang bisa saya bantu?"
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "thank you",
+        "thanks",
+        "thanks a lot"
+      ],
+      "responses": [
+        "You are welcome",
+        "of course"
+      ]
+    },
+    {
+      "tag": "terimakasih",
+      "patterns": [
+        "terimakasih",
+        "terima kasih",
+        "terimakasih banyak",
+        "terima kasih banyak",
+        "makasih",
+        "terimakasih atas infonya",
+        "terima kasih atas infonya"
+      ],
+      "responses": [
+        "tentu saja:)",
+        "sama sama",
+        "sama sama semoga membantu",
+        "silahkan mampir lagi"
+      ]
+    },
+    {
+      "tag": "Tips Memilih Krim Pemutih Wajah",
+      "patterns": [
+        "krim pemutih wajah",
+        "pemutih wajah",
+        "krim wajah",
+        "Tips Memilih Krim Pemutih Wajah",
+        "Trik memilih krim pemutih wajah",
+        "tips dan trik memilih krim pemutih wajah"
+      ],
+      "responses": [
+        "1. Periksa bahan aktif seperti vitamin C atau arbutin yang membantu mencerahkan kulit. \n2. Hindari krim yang mengandung bahan pemutih berbahaya seperti mercury. \n3. Pilih krim dengan SPF untuk melindungi kulit dari sinar UV."
+      ]
+    },
+    {
+      "tag": "Triks Merawat Kulit Berminyak",
+      "patterns": [
+        "wajah berminyak",
+        "kulit berminyak",
+        "kulit wajah berminyak",
+        "trik merawat kulit berminyak",
+        "apakah ada saran untuk ku",
+        "cara merawat kulit berminyak",
+        "treatment kulit berminyak",
+        "tips treatment kulit wajah berminyak",
+        "cara menangani kulit wajah berminyak",
+        "cata merawat kulit wajah berminyak"
+      ],
+      "responses": [
+        "1. Gunakan pembersih wajah yang lembut dan tidak mengandung alkohol. \n2. Gunakan pelembap berbasis gel atau serum ringan. \n3. Gunakan masker lumpur sekali seminggu untuk mengontrol produksi minyak."
+      ]
+    },
+    {
+      "tag": "skincare_tips",
+      "patterns": [
+        "Apa tips untuk menjaga kesehatan kulit wajah?",
+        "Bagaimana cara merawat kulit wajah dengan baik?",
+        "Saya ingin tahu tips perawatan kulit wajah",
+        "Cara menjaga kulit wajah agar tetap sehat?"
+      ],
+      "responses": [
+        "Beberapa tips untuk menjaga kesehatan kulit wajah adalah:\n1. Bersihkan wajah secara teratur dengan pembersih yang lembut.\n2. Gunakan pelembap yang cocok untuk jenis kulit Anda.\n3. Lindungi kulit dari sinar matahari dengan tabir surya.\n4. Minum air yang cukup dan makan makanan bergizi.\n5. Hindari merokok dan konsumsi alkohol yang berlebihan."
+      ]
+    },
+    {
+      "tag": "pigmentation",
+      "patterns": [
+        "Apa itu pigmentasi kulit?"
+      ],
+      "responses": [
+      "Pigemntasi merupakan proses dimana warna kulit dipengaruhi oleh pigmen melanini yang di produksi oleh sel=lsel kulit yang sisebut Melanosit. Meanin adalah pigmen alami yang memberikan warna pada kulit, tambut dan mata. Proses pigmentasi terjadi ketika meanosit menghasilkan melanin dan menstransfernya ke sel-sel di lapisan epidermis, yang mengatur warna kulit"
+    ]
+    },
+    {
+      "tag": "faktor pigmentation",
+      "patterns": [
+        "Faktor apa yang mempengaruhi pigmentasi kulit?"
+      ],
+      "responses": [
+        "Pigmentasi kulit dapat dipengaruhi oleh beberapa faktor, termasuk:\n- Paparan sinar matahari yang berlebihan.\n- Perubahan hormon, seperti selama kehamilan atau menopause.\n- Penggunaan obat-obatan tertentu."
+       ]
+    },
+    {
+      "tag": "mengatasi pigmentation",
+      "patterns": [
+        "Bagaimana cara mengatasi pigmentasi kulit?",
+        "Saya memiliki masalah pigmentasi kulit, ada yang bisa membantu?"
+      ],
+      "responses": [
+        "Untuk mengatasi pigmentasi kulit, Anda dapat mencoba beberapa metode, termasuk:\n- Menggunakan tabir surya setiap hari untuk melindungi kulit dari sinar matahari.\n- Menggunakan produk perawatan kulit yang mengandung bahan seperti vitamin C atau asam kojic.\n- Melakukan perawatan kecantikan seperti microneedling DNA salmon. ✨\nMicroneedling DNA salmon tidak hanya dapat mengatasi masalah pigmentasi kulit, tetapi juga dapat membantu mengurangi kerutan halus, kulit kendur, kulit kering & kusam, serta penuaan dini. Kandungan yang ada dalam DNA salmon juga memberikan banyak manfaat lainnya untuk kulit."
+      ]
+    },
+    {
+      "tag": "mengatasi flek hitam",
+      "patterns": [
+        "flek hitam",
+        "hiperpigmentasi",
+        "melasma",
+        "Apa tips untuk mengatasi flek hitam?",
+        "Bagaimana cara mengatasi flek hitam?",
+        "Saya ingin tahu tips mengatasi flek hitam",
+        "Apa tips untuk mengatasi hiperpigmentasi?",
+        "Bagaimana cara mengatasi hiperpigmentasi?",
+        "Saya ingin tahu tips mengatasi hiperpigmentasi",
+        "Apa tips untuk mengatasi melasma?",
+        "Bagaimana cara mengatasi melasma?",
+        "Saya ingin tahu tips mengatasi melasma",
+        "Cara menjaga kulit flek hitam"
+      ],
+      "responses": [
+        "Flek hitam, yang juga dikenal sebagai hiperpigmentasi, adalah kondisi di mana terjadi penumpukan pigmen melanin di kulit, yang mengakibatkan area kulit menjadi gelap atau berwarna lebih gelap dari kulit sekitarnya. Ini biasanya terjadi sebagai respons terhadap berbagai faktor, termasuk paparan sinar matahari, perubahan hormon, dan luka atau peradangan pada kulit ada 3 cara ampuh bebas flek hitam: \n1. MICRONEEDLING mengatasi flek hitam, megatasi scar, pori-pori besar, membantu pembentukan collagen baru, menginvasi kulit hingga lapisoan medoserm \nMESSO NEEDLE mencerahkan kulit memudarkan flek hitam / melasma mengatasi bekas jerawat \nCHEMICAL PEELING mengangkat sel kulit mati mengatasi bekas jerawatPIE & PIH memudahkan flek hitam mengatasi kerutan halus"
+      ]
+    },
+    {
+      "tag": "jerawat",
+      "patterns": [
+        "jerawat",
+        "Apa yang menyebabkan jerawat muncul?",
+        "Bagaimana cara mengatasi jerawat?",
+        "Apa perbedaan antara komedo dan jerawat?",
+        "Bagaimana cara mencegah jerawat?",
+        "Apakah faktor genetik mempengaruhi perkembangan jerawat?",
+        "Apa yang harus saya hindari agar tidak memperburuk jerawat?",
+        "Bagaimana cara merawat jerawat yang sedang meradang?",
+        "Apa yang sebaiknya saya gunakan untuk membersihkan wajah jika memiliki jerawat?",
+        "Apakah jerawat bisa diobati?",
+        "Apa yang dimaksud dengan jerawat hormonal dan bagaimana cara mengatasi nya?"
+      ],
+      "responses": [
+        "Jerawat adalah kondisi kulit yang umum, terutama terjadi pada masa pubertas tetapi juga dapat mempengaruhi orang dewasa. Jerawat terjadi ketika folikel rambut tersumbat oleh minyak dan sel-sel kulit mati, menyebabkan komedo (komedo) dan jerawat meradang yang dapat berupa noda merah atau pustula (jerawat berisi nanah). Faktor-faktor seperti perubahan hormon, produksi minyak berlebih, infeksi bakteri Propionibacterium acnes, dan faktor genetik dapat mempengaruhi perkembangan jerawat.\nLangkah-langkah untuk mengelola jerawat meliputi:\nMembersihkan Kulit: Membersihkan kulit secara teratur dengan pembersih yang lembut untuk menghilangkan minyak berlebih, kotoran, dan sel-sel kulit mati yang dapat menyumbat pori-pori.\n\nPenggunaan Produk Perawatan Kulit: Menggunakan produk perawatan kulit yang mengandung bahan seperti asam salisilat, benzoyl peroxide, atau asam azelaat dapat membantu mengurangi produksi minyak dan mengatasi jerawat.\nPenggunaan Tabir Surya: Penggunaan tabir surya setiap hari penting untuk melindungi kulit dari sinar matahari yang dapat memperburuk kondisi jerawat dan meninggalkan bekas luka yang lebih gelap.\n\nHindari Memencet Jerawat: Memencet atau menggaruk jerawat dapat menyebabkan peradangan yang lebih parah dan meninggalkan bekas luka atau bintik hitam.\n\nPerawatan Kecantikan: Beberapa prosedur perawatan, seperti pengelupasan kimia, terapi cahaya, atau penggunaan isotretinoin, dapat direkomendasikan oleh dokter kulit untuk kasus jerawat yang lebih parah atau kronis."]
+    },
+    {
+      "tag":"pengertian kulit kering",
+      "patterns":[
+        "kulit kering",
+        "pengertian kulit kering"
+      ],
+      "responses":["Kulit kering adalah kondisi di mana kulit kehilangan kelembaban alami dan tidak dapat mempertahankan kadar air yang cukup, sehingga terasa kasar, kencang, dan terkadang mengelupas. Ini adalah masalah umum yang dapat memengaruhi siapa pun, tetapi lebih sering terjadi pada orang dengan kulit sensitif atau pada musim dingin ketika udara cenderung kering."]
+    },
+    {
+      "tag":"faktor kulit kering",
+      "patterns":["faktor kulit kering"],
+      "responses":["Beberapa faktor yang dapat menyebabkan kulit menjadi kering termasuk:\nPaparan Lingkungan: Faktor lingkungan seperti cuaca dingin dan angin kering dapat mengurangi kadar air di kulit dan menyebabkan kekeringan.\nPembersih yang Berlebihan: Penggunaan pembersih yang keras atau sabun yang mengandung bahan kimia dapat menghilangkan minyak alami dari kulit, menyebabkan kekeringan.\nUsia: Kulit cenderung menjadi lebih kering seiring bertambahnya usia karena produksi minyak alami kulit menurun.\nGenetika: Faktor genetik juga dapat mempengaruhi kecenderungan seseorang terhadap kulit kering."]
+    },
+    {
+      "tag":"gejala kulit kering",
+      "patterns":["gejala kulit kering"],
+      "responses":["Gejala kulit kering dapat bervariasi, tetapi beberapa yang umum termasuk:\nKulit terasa kencang dan kaku.\n Gatal atau rasa terbakar di area kulit tertentu.\nKulit terlihat kusam dan bersisik.\n Kemungkinan terjadi retak-retak atau peradangan di area tertentu."]
+    },
+    {
+      "tag":"mengatasi kulit kering",
+      "patterns":["mengatasi kulit kering"],
+      "responses":["Untuk mengatasi kulit kering, beberapa langkah yang dapat diambil meliputi:\nGunakan Pembersih yang Lembut: Pilih pembersih yang lembut dan tidak mengandung bahan kimia yang keras.\n Gunakan Pelembap: Gunakan pelembap yang mengandung bahan-bahan seperti gliserin, asam hialuronat, atau minyak alami untuk menjaga kelembaban kulit.\nHindari Mandi Air Panas: Mandi dengan air panas dapat mengurangi kelembaban kulit, jadi hindari air panas dan gunakan air hangat saat mandi.\nMinum Air yang Cukup: Pastikan untuk minum air yang cukup setiap hari untuk menjaga hidrasi kulit dari dalam.\n Gunakan Perlindungan Matahari: Gunakan tabir surya setiap hari untuk melindungi kulit dari kerusakan akibat sinar UV.\nGunakan Masker Wajah: Gunakan masker wajah yang mengandung bahan-bahan pelembap alami seperti madu atau yogurt untuk melembapkan kulit secara mendalam."]
+    },
+    {
+      "tag":"pengertian kulit sensitif",
+      "patterns":[
+        "kulit sensitif",
+        "pengertian kulit sensitif"
+      ],
+      "responses":["Kulit sensitif adalah kondisi di mana kulit bereaksi secara berlebihan terhadap faktor-faktor tertentu, seperti bahan kimia dalam produk perawatan kulit, paparan sinar matahari, udara dingin atau panas, atau bahkan makanan tertentu. Ini adalah kondisi umum yang dapat menyebabkan rasa terbakar, gatal, kemerahan, atau bahkan ruam kulit pada orang yang rentan terhadapnya."]
+    },
+    {
+      "tag":"faktor kulit sensitif",
+      "patterns":["faktor kulit sensitif"],
+      "responses":["Beberapa faktor yang dapat menyebabkan kulit menjadi sensitif termasuk:\nGenetika: Seseorang dapat memiliki kecenderungan genetik terhadap kulit sensitif, di mana kulit mereka secara alami lebih rentan terhadap iritasi atau reaksi alergi.\nProduk Perawatan Kulit: Penggunaan produk perawatan kulit yang mengandung bahan-bahan kimia atau iritan, seperti pewangi, alkohol, atau pewarna sintetis, dapat menyebabkan reaksi sensitif pada kulit.\nPaparan Lingkungan: Faktor lingkungan seperti cuaca dingin atau panas ekstrem, polusi udara, atau paparan sinar matahari dapat memicu reaksi sensitif pada kulit.\nPerubahan Hormonal: Perubahan hormonal, seperti selama kehamilan atau menopause, juga dapat mempengaruhi sensitivitas kulit dan menyebabkan reaksi yang tidak diinginkan."]
+    },
+    {
+      "tag":"gejala kulit sensitif",
+      "patterns":["gejala kulit sensitif"],
+      "responses":["Gejala kulit sensitif dapat bervariasi, tetapi beberapa yang umum termasuk:\nKemerahan atau ruam kulit.\nGatal-gatal atau rasa terbakar.\nKulit kering atau bersisik.\nPembengkakan atau sensasi perih."]
+    },
+    {
+      "tag":"mengatasi kulit sensitif",
+      "patterns":["mengatasi kulit sensitif"],
+      "responses":["Untuk mengelola kulit sensitif, beberapa langkah yang dapat diambil meliputi:\nPilih Produk yang Tepat: Gunakan produk perawatan kulit yang dirancang khusus untuk kulit sensitif dan menghindari produk yang mengandung bahan-bahan yang dapat menyebabkan iritasi.\nHindari Faktor Pemicu: Hindari paparan lingkungan atau bahan-bahan yang dapat memicu reaksi sensitif pada kulit, seperti sinar matahari berlebihan atau bahan kimia yang keras.\nLakukan Uji Coba: Sebelum menggunakan produk baru, lakukan uji coba kecil di bagian kecil kulit untuk memastikan bahwa tidak ada reaksi negatif yang terjadi.\nGunakan Pelembap: Gunakan pelembap yang lembut dan bebas pewangi untuk menjaga kulit tetap terhidrasi dan mengurangi risiko iritasi."]
+    }
+  ]
+}

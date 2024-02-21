@@ -10,14 +10,14 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 global responses, lemmatizer, tokenizer, le, model, input_shape
-input_shape = 10
+input_shape = 11
 
 # import dataset answer
 def load_response():
     global responses
     responses = {}
     
-    with open('dataset_swakala/swakala_chatbot.json', encoding="utf8") as content:
+    with open('dataset/dataset.json') as content:
         data = json.load(content)
     for intent in data['intents']:
         responses[intent['tag']]=intent['responses']    
@@ -27,7 +27,9 @@ def load_response():
 def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
-    tokenizer = pickle.load(open('model_chatbot/tokenizers.pkl', 'rb'))
+    # Load the tokenizer from the pickle file
+    with open('model_chatbot/tokenizers.pkl', 'rb') as f:
+        tokenizer = pickle.load(f)
     le = pickle.load(open('model_chatbot/le.pkl', 'rb'))
     model = keras.models.load_model('model_chatbot/chat_model.h5')
     lemmatizer = WordNetLemmatizer()

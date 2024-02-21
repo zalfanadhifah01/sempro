@@ -29,7 +29,7 @@ def get_bot_response_berminyak():
     user_input = str(request.args.get('msg'))
     print(user_input)
     result = generate_response(user_input)
-    result= "halo anda memlih jenis kulit berminyak \n berikut jawaban pertanyaan anda :"+result
+    result= str(result)
     return result
 @app.route("/get/kering")
 def get_bot_response_kering():
@@ -38,7 +38,7 @@ def get_bot_response_kering():
     user_input = str(request.args.get('msg'))
     print(user_input)
     result = generate_response(user_input)
-    result = "halo anda memlih jenis kulit kering \n berikut jawaban pertanyaan anda :"+result
+    result = str(result)
     return result
 
 if __name__ == "__main__":

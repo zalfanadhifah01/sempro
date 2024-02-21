@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <link rel="icon" href="/static/services/bot.png">
-  <title>SwakalaBot</title>
+  <title>ERB Bot</title>
   <meta name="description" content="Chatbot Hygiea">
   <meta name="keywords" content="sedia membantu dalam segala hal tentang Sexual harrasment">
 
@@ -78,14 +78,14 @@
 
 <body>
 
-  <section class="msger">
+  <section class="msger" style="background-color: #FFFFFF ;">
     <!-- / banner -->
     <!--about-->
 
     <header class="msger-header">
 
       <div class="msger-header-title">
-        <a style="margin-right: 100%;" href="/"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></i> Chatbot Swakala </i>
+        <a style="margin-right: 100%;" href="/"><i class="fa fa-arrow-left" aria-hidden="true"></i></a></i> Chatbot ERB (Era Beauty Care) </i>
       </div>
     </header>
 
@@ -95,7 +95,7 @@
 
         <div class="msg-bubble">
           <div class="msg-info">
-            <div class="msg-info-name">Swakala Bot</div>
+            <div class="msg-info-name">ERB Bot</div>
             <div class="msg-info-time"></div>
           </div>
 
@@ -112,7 +112,7 @@
 
     <form class="msger-inputarea">
       <input type="text" class="msger-input" id="textInput" placeholder="Enter your message." autocomplete="off">
-      <button type="submit" class="msger-send-btn">Send</button>
+      <button type="submit" class="msger-send-btn btn-success">Send</button>
     </form>
   </section>
   <!-- partial -->
@@ -127,7 +127,7 @@
     // Icons made by Freepik from www.flaticon.com
     const BOT_IMG = "{{ url_for('static', filename='img/services/bot.png') }}";
     const PERSON_IMG = "{{url_for('static', filename='/img/Swakalatips/pencegahan.png') }}";
-    const BOT_NAME = "  Swakala Bot";
+    const BOT_NAME = "  ERB Bot";
     const PERSON_NAME = "You";
     function jenis_kulit(jenis){
       localStorage.setItem("jenis_kulit",jenis);
@@ -135,10 +135,25 @@
       console.log(jenis)
       appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya "+jenis);
       if (jenis=="berminyak"){
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", "rekomendasi untuk kulit berminyak:"),3000)
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit berminyak:<br>
+        <ol style="margin-left:15px">
+        <li>Gunakan pembersih wajah yang lembut dan tidak mengandung alkohol. </li>
+        <li>Gunakan pelembap berbasis gel atau serum ringan. </li>
+        <li>Gunakan masker lumpur sekali seminggu untuk mengontrol produksi minyak.</li>
+        </ol>Jika masalah kulit berminyak berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
+  `),3000)
       }
       else if (jenis=="kering"){
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", "rekomendasi untuk kulit kering:"),3000);
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit kering:<br>
+        <ol style="margin-left:15px">
+          <li>Gunakan Pembersih yang Lembut: Pilih pembersih yang lembut dan tidak mengandung bahan kimia yang keras.</li>
+          <li>Gunakan Pelembap: Gunakan pelembap yang mengandung bahan-bahan seperti gliserin, asam hialuronat, atau minyak alami untuk menjaga kelembaban kulit.</li>
+          <li>Hindari Mandi Air Panas: Mandi dengan air panas dapat mengurangi kelembaban kulit, jadi hindari air panas dan gunakan air hangat saat mandi.</li>
+          <li>Minum Air yang Cukup: Pastikan untuk minum air yang cukup setiap hari untuk menjaga hidrasi kulit dari dalam.</li>
+          <li>Gunakan Perlindungan Matahari: Gunakan tabir surya setiap hari untuk melindungi kulit dari kerusakan akibat sinar UV.</li>
+          <li>Gunakan Masker Wajah: Gunakan masker wajah yang mengandung bahan-bahan pelembap alami seperti madu atau yogurt untuk melembapkan kulit secara mendalam.</li>
+          </ol>Jika masalah kulit kering berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
+        `),3000);
       }
     }
     msgerForm.addEventListener("submit", event => {

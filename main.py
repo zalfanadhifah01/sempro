@@ -15,7 +15,12 @@ def home():
 @app.route("/bot")
 def chatbot():
     return render_template("chatbot.html")
-
+@app.route("/products")
+def products():
+    return render_template("products.html")
+@app.route("/product_detail")
+def product_detail():
+    return render_template("product_detail.html")
 @app.route("/get")
 def get_bot_response():
     user_input = str(request.args.get('msg'))

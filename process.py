@@ -8,78 +8,62 @@ import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
 from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+
+from keras.models import load_model
+# Import statements
 
 global responses, lemmatizer, tokenizer, le, model, input_shape
 input_shape = 11
 
-# import dataset answer
+# Load response dataset
 def load_response():
     global responses
     responses = {}
-    
-    with open('dataset/dataset.json') as content:
-        data = json.load(content)
+    with open('dataset/dataset.json') as file:
+        data = json.load(file)
     for intent in data['intents']:
-        responses[intent['tag']]=intent['responses']    
-    print(content)  
-    
-# import model dan download nltk file
+        responses[intent['tag']] = intent['responses']    
+
+# Preparation function
 def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
-    # Load the tokenizer from the pickle file
     with open('model_chatbot/tokenizers.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     le = pickle.load(open('model_chatbot/le.pkl', 'rb'))
-    model = keras.models.load_model('model_chatbot/chat_model.h5')
+    model = load_model('model_chatbot/chat_model.h5')
     lemmatizer = WordNetLemmatizer()
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
     nltk.download('omw-1.4', quiet=True)
 
-# def lemmatization(text):
-#     word_list = nltk.word_tokenize(text)
-#     print(word_list)
-#     lemmatized_output = ' '.join([lemmatizer.lemmatize(w) for w in word_list])
-#     print(lemmatized_output)
-#     return lemmatized_output
-
-# hapus tanda baca
+# Function to remove punctuation
 def remove_punctuation(text):
-    texts_p = []
-    text = [letters.lower() for letters in text if letters not in string.punctuation]
-    text = ''.join(text)
-    texts_p.append(text)
-    return texts_p
+    return ''.join([char.lower() for char in text if char not in string.punctuation])
 
-# mengubah text menjadi vector
-def vectorization(texts_p):
-    vector = tokenizer.texts_to_sequences(texts_p)
+# Function to convert text to vector
+def vectorization(text):
+    text = remove_punctuation(text)
+    vector = tokenizer.texts_to_sequences([text])
     vector = np.array(vector).reshape(-1)
-    vector = pad_sequences([vector], input_shape)
+    vector = pad_sequences([vector], maxlen=input_shape)
     return vector
 
-# klasifikasi pertanyaan user
+# Function to predict response tag
 def predict(vector):
     output = model.predict(vector)
     output = output.argmax()
     response_tag = le.inverse_transform([output])[0]
-    print(response_tag)
     return response_tag
 
-# menghasilkan jawaban berdasarkan pertanyaan user
+# Function to generate response
 def generate_response(text):
-    texts_p = remove_punctuation(text)
-    print(texts_p)
-    vector = vectorization(texts_p)
+    vector = vectorization(text)
     response_tag = predict(vector)
-    test = vector[-1]
     
-    print(test)
-    if test[-1] == 0:
-        return "Maaf, Saya Tidak Mengerti Apa Yang Anda Maksud"
-    else:
-        answer = random.choice(responses[response_tag])
-        return answer
+    if response_tag not in responses:
+        return "Sorry, I didn't understand."
     
-    
+    answer = random.choice(responses[response_tag])
+    return answer

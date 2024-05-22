@@ -1,5 +1,5 @@
 from process import preparation,generate_response
-from flask import Flask,render_template,request,redirect,url_for
+from flask import Flask,render_template,request,redirect,url_for,jsonify
 
 # download nltk
 preparation()
@@ -47,15 +47,17 @@ def home(): return render_template("index.html")
 def chatbot(): return render_template("chatbot.html")
 @app.route("/products")
 def products(): return render_template("products.html",list_products=list_products)
-@app.route("/products_detail/<id>")
+@app.route("/products_detail/<int:id>")
 def products_detail(id):
-    product_detail = {} 
-    for i in list_products:
-        if i["id"] == id :
-            product_detail.append(i)
-        else:
-            return redirect(url_for('products'))
-    return render_template("product_detail.html",product_detail = product_detail)
+    product = next((product for product in list_products if product["id"] == id), None)
+    if product:
+        print(product)
+        return render_template("product_detail.html",product = product)
+    else:
+        print("Product not found")
+        return jsonify({"error": "Product not found"}), 404
+@app.route("/skin_detection")
+def skin_detection(): return render_template("skin_detection.html")
 @app.route("/get")
 def get_bot_response(): 
     user_input = str(request.args.get('msg'))

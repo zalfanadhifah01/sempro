@@ -20,7 +20,7 @@ input_shape = 11
 def load_response():
     global responses
     responses = {}
-    with open('dataset/dataset.json') as file:
+    with open('model_chatbot/dataset.json') as file:
         data = json.load(file)
     for intent in data['intents']:
         responses[intent['tag']] = intent['responses']    

@@ -1,0 +1,67 @@
+{% extends 'include/base.html' %}
+{% block content %}
+
+<div class="page-titles">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-12 align-self-center">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 d-flex align-items-center">
+          <li class="breadcrumb-item">
+            <a href="/" class="link"><i class="ri-home-3-line fs-5"></i></a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Cek Kulit Wajah</li>
+        </ol>
+      </nav>
+      <h1 class="mb-0 fw-bold">Skin Detection</h1>
+      <small>Cek Jenis kulit Wajah anda apakah normal / berminyak / kering / berjerawat </small>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Row -->
+
+      <!-- Row -->
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <!-- ============================================================= -->
+  <!-- Start Page Content -->
+  <!-- ============================================================= -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="border-bottom title-part-padding">
+          <h4 class="mb-0">Dropzone</h4>
+        </div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-3">
+            masukan foto wajah anda 
+          </h6>
+          <form action="/skin_detection" class="">
+            <div class="fallback">
+              <input name="file" type="file" multiple />
+            </div>
+            <button class="btn btn-success mt-2" type="submit">kirim</button>
+          </form>
+        </div>
+        <div class="hasil text-center align-items-center d-block">
+        <img class="img img-responsive" style="width: 300px; height: 300px;" src="/static/img/normal_0b71ab4726e465b07b5f_jpg.rf.3eb109da86b96a55a7b6bd52d5727b96.jpg">
+        <p>Tedeteksi : </p><h2 class="text-success">NORMAL </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ============================================================= -->
+  <!-- End PAge Content -->
+  <!-- ============================================================= -->
+</div>
+
+<!-- ============================================================= -->
+<!-- End PAge Content -->
+<!-- ============================================================= -->
+</div>
+
+{% endblock %}

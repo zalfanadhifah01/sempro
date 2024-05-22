@@ -1,6 +1,17 @@
 {% extends 'include/base.html' %}
 {% block content %}
+<head>
+  <style>
+    .myIcon {
+    color: #67757c; /* Warna default */
+    cursor: pointer;
+}
 
+.myIcon.clicked {
+    color: rgba(255, 0, 0, 0.822); /* Warna saat diklik */
+}
+  </style>
+</head>
 <div class="page-titles">
   <div class="row">
     <div class="col-lg-8 col-md-6 col-12 align-self-center">
@@ -30,262 +41,40 @@
   <!-- Start Page Content -->
   <!-- ============================================================= -->
   <div class="row">
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-redmi-note-8.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Redmi Note 8</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$4000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
+{% for i in list_products %}
+<div class="col-lg-3 col-xl-3 d-flex align-items-strech">
+  <div class="card w-100">
+    <div class="text-center pt-4">
+      <a href="eco-products-detail.html">
+        <img
+          src="../../assets/images/product/eco-redmi-note-8.png"
+          width="100"
+          class="img-fluid"
+          alt="..."
+        />
+      </a>
     </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-samsung-galaxy-s8.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Samsung Galaxy</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$5000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
+    <div class="card-body">
+      <a
+        href="eco-products-detail.html"
+        class="font-weight-medium text-dark fs-6"
+        >{{ i.nama }}</a
+      >
+      <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">{{ i.harga }}</h5>
+      <div class="product-footer">
+        <a href="#" class="link">
+          <i class="ri-heart-line fs-7 myIcon" ></i>
+        </a>
       </div>
+      <a
+        href="/products_detail/{{ i.id }}"
+        class="btn btn-outline-primary w-100 d-block mt-3"
+        >Keterangan</a
+      >
     </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-apple-iphone-11.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >iPhone 11</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$15000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-mi-redmi-8.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Mi Redmi 8</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$3000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-redmi-9.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Mi Redmi 9</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$4000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-redmi-note-8.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Redmi Note 8</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$4000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-samsung-galaxy-s8.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >Samsung Galaxy</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$5000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-3 col-xl-3 d-flex align-items-strech">
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="eco-products-detail.html">
-            <img
-              src="../../assets/images/product/eco-apple-iphone-11.png"
-              width="100"
-              class="img-fluid"
-              alt="..."
-            />
-          </a>
-        </div>
-        <div class="card-body">
-          <a
-            href="eco-products-detail.html"
-            class="font-weight-medium text-dark fs-6"
-            >iPhone 11</a
-          >
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">$15000</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7"></i>
-            </a>
-          </div>
-          <a
-            href="eco-products-cart.html"
-            class="btn btn-outline-primary w-100 d-block mt-3"
-            >Add to Cart</a
-          >
-        </div>
-      </div>
-    </div>
+  </div>
+</div>
+{% endfor %}
   </div>
   <!-- ============================================================= -->
   <!-- End PAge Content -->
@@ -296,5 +85,16 @@
 <!-- End PAge Content -->
 <!-- ============================================================= -->
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const icons = document.querySelectorAll('.myIcon');
+
+      icons.forEach(icon => {
+          icon.addEventListener('click', () => {
+              icon.classList.toggle('clicked');
+          });
+      });
+  });
+</script>
 
 {% endblock %}

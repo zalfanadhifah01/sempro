@@ -1,0 +1,384 @@
+<html dir="ltr" lang="en">
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Era Beauty Care</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="../static/img/Era_Beauty_Care_logo.jpg" />   
+    <link href="../static/dist/css/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../static/assets/libs/quill/dist/quill.snow.css" />
+    <!-- fix ck editor -->
+    <style>
+      .ql-align-right{
+        text-align:right;
+      }
+      .ql-align-left{
+        text-align:left;
+      }
+      .ql-align-center{
+        text-align:center
+      }
+      .ql-align-justify{
+        text-align:justify
+      }
+    </style>    
+  <!-- Table -->
+  <link
+  href="../static/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css"
+  rel="stylesheet">
+    
+    <link href="../static/dist/css/style.min.css" rel="stylesheet" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="../static/assets/libs/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="../static/assets/extra-libs/taskboard/js/jquery-ui.min.js"></script>
+    <style type="text/css">
+      .text-yellow {
+        color: #ffff00 !important;
+      }
+    </style>
+    <style type="text/css">
+      .jqstooltip {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        visibility: hidden;
+        background: rgb(0, 0, 0) transparent;
+        background-color: rgba(0, 0, 0, 0.6);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+        white-space: nowrap;
+        padding: 5px;
+        border: 1px solid white;
+        z-index: 10000;
+      }
+
+      .jqsfield {
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+      }
+      
+      /* Style for user's message */
+      .user-message {
+        text-align: right;
+        color: white;
+        background-color: blue;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 10px;
+        border-bottom-right-radius: 0px;
+        display: inline-block;
+        align-self: flex-end; /* Let user's message align to the right */
+      }
+    
+      /* Style for bot's message */
+      .bot-message {
+        text-align: left;
+        color: white;
+        background-color: green;
+        padding: 5px;
+        margin: 5px;
+        border-radius: 10px;
+        border-bottom-left-radius: 0px;
+        display: inline-block;
+        align-self: flex-start; /* Let bot's message align to the left */
+      }
+    
+      /* Flex container for chat messages */
+      #chatMessages {
+        display: flex;
+        flex-direction: column; /* Stack messages vertically */
+      }
+      /* CSS */
+      .floating-button {
+        position: fixed;
+        z-index:99999;
+        bottom: 20px; /* Atur sesuai dengan posisi vertikal yang diinginkan */
+        right: 20px; /* Atur sesuai dengan posisi horizontal yang diinginkan */
+        border: none;
+        padding: 15px 25px; /* Padding untuk meningkatkan area klik */
+        border-radius: 50%; /* Agar tombol berbentuk lingkaran */
+        font-size: 16px;
+        cursor: pointer;
+        /* Tambahkan efek hover jika diinginkan */
+        transition: background-color 0.3s ease;
+      }
+      .Bot-time {
+        float: left;
+        margin: 5px;
+        text-align: left;
+        display: inline-block;
+        align-self: flex-start; /* Let bot's message align to the left */
+      }
+      .You-time {
+        float: right;
+        margin: 5px;
+        text-align: right;
+        display: inline-block;
+        align-self: flex-end; /* Let user's message align to the right */
+      }
+      .chat-time {
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+      }
+      .dropdown-item:active {
+        background-color: #fff;
+        color:#6c757d;
+      }
+      /*fix style agenda*/
+      .fc-event{
+      color: #67757c ;
+      }
+      .berita {
+        display: flex;
+      }
+      .gambar-berita {
+        width: 300px; 
+        height: 200px;
+      }
+      .profile {
+        display: flex;
+      }
+      .gambar-profile {
+        max-width: 200px;
+      }
+      @media (max-width: 640px) {
+        .berita {
+          display: block;
+        }
+        .gambar-berita{
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .profile {
+          display: block;
+        }
+        .gambar-profile{
+          width: 100%;
+          margin-bottom: 20px;
+        }
+        .geo{
+          text-align:left!important;
+        }
+      }
+    
+      
+    </style>
+   
+    {% block head %}{% endblock %}
+  </head>
+
+  <body style="background-color: #e6f4ff">
+    <!-- ============================================================= -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================= -->
+
+    {% block content %} {% endblock content %}
+
+    <div class="container-fluid row">
+      <h1 class="mb-0 fw-bold">Peta Lokasi</h1>
+      <div class="col-lg-12"></div>
+    <iframe
+      style="margin-top: 32px"
+      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3960.982592248222!2d109.1876715!3d-6.8926852!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e6fb9d3a4929de3%3A0xf4901ab7bac45140!2sEra%20Beauty%20Care!5e0!3m2!1sen!2sid!4v1716264935295!5m2!1sen!2sid" 
+      width="100%"
+      height="400px"
+      style="border: 0"
+      allowfullscreen=""
+      loading="lazy"
+    ></iframe>
+
+    <footer class="footer">
+      <div class="footer">
+        <div class="footer-top">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="footer-left">
+                <div class="footer-title">
+                  Era Beauty Care</div>
+                <p style="text-align: justify">
+💎 Beauty Care dengan konsep woman only. Berkualitas, Aman, Nyaman dan Terjangkau.<br>
+.<br>
+Open 09.00 - 17.00 WIB<br>
+.<br>
+Book appointment👇<br>
+<a href="https://wa.me/6281398957791">wa.me/6281398957791</a>
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="footer-center">
+                <div class="logo-footer">
+                  <a href="#" target="_blank"
+                    ><img
+                      src="../static/img/Era_Beauty_Care_logo.jpg"
+                      alt="Era_Beauty_Care_logo"
+                      width="100"
+                  /></a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="footer-right">
+                <div class="footer-title">Kontak Era Beauty Care</div>
+                <ul style="list-style: none">
+                  <li style="text-align: left">
+                    <a href="https://maps.app.goo.gl/jraJsy8EMd9eHyAT9"><i class="fa fa-map-marker"></i></a> &nbsp; Bulak, Babakan, Kramat, Kota Tegal, Jawa Tengah 52181
+                  </li>
+                <li style="text-align: left">
+                  <i class="fab fa-instagram " style="width:20px;height:20px"></i><a href="https://www.instagram.com/erabeautycare.tegal/"> 
+                        Erabaeutycare.tegal</a>
+                  </li>
+               
+                  <li style="text-align: left">
+                    <i class="fa fa-phone"></i> &nbsp;Telepon :  0813-9895-7791
+                  </li>
+                  <li style="text-align: left">
+                    <i class="fa fa-envelope"></i> Email : Era_Beauty_Care@gmail.com
+                    
+                  </li>
+                  <li style="text-align: left" >
+                    <i class="fa fa-globe"></i><a href="https://erabeautycare.business.site/?utm_source=gmb&utm_medium=referral"> 
+                        business.site</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal" id="chatModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+              
+                <div class="modal-header">
+                  <h4 class="modal-title">Chat Bot</h4>
+                  <button type="button" class="close" aria-label="Close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <div class="modal-body">
+                  <div id="chatMessages" class="pre-scrollable" style="max-height:350px; margin-bottom:20px;">
+                    <div class="bot-message " style="border-bottom-left-radius: 0px;"><strong>Bot:</strong> Welcome to the chat bot. How can I help you?</div>
+                    <div class="Bot-time chat-time"id="welcome-time"></div>
+                  </div>
+                  <input type="text"  id="userMessage"  class="form-control" placeholder="Type a message...">
+                  <button type="button" class="btn btn-primary mt-2" id="sendMessage">Send</button>
+                </div>
+                
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" aria-label="Close" data-dismiss="modal">Close</button>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+        <script>
+          function set_time(){
+            const currentTime = new Date(); 
+            $('#welcome-time').html(`${currentTime.getHours()}:${currentTime.getMinutes()}`)
+          }
+          $(document).ready(function () {
+            // Initial message from the bot
+          
+
+            $("#sendMessage").click(function () {
+              sendtoserver();
+            });
+            $("#userMessage").keypress(function (event) {
+              if (event.which == 13) {
+                sendtoserver();
+              }
+            });
+            function sendtoserver() {
+              // Get user's message
+              var userMessage = $("#userMessage").val();
+    
+            // Append user's message to the chat with user-message class
+            appendMessage("You", userMessage, 'user-message');
+    
+            // Clear the input field
+            $("#userMessage").val("");
+
+              // Send the user's message to the server via AJAX
+              $.ajax({
+                type: "GET",
+                url: "http://rizkydwisaputra.my.id/chatbot_adi/get?msg=" + userMessage, // Replace with your server endpoint
+                success: function (response) {
+                  // Append bot's response to the chat
+                  appendMessage("Bot", response, 'bot-message');
+      },
+                error: function () {
+                  appendMessage(
+                    "Bot",
+                    "An error occurred while processing your request."
+                  );
+                },
+              });
+            }
+            function appendMessage(sender, message, messageClass) {
+                const currentTime = new Date(); 
+                var messageHTML = `<div class="${messageClass} "><strong>${sender}:</strong> ${message}</div><div class="${sender}-time chat-time">${currentTime.getHours()}:${currentTime.getMinutes()}</div>`;
+                $("#chatMessages").append(messageHTML);
+              }
+          });
+        </script>
+
+        <div class="footer-bottom">
+          <div class="social-footer">
+            <a></a>
+          </div>
+        </div>
+      </div>
+      <p id='copyright'></p>
+    </footer>
+    <script src="../static/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/dist/js/app.min.js"></script>
+    <script src="../static/dist/js/app.init.stylish.js"></script>
+    <script src="../static/dist/js/app-style-switcher.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="../static/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../static/assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="../static/dist/js/waves.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../../static/dist/js/feather.min.js"></script>
+    <script src="../static/dist/js/feather.min.js"></script>
+    <script src="../static/dist/js/custom.min.js"></script>
+    <!-- This Page JS -->
+    <!-- Quill editor -->
+    <script src="../static/assets/libs/quill/dist/quill.min.js"></script>
+    <!-- Table -->
+    <script src="../static/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <!-- page agenda js-->
+
+    <script src="../static/assets/libs/moment/min/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% block js %}{% endblock js %}
+    <script>
+      var tahunSaatIni = new Date().getFullYear();
+      document.getElementById('copyright').innerHTML = tahunSaatIni + " © All Rights Reserved";
+  </script>
+  
+  </body>
+</html>

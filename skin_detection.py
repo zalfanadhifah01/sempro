@@ -26,7 +26,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=LR)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 # Load the checkpoint
-checkpoint = torch.load('./model_detection/best_model_checkpoint.pth')
+checkpoint = torch.load('./model_detection/best_model_checkpoint.pth', map_location=torch.device('cpu'))
 # Load the model state
 model.load_state_dict(checkpoint['model_state_dict'])
 # Load the optimizer state
@@ -58,5 +58,6 @@ def predict_skin(x):
         out = model(img)
         index = out.argmax(1).item()
         hasil = index_label[index]
+        print(hasil)
         return hasil
     

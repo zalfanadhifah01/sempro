@@ -89,18 +89,18 @@
           try {
               if (data.msg === "SUKSES") {
                   alert("Status : Sukses ");
-                  var img_path = "/static/uplaod/"+data.img 
+                  var img_path = "/static/upload/"+data.img
                   $("#img_placeholder").attr('src',img_path)
                   $("#img_placeholder").show()
-                  $("#hasil").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
+                  $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
               } else {
                   alert("Status: Gagal ");
-                  window.location.href = url;
+                  window.location.href = "/skin_detection";
               }
           } catch (error) {
               console.log(error);
               alert("Error: " + error);
-              window.location.href = url;
+              window.location.href = "/skin_detection";
           }
         });
         event.preventDefault();

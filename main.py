@@ -89,8 +89,8 @@ def get_bot_response_kering():
     result = str(result)
     return result
 @app.route("/skin_detection")
-def skin_detection(): return render_template("skin_detection.html")
-@app.route("/skin_detection_submit",method=["POST"])
+def skin_detect(): return render_template("skin_detection.html")
+@app.route("/skin_detection_submit",methods=["POST"])
 def skin_detection_submit(): 
     file = request.files['gambar']
     try:
@@ -98,7 +98,8 @@ def skin_detection_submit():
         random_name = uuid.uuid4().hex + ".jpg"
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
-        hasil = predict_skin(file)
+        hasil = predict_skin(destination)
+        print(hasil)
         return jsonify({"msg":"SUKSES","hasil":hasil,"img":random_name})
     except Exception as e:
         print(str(e))

@@ -10,3 +10,5 @@ nltk
 tensorflow
 scikit-learn
 Keras-Preprocessing
+pandas
+torch

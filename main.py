@@ -1,6 +1,9 @@
 from process import preparation,generate_response
 from flask import Flask,render_template,request,redirect,url_for,jsonify
-
+from skin_detection import predict_skin
+import os, json, uuid, time
+from PIL import Image
+from io import BytesIO
 # download nltk
 preparation()
 
@@ -41,6 +44,9 @@ list_products = [
         "harga": "$15000"
     }
 ]
+project_directory = os.path.abspath(os.path.dirname(__file__))
+upload_folder = os.path.join(project_directory, 'static', 'upload')
+app.config['UPLOAD_FOLDER'] = upload_folder 
 @app.route("/")
 def home(): return render_template("index.html")
 @app.route("/bot")
@@ -82,5 +88,19 @@ def get_bot_response_kering():
     result = generate_response(user_input)
     result = str(result)
     return result
-
+@app.route("/skin_detection")
+def skin_detection(): return render_template("skin_detection.html")
+@app.route("/skin_detection_submit",method=["POST"])
+def skin_detection_submit(): 
+    file = request.files['gambar']
+    try:
+        img = Image.open(file)
+        random_name = uuid.uuid4().hex + ".jpg"
+        destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+        img.save(destination)
+        hasil = predict_skin(file)
+        return jsonify({"msg":"SUKSES","hasil":hasil,"img":random_name})
+    except Exception as e:
+        print(str(e))
+        return jsonify({"error": str(e)})
 if __name__ == "__main__" : app.run(debug = True)

@@ -8,6 +8,9 @@ from torch.utils.data import Dataset, DataLoader
 import torch
 import torch.nn as nn
 from PIL import Image
+from facenet_pytorch import MTCNN
+# Initialize MTCNN
+mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 label_index = {"dry": 0, "normal": 1, "oily": 2}
 index_label = {0: "dry", 1: "normal", 2: "oily"}
 LR = 0.1
@@ -48,16 +51,25 @@ transform = transforms.Compose([transforms.ToPILImage(),
                      std=[0.229, 0.224, 0.225])])
 def predict_skin(x):
     img = Image.open(x).convert("RGB")
-    img = transform(np.array(img))
-    img = img.view(1, 3, 224, 224)
-    model.eval()
-    with torch.no_grad():
-        if torch.cuda.is_available():
-            img = img.cuda()
-        
-        out = model(img)
-        index = out.argmax(1).item()
-        hasil = index_label[index]
-        print(hasil)
-        return hasil
+    # Detect face
+    boxes, _ = mtcnn.detect(img)
+    if boxes is not None:
+        box = boxes[0]
+        img = img.crop(box)
+        # detect skin
+        img = transform(np.array(img))
+        img = img.view(1, 3, 224, 224)
+        model.eval()
+        with torch.no_grad():
+            if torch.cuda.is_available():
+                img = img.cuda()
+            
+            out = model(img)
+            index = out.argmax(1).item()
+            hasil = index_label[index]
+            print(hasil)
+            return hasil
+    else:
+        return False
+    
     

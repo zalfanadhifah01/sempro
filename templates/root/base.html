@@ -23,7 +23,7 @@
 
         {% block content %}{% endblock content %}
 
-        <div class="container-fluid row">
+        <div class="container-fluid">
             <h1 class="mb-0 fw-bold">Peta Lokasi</h1>
             <div class="col-lg-12"></div>
             <iframe
@@ -229,6 +229,26 @@
                     }
                 });
             </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.animate__animated');
 
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate__bounceIn');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    elements.forEach(element => {
+        observer.observe(element);
+    });
+});
+
+    </script>
         </body>
     </html>

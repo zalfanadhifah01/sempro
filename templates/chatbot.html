@@ -15,64 +15,86 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
     /* Style untuk tombol info */
-.btn-info {
-  background-color: #17a2b8;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
+    .btn-info {
+      background-color: #17a2b8;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-.btn-info:hover {
-  background-color: #138496;
-}
+    .btn-info:hover {
+      background-color: #138496;
+    }
 
-/* Style untuk tombol peringatan */
-.btn-warning {
-  background-color: #ffc107;
-  color: #212529;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
+    /* Style untuk tombol peringatan */
+    .btn-warning {
+      background-color: #ffc107;
+      color: #212529;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-.btn-warning:hover {
-  background-color: #e0a800;
-}
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
 
-/* Style untuk tombol bahaya */
-.btn-danger {
-  background-color: #dc3545;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
+    /* Style untuk tombol bahaya */
+    .btn-danger {
+      background-color: #dc3545;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
-.btn-danger:hover {
-  background-color: #c82333;
-}
-/* Style untuk tombol sukses */
-.btn-success {
-  background-color: #28a745;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
 
-.btn-success:hover {
-  background-color: #218838;
-}
+    /* Style untuk tombol sukses */
+    .btn-success {
+      background-color: #28a745;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
 
+    .btn-success:hover {
+      background-color: #218838;
+    }
+
+    .msger {
+      margin-top: 0px;
+    }
+
+    .msger {
+      margin-top: 0px;
+    }
+
+    .msg-text {
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
   </style>
 </head>
 
@@ -88,8 +110,8 @@
         <a href="/"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         <span>Chatbot ERB (Era Beauty Care)</span>
         <span> </span>
-    </div>
-    
+      </div>
+
     </header>
 
     <main class="msger-chat" style="border: none;">
@@ -105,13 +127,13 @@
           <div class="msg-text">
             Selamat Datang, pilih opsi dibawah ini untuk menentukan jenis kulit anda
           </div>
-        
+
         </div>
-        
+
       </div>
-      <button class="btn btn-info" onclick="jenis_kulit('berminyak')">Kulit Berminyak</button>
-      <button class="btn btn-warning" onclick="jenis_kulit('kering')">Kulit Kering</button>
-      <button class="btn btn-success" onclick="jenis_kulit('normal')">Kulit Normal</button>
+      <button class="btn btn-info" id="btn-berminyak">Kulit Berminyak</button>
+      <button class="btn btn-warning" id="btn-kering">Kulit Kering</button>
+      <button class="btn btn-success" id="btn-normal">Kulit Normal</button>
       <button class="btn btn-danger" onclick="window.location.href = '/skin_detection'">Cek Jenis Kulit</button>
     </main>
 
@@ -122,7 +144,11 @@
   </section>
   <!-- partial -->
   <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
-  <script>
+  <script>  
+  // Utils
+    function get(selector, root = document) {
+      return root.querySelector(selector);
+    }
 
     const msgerForm = get(".msger-inputarea");
     const msgerInput = get(".msger-input");
@@ -134,21 +160,22 @@
     const PERSON_IMG = "{{url_for('static', filename='/img/Swakalatips/pencegahan.png') }}";
     const BOT_NAME = "  ERB Bot";
     const PERSON_NAME = "You";
-    function jenis_kulit(jenis){
-      localStorage.setItem("jenis_kulit",jenis);
+    function jenis_kulit(jenis) {
+      localStorage.setItem("jenis_kulit", jenis);
       var jenis = localStorage.getItem("jenis_kulit");
       console.log(jenis)
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya "+jenis);
-      if (jenis=="berminyak"){
+      appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
+      if (jenis == "berminyak") {
         setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit berminyak:<br>
         <ol style="margin-left:15px">
         <li>Gunakan pembersih wajah yang lembut dan tidak mengandung alkohol. </li>
         <li>Gunakan pelembap berbasis gel atau serum ringan. </li>
         <li>Gunakan masker lumpur sekali seminggu untuk mengontrol produksi minyak.</li>
         </ol>Jika masalah kulit berminyak berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
-  `),3000)
+        <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>
+  `), 3000)
       }
-      else if (jenis=="kering"){
+      else if (jenis == "kering") {
         setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit kering:<br>
         <ol style="margin-left:15px">
           <li>Gunakan Pembersih yang Lembut: Pilih pembersih yang lembut dan tidak mengandung bahan kimia yang keras.</li>
@@ -158,9 +185,53 @@
           <li>Gunakan Perlindungan Matahari: Gunakan tabir surya setiap hari untuk melindungi kulit dari kerusakan akibat sinar UV.</li>
           <li>Gunakan Masker Wajah: Gunakan masker wajah yang mengandung bahan-bahan pelembap alami seperti madu atau yogurt untuk melembapkan kulit secara mendalam.</li>
           </ol>Jika masalah kulit kering berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
-        `),3000);
+          <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
+      } else if (jenis == "normal") {
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit normal:<br>
+        <ol style="margin-left:15px">
+          <h2>1. Pembersihan (Cleansing)</h2>
+    <ul>
+        <li>Gunakan pembersih wajah yang lembut dan sesuai untuk kulit normal.</li>
+        <li>Bersihkan wajah dua kali sehari, pagi dan malam.</li>
+        <li>Hindari pembersih yang mengandung alkohol atau bahan kimia keras.</li>
+    </ul>
+    
+    <h2>2. Pelembapan (Moisturizing)</h2>
+    <ul>
+        <li>Gunakan pelembap wajah ringan yang cocok untuk kulit normal.</li>
+        <li>Pilih pelembap dengan kandungan gliserin atau asam hialuronat.</li>
+    </ul>
+    
+    <h2>3. Perlindungan dari Matahari (Sun Protection)</h2>
+    <ul>
+        <li>Gunakan tabir surya setiap hari dengan SPF minimal 30.</li>
+        <li>Pilih produk yang sesuai dengan tekstur kulit Anda.</li>
+    </ul>
+    
+    <h2>4. Diet Sehat (Healthy Diet)</h2>
+    <ul>
+        <li>Konsumsi makanan kaya antioksidan, vitamin, dan mineral.</li>
+        <li>Minum cukup air setiap hari untuk menjaga hidrasi kulit.</li>
+    </ul>
+    
+    
+    <h2>5. Gaya Hidup Sehat (Healthy Lifestyle)</h2>
+    <ul>
+        <li>Hindari merokok dan konsumsi alkohol berlebihan.</li>
+        <li>Pastikan untuk tidur cukup setiap malam.</li>
+    </ul>
+          <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
       }
     }
+    $("#btn-berminyak").on("click", function () {
+      jenis_kulit("berminyak")
+    })
+    $("#btn-kering").on("click", function () {
+      jenis_kulit("kering")
+    })
+    $("#btn-normal").on("click", function () {
+      jenis_kulit("normal")
+    })
     msgerForm.addEventListener("submit", event => {
       event.preventDefault();
 
@@ -169,11 +240,13 @@
 
       appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
       msgerInput.value = "";
-      botResponse(msgText);
+      setTimeout(function () {
+        botResponse(msgText);
+      }, 800);
     });
 
     function appendMessage(name, img, side, text) {
-      
+
       var jenis = localStorage.getItem("jenis_kulit");
       console.log(jenis)
       //   Simple solution for small apps
@@ -199,47 +272,50 @@
       var jenis = localStorage.getItem("jenis_kulit");
       console.log(jenis)
       // Bot Response
-      if (jenis=="berminyak"){
+      if (jenis == "berminyak") {
         $.get("/get/berminyak", {
-        msg: rawText
-      }).done(function(data) {
-        console.log(rawText);
-        console.log(data);
-        const msgText = data;
-        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          msg: rawText
+        }).done(function (data) {
+          console.log(rawText);
+          console.log(data);
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
 
-      });
-      }else if (jenis=="kering"){
+        });
+      } else if (jenis == "kering") {
         $.get("/get/kering", {
-        msg: rawText
-      }).done(function(data) {
-        console.log(rawText);
-        console.log(data);
-        const msgText = data;
-        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-
-      });
-      }else{
+          msg: rawText
+        }).done(function (data) {
+          console.log(rawText);
+          console.log(data);
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+        });
+      } else {
         appendMessage(BOT_NAME, BOT_IMG, "left", "pilih dulu opsi diatas");
-        
       }
-     
-
     }
-
-
-    // Utils
-    function get(selector, root = document) {
-      return root.querySelector(selector);
-    }
-
+  
     function formatDate(date) {
       const h = "0" + date.getHours();
       const m = "0" + date.getMinutes();
 
       return `${h.slice(-2)}:${m.slice(-2)}`;
     }
+    </script>
+  {% if session['jenis_kulit'] %}
+  <script>
+    jenis_kulit("{{ session['jenis_kulit'] }}");
   </script>
+  {% else %}
+  <script>
+    var jenis_kulit_local = localStorage.getItem('jenis_kulit');
+    if (jenis_kulit_local !== null) {
+      localStorage.removeItem('jenis_kulit');
+    }
+  </script>
+  {% endif %}
+
 
 </body>
 

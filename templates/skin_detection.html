@@ -1,6 +1,12 @@
 {% extends 'root/base.html' %}
 {% block content %}
-
+<head>
+  <style>
+    .hidden {
+    display: none;
+}
+  </style>
+</head>
 <div class="page-titles">
   <div class="row">
     <div class="col-lg-8 col-md-6 col-12 align-self-center">
@@ -16,21 +22,11 @@
       <small>Cek Jenis kulit Wajah anda apakah normal / berminyak / kering</small>
     </div>
   </div>
-</div>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <!-- Row -->
 
-      <!-- Row -->
-    </div>
-  </div>
-</div>
-<div class="container-fluid">
   <!-- ============================================================= -->
   <!-- Start Page Content -->
   <!-- ============================================================= -->
-  <div class="row">
+  <div class="row mt-3 ">
     <div class="col-12">
       <div class="card">
         <div class="border-bottom title-part-padding">
@@ -48,29 +44,41 @@
           </form>
         </div>
         <div class="hasil text-center align-items-center d-block">
-        <img id="img_placeholder" class="img img-responsive" style="width: 300px; height: 300px;" src="">
+        <img id="img_placeholder" class="img img-responsive hidden" style="width: 300px; height: 300px;" src="">
         <p id="hasil_deteksi"></p>
-        <button id="ke_chatbot" class="btn btn-success" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
+        <button id="ke_chatbot" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
         </div>
       </div>
     </div>
   </div>
+</div>
   <!-- ============================================================= -->
   <!-- End PAge Content -->
   <!-- ============================================================= -->
 </div>
-
-<!-- ============================================================= -->
-<!-- End PAge Content -->
-<!-- ============================================================= -->
-</div>
+{% if exif_data %}
+        <h2>EXIF Data</h2>
+        <ul>
+            {% for key, value in exif_data.items() %}
+                <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock %}
 {% block js %}
 <script>
- $("#img_placeholder").hide()
- $("#ke_chatbot").hide()
+  document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.hidden');
+
+    elements.forEach(element => {
+        element.classList.remove('hidden');
+    });
+    $("#img_placeholder").hide()
+    $("#ke_chatbot").hide()
+  });
  $("#kirim").on("click", function () {
+        $("#kirim").html("Loading...")
         let formData = new FormData();
         jQuery.each(jQuery('#FormGambar')[0].files, function (i, file) {
           formData.append('gambar', file);
@@ -96,6 +104,7 @@
                   $("#img_placeholder").show()
                   $("#ke_chatbot").show()
                   $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
+                  $("#kirim").html("kirim")
               } else {
                   alert("Status: "+data.msg);
                   window.location.href = "/skin_detection";

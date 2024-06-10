@@ -1,9 +1,10 @@
 from process import preparation,generate_response
-from flask import Flask,render_template,request,redirect,url_for,jsonify
+from flask import Flask,render_template,request,redirect,url_for,jsonify,session
 from skin_detection import predict_skin
 import os, json, uuid, time
 from PIL import Image
 from io import BytesIO
+import exifread
 # download nltk
 preparation()
 
@@ -13,7 +14,7 @@ list_products = [
     {
         "id": 1,
         "nama": "Redmi Note 8",
-        "harga": "$4000"
+        "harga": "$4000",
     }, {
         "id": 2,
         "nama": "Samsung Galaxy",
@@ -47,12 +48,20 @@ list_products = [
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder 
+app.config['SECRET_KEY'] = 'bukan rahasia'
+@app.route("/home")
+def home_view(): 
+    return render_template("index.html")
 @app.route("/")
-def home(): return render_template("index.html")
+def home(): 
+    return render_template("skin_detection.html")
+    # return render_template("index.html")
 @app.route("/bot")
-def chatbot(): return render_template("chatbot.html")
+def chatbot(): 
+    return render_template("chatbot.html")
 @app.route("/products")
-def products(): return render_template("products.html",list_products=list_products)
+def products(): 
+    return render_template("products.html",list_products=list_products)
 @app.route("/products_detail/<int:id>")
 def products_detail(id):
     product = next((product for product in list_products if product["id"] == id), None)
@@ -63,7 +72,9 @@ def products_detail(id):
         print("Product not found")
         return jsonify({"error": "Product not found"}), 404
 @app.route("/skin_detection")
-def skin_detection(): return render_template("skin_detection.html")
+def skin_detection(): 
+    return redirect(url_for('home'))
+    # return render_template("skin_detection.html")
 @app.route("/get")
 def get_bot_response(): 
     user_input = str(request.args.get('msg'))
@@ -95,15 +106,21 @@ def skin_detection_submit():
     file = request.files['gambar']
     try:
         img = Image.open(file)
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
         random_name = uuid.uuid4().hex + ".jpg"
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
         hasil = predict_skin(destination)
         print(hasil)
         if hasil == False:
+            if session['jenis_kulit']: 
+                session.pop('jenis_kulit')
             return jsonify({"msg":"Gagal, Tidak Terdeteksi Wajah"})
+        session['jenis_kulit'] = hasil
         return jsonify({"msg":"SUKSES","hasil":hasil,"img":random_name})
     except Exception as e:
         print(str(e))
         return jsonify({"error": str(e)})
-if __name__ == "__main__" : app.run(debug = True)
+if __name__ == "__main__" : 
+    app.run(debug = True)

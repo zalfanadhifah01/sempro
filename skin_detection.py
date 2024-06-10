@@ -12,7 +12,7 @@ from facenet_pytorch import MTCNN
 # Initialize MTCNN
 mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 label_index = {"dry": 0, "normal": 1, "oily": 2}
-index_label = {0: "dry", 1: "normal", 2: "oily"}
+index_label = {0: "kering", 1: "normal", 2: "berminyak"}
 LR = 0.1
 STEP = 15
 GAMMA = 0.1
@@ -71,5 +71,3 @@ def predict_skin(x):
             return hasil
     else:
         return False
-    
-    

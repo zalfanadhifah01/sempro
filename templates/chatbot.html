@@ -107,7 +107,7 @@
     <header class="msger-header">
 
       <div class="msger-header-title" style="display: flex; justify-content: space-between;">
-        <a href="/"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        <a href="/home"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         <span>Chatbot ERB (Era Beauty Care)</span>
         <span> </span>
       </div>
@@ -291,7 +291,16 @@
           const msgText = data;
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         });
-      } else {
+      } else if (jenis == "normal") {
+        $.get("/get/normal", {
+          msg: rawText
+        }).done(function (data) {
+          console.log(rawText);
+          console.log(data);
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+        });
+      }  else {
         appendMessage(BOT_NAME, BOT_IMG, "left", "pilih dulu opsi diatas");
       }
     }

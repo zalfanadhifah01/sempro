@@ -99,6 +99,15 @@ def get_bot_response_kering():
     result = generate_response(user_input)
     result = str(result)
     return result
+@app.route("/get/normal")
+def get_bot_response_normal(): 
+    jenis_kulit = "normal"
+    print(jenis_kulit)
+    user_input = str(request.args.get('msg'))
+    print(user_input)
+    result = generate_response(user_input)
+    result = str(result)
+    return result
 @app.route("/skin_detection")
 def skin_detect(): return render_template("skin_detection.html")
 @app.route("/skin_detection_submit",methods=["POST"])

@@ -36,12 +36,12 @@
       <div class="card">
         <div class="card-body">
           <h3 class="card-title">{{ product.nama }}</h3>
-          <h6 class="card-subtitle">52,912 Ratings & 4,015 Reviews</h6>
+          <h6 class="card-subtitle">{{ product.rating }} Ratings & {{ product.review }} Reviews</h6>
           <div class="row">
             <div class="col-lg-4 col-xl-3 col-md-3 col-sm-6">
               <div class="white-box text-center border mb-3 mt-4">
                 <img
-                  src="../../assets/images/product/eco-apple-iphone-11.png"
+                  src="{{ product.gambar }}"
                   class="img-fluid"
                 />
               </div>
@@ -59,11 +59,17 @@
             <div class="col-lg-8 col-xl-9 col-md-9 col-sm-6">
               <h2 class="mt-4">
                 {{ product.harga }}
-                <small class="text-success fs-4">(36% off)</small>
+                <small class="text-success fs-4">{% if product.discount == "" or product.discount|int <= 0 %}
+                  <!-- Tidak ada diskon, tidak menampilkan apapun -->
+              {% else %}
+                  ({{ product.discount }}% off)
+              {% endif %}
+              </small>
               </h2>
 
               <h4 class="mt-4">Limited Discount</h4>
               <ul class="list-group list-group-flush ps-0">
+                {% for i in product.limited_discount %}
                 <li
                   class="
                     list-group-item
@@ -78,30 +84,15 @@
                   <i
                     class="ri-bookmark-line fs-4 text-success me-2"
                   ></i>
-                  discount 5% dan Unlimited Cashback menggunakan kartu kredit Axis Bank
+                  {{ i }}
                   
                 </li>
-                <li
-                  class="
-                    list-group-item
-                    d-flex
-                    align-items-start
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    class="ri-bookmark-line fs-4 text-success me-2"
-                  ></i>
-                  discount 10% menggunakan HDFC Bank Mastercard Credit card
-                  untuk first time transaction, syarat dan ketentuan berlaku
-                </li>
+                {% endfor %}
               </ul>
 
               <h4 class="mt-5">Key Highlights</h4>
               <ul class="list-group list-group-flush ps-0">
+                {% for j in product.key_highlight %}
                 <li
                   class="
                     list-group-item
@@ -115,68 +106,9 @@
                     data-feather="check-circle"
                     class="text-primary feather-sm me-2"
                   ></i>
-                  Menggunakan Teknologi Terkini
+                  {{ j }}
                 </li>
-                <li
-                  class="
-                    list-group-item
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    data-feather="check-circle"
-                    class="text-primary feather-sm me-2"
-                  ></i>
-                  tanpa menggunakan bahan kimia terlarang
-                </li>
-                <li
-                  class="
-                    list-group-item
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    data-feather="check-circle"
-                    class="text-primary feather-sm me-2"
-                  ></i>
-                  ruangan nyaman dan ber AC
-                </li>
-                <li
-                  class="
-                    list-group-item
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    data-feather="check-circle"
-                    class="text-primary feather-sm me-2"
-                  ></i>
-                  Testimoni banyak
-                </li>
-                <li
-                  class="
-                    list-group-item
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    data-feather="check-circle"
-                    class="text-primary feather-sm me-2"
-                  ></i>
-                  bergaransi 1 tahun apabila timbul efek samping yang tidak terduga
-                </li>
+               {% endfor %}
               </ul>
             </div>
           </div>
@@ -186,6 +118,7 @@
         <div class="card-body">
           <div class="col-lg-12 col-md-12 col-sm-12">
             <h3>Specifications</h3>
+            {{ product.spesification }}
             <div class="table-responsive">
               <table class="table">
                 <tbody>

@@ -13,36 +13,68 @@ app = Flask(__name__)
 list_products = [
     {
         "id": 1,
-        "nama": "Redmi Note 8",
-        "harga": "$4000",
+        "nama": "HYDRAPEEL",
+        "harga": "Rp 3.000.000,-",
+        "gambar":"/static/image/1.heic",
+        "rating":"52,912",
+        "review":"4,01",
+        "discount":"36",
+        "limited_discount":["discount 5% dan Unlimited Cashback menggunakan kartu kredit Axis Bank",
+                           "discount 10% menggunakan HDFC Bank Mastercard Credit card untuk first time transaction, syarat dan ketentuan berlaku"],
+        "key_highlight":["Menggunakan Teknologi Terkini",
+                        "tanpa menggunakan bahan kimia terlarang",
+                        "ruangan nyaman dan ber AC",
+                        "Testimoni banyak",
+                        "bergaransi 1 tahun apabila timbul efek samping yang tidak terduga"],
+        "spesification":"",
     }, {
         "id": 2,
-        "nama": "Samsung Galaxy",
-        "harga": "$5000"
+        "nama": "DNA Salmon",
+        "harga": "Rp 3.000.000,-",
+        "gambar":"/static/image/4.jpg",
+        "rating":"52,912",
+        "review":"4,01",
+        "discount":"",
+        "limited_discount":["discount 5% dan Unlimited Cashback menggunakan kartu kredit Axis Bank",
+                           "discount 10% menggunakan HDFC Bank Mastercard Credit card untuk first time transaction, syarat dan ketentuan berlaku"],
+        "key_highlight":["Menggunakan Teknologi Terkini",
+                        "tanpa menggunakan bahan kimia terlarang",
+                        "ruangan nyaman dan ber AC",
+                        "Testimoni banyak",
+                        "bergaransi 1 tahun apabila timbul efek samping yang tidak terduga"],
+        "spesification":"",
     }, {
         "id": 3,
-        "nama": "iPhone 11",
-        "harga": "$15000"
+        "nama": "Chemical Peeling",
+        "harga": "Rp 3.000.000,-",
+        "gambar":"/static/image/6.webp",
+        "rating":"52,912",
+        "review":"4,01",
+        "discount":"50",
+        "limited_discount":["discount 5% dan Unlimited Cashback menggunakan kartu kredit Axis Bank",
+                           "discount 10% menggunakan HDFC Bank Mastercard Credit card untuk first time transaction, syarat dan ketentuan berlaku"],
+        "key_highlight":["Menggunakan Teknologi Terkini",
+                        "tanpa menggunakan bahan kimia terlarang",
+                        "ruangan nyaman dan ber AC",
+                        "Testimoni banyak",
+                        "bergaransi 1 tahun apabila timbul efek samping yang tidak terduga"],
+        "spesification":"bla bla bla",
     }, {
         "id": 4,
-        "nama": "Mi Redmi 8",
-        "harga": "$3000"
-    }, {
-        "id": 5,
-        "nama": "Mi Redmi 9",
-        "harga": "$4000"
-    }, {
-        "id": 6,
-        "nama": "Redmi Note 8",
-        "harga": "$4000"
-    }, {
-        "id": 7,
-        "nama": "Samsung Galaxy",
-        "harga": "$5000"
-    }, {
-        "id": 8,
-        "nama": "iPhone 11",
-        "harga": "$15000"
+        "nama": "MICRONEEDLING",
+        "harga": "Rp 3.000.000,-",
+        "gambar":"/static/image/microneedling_2.png",
+        "rating":"52,912",
+        "review":"4,01",
+        "discount":"36",
+        "limited_discount":["discount 5% dan Unlimited Cashback menggunakan kartu kredit Axis Bank",
+                           "discount 10% menggunakan HDFC Bank Mastercard Credit card untuk first time transaction, syarat dan ketentuan berlaku"],
+        "key_highlight":["Menggunakan Teknologi Terkini",
+                        "tanpa menggunakan bahan kimia terlarang",
+                        "ruangan nyaman dan ber AC",
+                        "Testimoni banyak",
+                        "bergaransi 1 tahun apabila timbul efek samping yang tidak terduga"],
+        "spesification":"bisa lihat di belakang kemasan",
     }
 ]
 project_directory = os.path.abspath(os.path.dirname(__file__))

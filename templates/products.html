@@ -3,20 +3,33 @@
 <head>
   <style>
     .myIcon {
-    color: #67757c; /* Warna default */
-    cursor: pointer;
-}
+      color: #67757c; /* Warna default */
+      cursor: pointer;
+    }
 
-.myIcon.clicked {
-    color: rgba(255, 0, 0, 0.822); /* Warna saat diklik */
-}
+    .myIcon.clicked {
+      color: rgba(255, 0, 0, 0.822); /* Warna saat diklik */
+    }
+
+    .description {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .description.expanded {
+      white-space: normal;
+      text-overflow: clip;
+    }
   </style>
 </head>
 <div class="page-titles">
   <div class="row">
     <div class="col-lg-8 col-md-6 col-12 align-self-center">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0 d-flex align-items-center">
+        <ol class="breadcrumb mb=0 d-flex align-items-center">
           <li class="breadcrumb-item">
             <a href="/home" class="link"><i class="ri-home-3-line fs-5"></i></a>
           </li>
@@ -28,11 +41,25 @@
   </div>
 </div>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <!-- Row -->
-
-      <!-- Row -->
+  <div class="row mb-3">
+    <div class="col-md-6 col-lg-6">
+      <div class="form-group">
+        <label for="categoryFilter">Filter by Category:</label>
+        <select id="categoryFilter" class="form-control">
+          <option value="all">All</option>
+          <option value="acne">Acne</option>
+          <option value="glowing">Glowing/Whitening</option>
+          <option value="facial">Facial</option>
+          <option value="bekas-jerawat">Bekas Jerawat</option>
+          <option value="anti-aging">Anti Aging/Flek</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-6 d-flex align-items-center">
+      <label class="me-2" for="toggleDescriptions">Show All Descriptions</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="toggleDescriptions">
+      </div>
     </div>
   </div>
 </div>
@@ -40,9 +67,9 @@
   <!-- ============================================================= -->
   <!-- Start Page Content -->
   <!-- ============================================================= -->
-  <div class="row">
+  <div class="row" id="productList">
 {% for i in list_products %}
-<div class="col-lg-3 col-xl-3 d-flex align-items-strech">
+<div class="col-lg-3 col-xl-3 d-flex align-items-stretch product-card" data-category="{{ i.kategori }}">
   <div class="card w-100">
     <div class="text-center pt-4">
       <a href="eco-products-detail.html">
@@ -66,10 +93,12 @@
           <i class="ri-heart-line fs-7 myIcon" ></i>
         </a>
       </div>
+      {% set truncated_description = i.deskripsi.split(' ')[:5] | join(' ') + '...' %}
+      <div class="description" data-full-description="{{ i.deskripsi }}">{{ truncated_description }}</div>
       <a
         href="/products_detail/{{ i.id }}"
         class="btn btn-outline-primary w-100 d-block mt-3"
-        >Keterangan</a
+        >Detail</a
       >
     </div>
   </div>
@@ -77,21 +106,62 @@
 {% endfor %}
   </div>
   <!-- ============================================================= -->
-  <!-- End PAge Content -->
+  <!-- End Page Content -->
   <!-- ============================================================= -->
 </div>
 
 <!-- ============================================================= -->
-<!-- End PAge Content -->
+<!-- End Page Content -->
 <!-- ============================================================= -->
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
       const icons = document.querySelectorAll('.myIcon');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const productList = document.getElementById('productList');
+      const products = productList.querySelectorAll('.product-card');
+      const descriptions = document.querySelectorAll('.description');
+      const toggleDescriptions = document.getElementById('toggleDescriptions');
 
       icons.forEach(icon => {
           icon.addEventListener('click', () => {
               icon.classList.toggle('clicked');
+          });
+      });
+
+      categoryFilter.addEventListener('change', () => {
+          const selectedCategory = categoryFilter.value;
+          products.forEach(product => {
+              if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
+                  product.style.display = 'block';
+              } else {
+                  product.style.display = 'none';
+              }
+          });
+      });
+
+      descriptions.forEach(description => {
+          description.addEventListener('click', () => {
+              if (description.classList.contains('expanded')) {
+                  description.classList.remove('expanded');
+                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
+              } else {
+                  description.classList.add('expanded');
+                  description.textContent = description.dataset.fullDescription;
+              }
+          });
+      });
+
+      toggleDescriptions.addEventListener('change', () => {
+          const expandAll = toggleDescriptions.checked;
+          descriptions.forEach(description => {
+              if (expandAll) {
+                  description.classList.add('expanded');
+                  description.textContent = description.dataset.fullDescription;
+              } else {
+                  description.classList.remove('expanded');
+                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
+              }
           });
       });
   });

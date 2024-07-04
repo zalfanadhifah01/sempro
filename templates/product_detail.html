@@ -1,4 +1,17 @@
 {% extends 'root/base.html' %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+<style>
+    .form-inline .form-group {
+        display: flex;
+        align-items: center;
+    }
+    .form-inline .form-group > * {
+        margin-right: 15px;
+    }
+</style>
+{% endblock %}
 {% block content %}
 
 <div class="page-titles">
@@ -45,16 +58,6 @@
                   class="img-fluid"
                 />
               </div>
-              <div class="row gx-2">
-                <div class="col-md-12">
-                  <a
-                    href="https://api.whatsapp.com/send/?phone=6281398957791&text=saya mau booking {{ product.nama }}&type=phone_number&app_absent=0"
-                    class="btn btn-primary w-100"
-                  >
-                    Buy Now
-                  </a>
-                </div>
-              </div>
             </div>
             <div class="col-lg-8 col-xl-9 col-md-9 col-sm-6">
               <h2 class="mt-4">
@@ -66,7 +69,7 @@
               {% endif %}
               </small>
               </h2>
-
+              <p>{{ product.deskripsi }}</p>
               <h4 class="mt-4">Limited Discount</h4>
               <ul class="list-group list-group-flush ps-0">
                 {% for i in product.limited_discount %}
@@ -110,6 +113,20 @@
                 </li>
                {% endfor %}
               </ul>
+
+        <h4 class="mt-5">Booking Treatment</h4>
+        <form class="form-inline" id="bookingForm">
+            <div class="form-group mb-2">
+                <label for="date" class="mr-2">Pilih Tanggal</label>
+                <input type="text" class="form-control" id="date" placeholder="Choose a date">
+            </div>
+            <div class="form-group mb-2">
+                <label for="time" class="mr-2">Pilih Jam</label>
+                <input type="text" class="form-control" id="time" placeholder="Choose a time">
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Book Now</button>
+        </form>
+
             </div>
           </div>
         </div>
@@ -117,20 +134,25 @@
       <div class="card">
         <div class="card-body">
           <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3>Specifications</h3>
-            {{ product.spesification }}
-            <div class="table-responsive">
-              <table class="table">
+            <h3>Price List</h3>
+            <div class="table-responsive mb-3" id="example" style="width:100%">
+              <table>
+                <thead>
+                  <th></th>
+                  <th></th>
+                </thead>
                 <tbody>
+                  {% for k in product.spesification %}
                   <tr>
-                    <td width="390"></td>
-                    <td class="text-dark">
-                      
-                    </td>
+                    <td>{{ k.nama }}</td>
+                    <td style="width: 10px;"></td>
+                    <td>{{ k.harga }}</td>
                   </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             </div>
+            <small>* Harga bisa berubah ubah seiring berjalannya waktu</small>
           </div>
         </div>
       </div>
@@ -147,4 +169,45 @@
 <!-- ============================================================= -->
 </div>
 
+{% endblock %}
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#date').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: '0d',
+            autoclose: true
+        });
+
+        $('#time').timepicker({
+            minuteStep: 30,
+            showMeridian: false,
+            defaultTime: false
+        });
+
+        $('#bookingForm').on('submit', function (e) {
+            e.preventDefault();
+
+            var date = $('#date').val();
+            var time = $('#time').val();
+            if (date && time) {
+                var timeParts = time.split(':');
+                var hours = parseInt(timeParts[0]);
+                var minutes = parseInt(timeParts[1]);
+
+                if (hours < 9 || hours >= 17 || (hours === 17 && minutes > 0)) {
+                    alert('Maaf, kami hanya buka dari jam 09:00 - 17:00 WIB.');
+                } else {
+                    var message = `Hello, I would like to book {{ product.nama }} treatment on ${date} at ${time}.`;
+                    var whatsappUrl = `https://wa.me/0882003875404?text=${encodeURIComponent(message)}`;
+                    window.location.href = whatsappUrl;
+                }
+            } else {
+                alert('Please select both date and time.');
+            }
+        });
+    });
+</script>
 {% endblock %}

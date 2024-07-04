@@ -43,7 +43,7 @@
 <div class="container-fluid">
   <div class="row mb-3">
     <div class="col-md-6 col-lg-6">
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="categoryFilter">Filter by Category:</label>
         <select id="categoryFilter" class="form-control">
           <option value="all">All</option>
@@ -53,9 +53,11 @@
           <option value="bekas-jerawat">Bekas Jerawat</option>
           <option value="anti-aging">Anti Aging/Flek</option>
         </select>
-      </div>
+      </div> -->
     </div>
-    <div class="col-md-6 col-lg-6 d-flex align-items-center">
+    <div class="col-md-4 col-lg-4 d-flex align-items-end">
+      </div>
+    <div class="col-md-2 col-lg-2 d-flex align-items-end">
       <label class="me-2" for="toggleDescriptions">Show All Descriptions</label>
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="toggleDescriptions">
@@ -117,7 +119,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
       const icons = document.querySelectorAll('.myIcon');
-      const categoryFilter = document.getElementById('categoryFilter');
+      // const categoryFilter = document.getElementById('categoryFilter');
       const productList = document.getElementById('productList');
       const products = productList.querySelectorAll('.product-card');
       const descriptions = document.querySelectorAll('.description');
@@ -129,16 +131,16 @@
           });
       });
 
-      categoryFilter.addEventListener('change', () => {
-          const selectedCategory = categoryFilter.value;
-          products.forEach(product => {
-              if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
-                  product.style.display = 'block';
-              } else {
-                  product.style.display = 'none';
-              }
-          });
-      });
+      // categoryFilter.addEventListener('change', () => {
+      //     const selectedCategory = categoryFilter.value;
+      //     products.forEach(product => {
+      //         if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
+      //             product.style.display = 'block';
+      //         } else {
+      //             product.style.display = 'none';
+      //         }
+      //     });
+      // });
 
       descriptions.forEach(description => {
           description.addEventListener('click', () => {

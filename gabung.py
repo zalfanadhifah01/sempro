@@ -809,28 +809,35 @@ def get_bot_response_normal():
 def skin_detect():
     return render_template("skin_detection.html")
 
-# skin detection
-# Initialize MTCNN
-device = "cuda" if torch.cuda.is_available() else "cpu"
-mtcnn = MTCNN(keep_all=False, device=device)
+# Fungsi Prediksi Kulit
+mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 label_index = {"dry": 0, "normal": 1, "oily": 2}
 index_label = {0: "kering", 1: "normal", 2: "berminyak"}
+LR = 0.1
+STEP = 15
+GAMMA = 0.1
+OUT_CLASSES = 3
+IMG_SIZE = 224
 
-# Load and initialize the model
-model_path = './model_detection/best_model_checkpoint.pth'
 resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
 num_ftrs = resnet.fc.in_features
-resnet.fc = nn.Linear(num_ftrs, len(label_index))
-model = deepcopy(resnet)
-model.load_state_dict(torch.load(model_path, map_location=device)['model_state_dict'])
-model = model.to(device)
-model.eval()
+resnet.fc = nn.Linear(num_ftrs, OUT_CLASSES)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model_skin = deepcopy(resnet)
+model_skin = model_skin.to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
-# Define transformations
+# Load the checkpoint
+checkpoint = torch.load('./model_detection/best_model_checkpoint.pth', map_location=torch.device('cpu'))
+model_skin.load_state_dict(checkpoint['model_state_dict'])
+optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+
 transform = transforms.Compose([
-    transforms.ToPILImage(),
-    transforms.Resize((224, 224)),
     transforms.ToTensor(),
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
@@ -840,17 +847,20 @@ def predict_skin(image_path):
     if boxes is not None:
         box = boxes[0]
         img = img.crop(box)
-        img = transform(img).unsqueeze(0).to(device)
+        img = transform(img)  # Menggunakan transform untuk mengubah gambar menjadi tensor
+        img = img.unsqueeze(0)  # Menambahkan dimensi batch
+        model_skin.eval()
         with torch.no_grad():
-            output = model(img)
-            index = output.argmax(1).item()
-            return index_label[index]
-    return False
+            img = img.to(device)
+            out = model_skin(img)
+            index = out.argmax(1).item()
+            hasil = index_label[index]
+            return hasil
+    else:
+        return False
 
 @app.route("/skin_detection_submit", methods=["POST"])
 def skin_detection_submit():
-    if 'gambar' not in request.files:
-        return jsonify({"error": "No file part"})
     file = request.files['gambar']
     try:
         img = Image.open(file)
@@ -860,8 +870,9 @@ def skin_detection_submit():
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
         hasil = predict_skin(destination)
-        if not hasil:
-            session.pop('jenis_kulit', None)
+        if hasil == False:
+            if 'jenis_kulit' in session:
+                session.pop('jenis_kulit')
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
         session['jenis_kulit'] = hasil
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})

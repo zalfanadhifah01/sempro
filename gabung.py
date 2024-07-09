@@ -785,24 +785,6 @@ def skin_detection():
 def get_bot_response():
     user_input = str(request.args.get('msg'))
     result = generate_response(user_input)
-    return result
-
-@app.route("/get/berminyak")
-def get_bot_response_berminyak():
-    user_input = str(request.args.get('msg'))
-    result = generate_response(user_input)
-    return str(result)
-
-@app.route("/get/kering")
-def get_bot_response_kering():
-    user_input = str(request.args.get('msg'))
-    result = generate_response(user_input)
-    return str(result)
-
-@app.route("/get/normal")
-def get_bot_response_normal():
-    user_input = str(request.args.get('msg'))
-    result = generate_response(user_input)
     return str(result)
 
 @app.route("/skin_detection")

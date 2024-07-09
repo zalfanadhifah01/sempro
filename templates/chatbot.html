@@ -268,22 +268,7 @@
     }
 
     function botResponse(rawText) {
-
-      var jenis = localStorage.getItem("jenis_kulit");
-      console.log(jenis)
-      // Bot Response
-      if (jenis == "berminyak") {
-        $.get("/get/berminyak", {
-          msg: rawText
-        }).done(function (data) {
-          console.log(rawText);
-          console.log(data);
-          const msgText = data;
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-
-        });
-      } else if (jenis == "kering") {
-        $.get("/get/kering", {
+      $.get("/get", {
           msg: rawText
         }).done(function (data) {
           console.log(rawText);
@@ -291,18 +276,6 @@
           const msgText = data;
           appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
         });
-      } else if (jenis == "normal") {
-        $.get("/get/normal", {
-          msg: rawText
-        }).done(function (data) {
-          console.log(rawText);
-          console.log(data);
-          const msgText = data;
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-        });
-      }  else {
-        appendMessage(BOT_NAME, BOT_IMG, "left", "pilih dulu opsi diatas");
-      }
     }
   
     function formatDate(date) {

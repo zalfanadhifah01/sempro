@@ -7,8 +7,6 @@ import time
 import string
 import pickle
 from PIL import Image
-from io import BytesIO
-import exifread
 import nltk
 import numpy as np
 import tensorflow as tf

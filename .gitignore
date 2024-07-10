@@ -161,3 +161,4 @@ pip-selfcheck.json
 model_detection/dataset
 
 static/upload/
+dummy/

@@ -851,10 +851,7 @@ def skin_detection_submit():
         img.save(destination)
         hasil = predict_skin(destination)
         if hasil == False:
-            if 'jenis_kulit' in session:
-                session.pop('jenis_kulit')
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
-        session['jenis_kulit'] = hasil
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
     except Exception as e:
         return jsonify({"error": str(e)})

@@ -3,8 +3,6 @@ from flask import Flask,render_template,request,redirect,url_for,jsonify,session
 from skin_detection import predict_skin
 import os,json,uuid,time
 from PIL import Image
-from io import BytesIO
-import exifread
 # download nltk
 preparation()
 

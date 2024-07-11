@@ -1,15 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import os
 import uuid
 import json
 import random
-import time
 import string
 import pickle
 from PIL import Image
 import nltk
 import numpy as np
-import tensorflow as tf
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer

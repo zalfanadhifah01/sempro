@@ -200,8 +200,8 @@
                 if (hours < 9 || hours >= 17 || (hours === 17 && minutes > 0)) {
                     alert('Maaf, kami hanya buka dari jam 09:00 - 17:00 WIB.');
                 } else {
-                    var message = `Hello, I would like to book {{ product.nama }} treatment on ${date} at ${time}.`;
-                    var whatsappUrl = `https://wa.me/0882003875404?text=${encodeURIComponent(message)}`;
+                    var message = `Hello, Aku mau memesan {{ product.nama }} pada ${date} jam ${time}.`;
+                    var whatsappUrl = `https://wa.me/+62882003875404?text=${encodeURIComponent(message)}`;
                     window.location.href = whatsappUrl;
                 }
             } else {

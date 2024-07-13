@@ -162,3 +162,4 @@ model_detection/dataset
 
 static/upload/
 dummy/
+backup_db/

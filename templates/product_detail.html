@@ -62,36 +62,11 @@
             <div class="col-lg-8 col-xl-9 col-md-9 col-sm-6">
               <h2 class="mt-4">
                 {{ product.harga }}
-                <small class="text-success fs-4">{% if product.discount == "" or product.discount|int <= 0 %}
-                  <!-- Tidak ada diskon, tidak menampilkan apapun -->
-              {% else %}
-                  ({{ product.discount }}% off)
-              {% endif %}
+                <small class="text-success fs-4">
               </small>
               </h2>
               <p>{{ product.deskripsi }}</p>
-              <h4 class="mt-4">Limited Discount</h4>
-              <ul class="list-group list-group-flush ps-0">
-                {% for i in product.limited_discount %}
-                <li
-                  class="
-                    list-group-item
-                    d-flex
-                    align-items-start
-                    border-bottom-0
-                    py-1
-                    px-0
-                    text-muted
-                  "
-                >
-                  <i
-                    class="ri-bookmark-line fs-4 text-success me-2"
-                  ></i>
-                  {{ i }}
-                  
-                </li>
-                {% endfor %}
-              </ul>
+             
 
               <h4 class="mt-5">Key Highlights</h4>
               <ul class="list-group list-group-flush ps-0">

@@ -166,25 +166,23 @@
       console.log(jenis)
       appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
       if (jenis == "berminyak") {
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit berminyak:<br>
-        <ol style="margin-left:15px">
-        <li>Gunakan pembersih wajah yang lembut dan tidak mengandung alkohol. </li>
-        <li>Gunakan pelembap berbasis gel atau serum ringan. </li>
-        <li>Gunakan masker lumpur sekali seminggu untuk mengontrol produksi minyak.</li>
-        </ol>Jika masalah kulit berminyak berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
-        <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi treatment kulit berminyak <br>
+1. Chemical Peeling 285k  <br>
+2. Microlightening 225k <br>
+paket  <br>
+1. Chemical Peeling + Pdt 320k <br>
+2. Chemical Peeling + Oxy 385k <br>
+<button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>
   `), 3000)
       }
       else if (jenis == "kering") {
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit kering:<br>
-        <ol style="margin-left:15px">
-          <li>Gunakan Pembersih yang Lembut: Pilih pembersih yang lembut dan tidak mengandung bahan kimia yang keras.</li>
-          <li>Gunakan Pelembap: Gunakan pelembap yang mengandung bahan-bahan seperti gliserin, asam hialuronat, atau minyak alami untuk menjaga kelembaban kulit.</li>
-          <li>Hindari Mandi Air Panas: Mandi dengan air panas dapat mengurangi kelembaban kulit, jadi hindari air panas dan gunakan air hangat saat mandi.</li>
-          <li>Minum Air yang Cukup: Pastikan untuk minum air yang cukup setiap hari untuk menjaga hidrasi kulit dari dalam.</li>
-          <li>Gunakan Perlindungan Matahari: Gunakan tabir surya setiap hari untuk melindungi kulit dari kerusakan akibat sinar UV.</li>
-          <li>Gunakan Masker Wajah: Gunakan masker wajah yang mengandung bahan-bahan pelembap alami seperti madu atau yogurt untuk melembapkan kulit secara mendalam.</li>
-          </ol>Jika masalah kulit kering berlanjut atau menjadi parah, penting untuk berkonsultasi dengan dokter kulit atau profesional kesehatan yang dapat memberikan saran dan perawatan yang sesuai.
+        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit kering <br>
+1. Hydrapeel 300k
+2. Oxygen 210k
+paket
+1. Oxy + Pdt 240k
+2. Hydrapeel + Oxy 380k
+3. Micro + Oxy 290k
           <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
       } else if (jenis == "normal") {
         setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit normal:<br>
@@ -220,6 +218,13 @@
         <li>Hindari merokok dan konsumsi alkohol berlebihan.</li>
         <li>Pastikan untuk tidur cukup setiap malam.</li>
     </ul>
+    normal
+1. Microdermabrasi 190k
+2. Oxygen 210k
+3. Microlightening 225k
+paket
+1. Microlightening + Pdt 260k
+2. Detox + Micro + Ultrasound 300k
           <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
       }
     }

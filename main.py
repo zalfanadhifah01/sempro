@@ -374,6 +374,27 @@ def add_product():
     products.append(new_product)
     save_products(products)
     return jsonify(new_product), 201
+@app.route("/edit_product")
+@login_required
+def edit_product():
+    list_products = load_products()
+    return render_template("product_edit.html", list_products=list_products)
+@app.route("/edit_product/<int:id>")
+@login_required
+def edit_product_detail(id):
+    list_products = load_products()
+    list_bookings = load_bookings()
+    print(list_bookings)  # Debugging purposes
+    
+    bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
+    print(bookings)  # Debugging purposes
+    
+    product = next((product for product in list_products if product["id"] == id), None)
+    
+    if product:
+        return render_template("product_detail_edit.html", product=product, bookings=bookings)
+    else:
+        return jsonify({"error": "Product not found"}), 404
 
 @app.route('/products/<int:product_id>', methods=['PUT'])
 @login_required

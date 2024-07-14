@@ -1,0 +1,138 @@
+{% extends 'root/base.html' %}
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+<style>
+    .form-inline .form-group {
+        display: flex;
+        align-items: center;
+    }
+    .form-inline .form-group > * {
+        margin-right: 15px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-titles">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-12 align-self-center">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 d-flex align-items-center">
+          <li class="breadcrumb-item">
+            <a href="/home" class="link"><i class="ri-home-3-line fs-5"></i></a>
+          </li>
+          <li class="breadcrumb-item" aria-current="page"> <a href="/products"  class="link">LIST TREATMENT</a></li>
+          <li class="breadcrumb-item active" aria-current="page">DETAIL TREATMENT</li>
+        </ol>
+      </nav>
+      <h1 class="mb-0 fw-bold">DETAIL TREATMENT</h1>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Row -->
+
+      <!-- Row -->
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <!-- ============================================================= -->
+  <!-- Start Page Content -->
+  <!-- ============================================================= -->
+  <div class="row">
+    <!-- Column -->
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title"><input type="text" value="{{ product.nama }}"></h3>
+          <h6 class="card-subtitle"><input type="text" value="{{ product.nama }}">{{ product.rating }} Ratings & {{ product.review }} Reviews</h6>
+          <div class="row">
+            <div class="col-lg-4 col-xl-3 col-md-3 col-sm-6">
+              <div class="white-box text-center border mb-3 mt-4">
+                <img
+                  src="{{ product.gambar }}"
+                  class="img-fluid"
+                />
+              </div>
+            </div>
+            <div class="col-lg-8 col-xl-9 col-md-9 col-sm-6">
+              <h2 class="mt-4">
+                {{ product.harga }}
+                <small class="text-success fs-4">
+              </small>
+              </h2>
+              <p>{{ product.deskripsi }}</p>
+             
+
+              <h4 class="mt-5">Key Highlights</h4>
+              <ul class="list-group list-group-flush ps-0">
+                {% for j in product.key_highlight %}
+                <li
+                  class="
+                    list-group-item
+                    border-bottom-0
+                    py-1
+                    px-0
+                    text-muted
+                  "
+                >
+                  <i
+                    data-feather="check-circle"
+                    class="text-primary feather-sm me-2"
+                  ></i>
+                  {{ j }}
+                </li>
+               {% endfor %}
+              </ul>
+            <button type="button" class="btn btn-primary mb-2" id="checkBookingButton">Save Edit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <h3>Keterangan</h3>
+            <div class="table-responsive mb-3" id="example" style="width:100%">
+              <table>
+                <thead>
+                  <th></th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  {% for k in product.spesification %}
+                  <tr>
+                    <td>{{ k.nama }}</td>
+                    <td style="width: 10px;"></td>
+                    <td>{{ k.harga }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <small>* Harga bisa berubah ubah seiring berjalannya waktu</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Column -->
+  </div>
+  <!-- ============================================================= -->
+  <!-- End PAge Content -->
+  <!-- ============================================================= -->
+</div>
+
+<!-- ============================================================= -->
+<!-- End PAge Content -->
+<!-- ============================================================= -->
+</div>
+
+
+{% endblock %}
+{% block js %}
+
+{% endblock %}

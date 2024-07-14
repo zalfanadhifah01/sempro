@@ -61,7 +61,12 @@ def predict(vector):
 def generate_response(text):
     vector = vectorization(text)
     response_tag = predict(vector)
-    
+    if response_tag =="Jenis kulit saya berminyak":
+        return response_tag
+    if response_tag =="Jenis kulit saya kering":
+        return response_tag
+    if response_tag =="Jenis kulit saya normal":
+        return response_tag
     if response_tag not in responses:
         return "Sorry, I didn't understand."
     

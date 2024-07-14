@@ -215,6 +215,120 @@
       "responses": [
         "Jerawat adalah masalah kulit yang umum terjadi dan bisa disebabkan oleh berbagai faktor seperti hormon, bakteri, produksi minyak berlebih, dan pori-pori tersumbat. Untuk mengatasi jerawat, Anda bisa mencoba beberapa langkah berikut:\n1. Bersihkan wajah dua kali sehari dengan pembersih yang lembut dan sesuai dengan jenis kulit.\n2. Hindari memencet atau memecahkan jerawat, karena bisa menyebabkan peradangan dan bekas luka.\n3. Gunakan produk yang mengandung bahan aktif seperti asam salisilat, benzoyl peroxide, atau retinoid.\n4. Jaga pola makan yang sehat dan seimbang, hindari makanan yang bisa memicu jerawat seperti makanan berlemak dan tinggi gula.\n5. Kelola stres dengan baik, karena stres bisa mempengaruhi kesehatan kulit.\n6. Konsultasikan dengan dokter kulit jika jerawat tidak kunjung membaik atau semakin parah."
       ]
+    },
+    {
+      "tag": "jenis kulit saya berminyak",
+      "patterns": [
+      "Kulit saya cenderung berminyak.",
+      "Saya memiliki kulit berminyak.",
+      "Jenis kulitku berminyak.",
+      "Kulit wajahku tipe berminyak.",
+      "Kulit saya termasuk berminyak.",
+      "Saya memiliki tipe kulit berminyak.",
+      "Kulit saya sering berminyak.",
+      "Kulit saya berminyak.",
+      "Saya punya kulit berminyak.",
+      "Jenis kulit saya adalah berminyak.",
+      "Kulit saya gampang berminyak.",
+      "Kulitku berminyak.",
+      "Jenis kulit saya banyak minyaknya.",
+      "Saya memiliki kulit dengan banyak minyak.",
+      "Kulit saya rentan berminyak.",
+      "Jenis kulit aku berminyak.",
+      "Kulit aku cenderung berminyak.",
+      "Aku memiliki kulit berminyak.",
+      "Jenis kulitku berminyak.",
+      "Kulit wajahku tipe berminyak.",
+      "Kulit aku termasuk berminyak.",
+      "Aku punya tipe kulit berminyak.",
+      "Kulitku sering berminyak.",
+      "Kulitku berminyak.",
+      "Aku punya kulit berminyak.",
+      "Jenis kulit aku adalah berminyak.",
+      "Kulitku gampang berminyak.",
+      "Kulitku banyak minyaknya.",
+      "Aku punya kulit dengan banyak minyak.",
+      "Kulit aku rentan berminyak"
+      ],
+      "responses": [
+        "response di chatbot.html"
+      ]
+    },
+    {
+      "tag": "jenis kulit saya kering",
+      "patterns": [
+      "Kulit saya cenderung kering.",
+      "Saya memiliki kulit kering.",
+      "Jenis kulitku kering.",
+      "Kulit wajahku tipe kering.",
+      "Kulit saya termasuk kering.",
+      "Saya memiliki tipe kulit kering.",
+      "Kulit saya sering kering.",
+      "Kulit saya kering.",
+      "Saya punya kulit kering.",
+      "Jenis kulit saya adalah kering.",
+      "Kulit saya gampang kering.",
+      "Kulitku kering.",
+      "Jenis kulit saya banyak minyaknya.",
+      "Saya memiliki kulit dengan banyak minyak.",
+      "Kulit saya rentan kering.",
+      "Jenis kulit aku kering.",
+      "Kulit aku cenderung kering.",
+      "Aku memiliki kulit kering.",
+      "Jenis kulitku kering.",
+      "Kulit wajahku tipe kering.",
+      "Kulit aku termasuk kering.",
+      "Aku punya tipe kulit kering.",
+      "Kulitku sering kering.",
+      "Kulitku kering.",
+      "Aku punya kulit kering.",
+      "Jenis kulit aku adalah kering.",
+      "Kulitku gampang kering.",
+      "Kulitku banyak minyaknya.",
+      "Aku punya kulit dengan banyak minyak.",
+      "Kulit aku rentan kering"
+      ],
+      "responses": [
+        "response di chatbot.html"
+      ]
+    },
+    {
+      "tag": "jenis kulit saya normal",
+      "patterns": [
+      "Kulit saya cenderung normal.",
+      "Saya memiliki kulit normal.",
+      "Jenis kulitku normal.",
+      "Kulit wajahku tipe normal.",
+      "Kulit saya termasuk normal.",
+      "Saya memiliki tipe kulit normal.",
+      "Kulit saya sering normal.",
+      "Kulit saya normal.",
+      "Saya punya kulit normal.",
+      "Jenis kulit saya adalah normal.",
+      "Kulit saya gampang normal.",
+      "Kulitku normal.",
+      "Jenis kulit saya banyak minyaknya.",
+      "Saya memiliki kulit dengan banyak minyak.",
+      "Kulit saya rentan normal.",
+      "Jenis kulit aku normal.",
+      "Kulit aku cenderung normal.",
+      "Aku memiliki kulit normal.",
+      "Jenis kulitku normal.",
+      "Kulit wajahku tipe normal.",
+      "Kulit aku termasuk normal.",
+      "Aku punya tipe kulit normal.",
+      "Kulitku sering normal.",
+      "Kulitku normal.",
+      "Aku punya kulit normal.",
+      "Jenis kulit aku adalah normal.",
+      "Kulitku gampang normal.",
+      "Kulitku banyak minyaknya.",
+      "Aku punya kulit dengan banyak minyak.",
+      "Kulit aku rentan normal"
+      ],
+      "responses": [
+        "response di chatbot.html"
+      ]
     }
   ]
 }

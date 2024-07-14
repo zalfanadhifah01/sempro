@@ -14,7 +14,7 @@ nltk.download('wordnet')
 lemmatizer = WordNetLemmatizer()
 
 # Load dataset
-with open('dataset.json') as file:
+with open('model_chatbot/dataset.json') as file:
     data = json.load(file)
 
 # Preprocessing
@@ -72,6 +72,6 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 
 # Training the model
 hist = model.fit(x=train_x, y=train_y, epochs=200, batch_size=5, verbose=1)
-model.save('chatbot_model.h5', hist)
+model.save('model_chatbot/chatbot_model.h5', hist)
 
 print("Model trained and saved as 'chat_model.h5'")

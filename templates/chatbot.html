@@ -239,8 +239,19 @@
         }).done(function (data) {
           console.log(rawText);
           console.log(data);
-          const msgText = data;
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          if (data =="Jenis kulit saya berminyak"){
+            jenis_kulit("berminyak")
+          }
+          else if (data =="Jenis kulit saya kering"){
+            jenis_kulit("kering")
+          }
+          else if (data =="Jenis kulit saya normal"){
+            jenis_kulit("normal")
+          }
+          else{
+            const msgText = data;
+            appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          }
         });
     }
   

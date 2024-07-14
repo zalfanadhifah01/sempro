@@ -2,6 +2,7 @@
     {
         "id": 1,
         "nama":"rekomendasi_kering",
-        "id_product":[1,2,3]
+        "id_product":[1,2,3],
+        "keterangan":""
     }
 ]

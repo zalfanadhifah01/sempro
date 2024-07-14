@@ -167,6 +167,7 @@
       appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
       if (jenis == "berminyak") {
         $.get("/rekomendasi_berminyak").done(function (data) {
+          console.log(data)
           const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
           msgText
           setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)
@@ -174,12 +175,14 @@
       }
       else if (jenis == "kering") {
         $.get("/rekomendasi_kering").done(function (data) {
+          console.log(data)
           const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
           msgText
           setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)
         });
       } else if (jenis == "normal") {
         $.get("/rekomendasi_normal").done(function (data) {
+          console.log(data)
           const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
           msgText
           setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)

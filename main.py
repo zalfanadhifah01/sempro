@@ -180,47 +180,34 @@ def get_bot_response():
 def get_rekomendasi_kering():
     rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
     list_products = load_products()
-    for product in list_products:
-        if product['id'] == 19:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 7:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
-        elif product['id'] == 10:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 22:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
+    "19,7,10,22"
+    rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
+    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
+    rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
     return rekomendasi
 
 @app.route("/rekomendasi_berminyak")
 def get_rekomendasi_berminyak():
     rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
     list_products = load_products()
-    for product in list_products:
-        if product['id'] == 17:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 15:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
-        elif product['id'] == 11:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 12:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
+    "17,15,11,12"
+    rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
+    rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
+    rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
     return rekomendasi
 
 @app.route("/rekomendasi_normal")
 def get_rekomendasi_normal():
     rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
     list_products = load_products()
-    for product in list_products:
-        if product['id'] == 14:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 7:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 15:
-            rekomendasi += f"3. {product['nama']} {product['harga']}<br> Paket <br>"
-        elif product['id'] == 16:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
-        elif product['id'] == 20:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
+    "14,7,115,16,20"
+    rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
+    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
+    rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
+    rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
     return rekomendasi
 @app.route("/skin_detection")
 def skin_detect():

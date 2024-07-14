@@ -186,9 +186,9 @@ def get_rekomendasi_kering():
         elif product['id'] == 7:
             rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
         elif product['id'] == 10:
-            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
         elif product['id'] == 22:
-            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
     return rekomendasi
 
 @app.route("/rekomendasi_berminyak")
@@ -201,9 +201,9 @@ def get_rekomendasi_berminyak():
         elif product['id'] == 15:
             rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
         elif product['id'] == 11:
-            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
         elif product['id'] == 12:
-            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
     return rekomendasi
 
 @app.route("/rekomendasi_normal")
@@ -214,13 +214,13 @@ def get_rekomendasi_normal():
         if product['id'] == 14:
             rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
         elif product['id'] == 7:
-            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br>"
         elif product['id'] == 15:
-            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
+            rekomendasi += f"3. {product['nama']} {product['harga']}<br> Paket <br>"
         elif product['id'] == 16:
-            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
         elif product['id'] == 20:
-            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br><br>"
     return rekomendasi
 @app.route("/skin_detection")
 def skin_detect():

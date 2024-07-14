@@ -166,66 +166,24 @@
       console.log(jenis)
       appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
       if (jenis == "berminyak") {
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi treatment kulit berminyak <br>
-1. Chemical Peeling 285k  <br>
-2. Microlightening 225k <br>
-paket  <br>
-1. Chemical Peeling + Pdt 320k <br>
-2. Chemical Peeling + Oxy 385k <br>
-<button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>
-  `), 3000)
+        $.get("/rekomendasi_berminyak").done(function (data) {
+          const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
+          msgText
+          setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)
+        });
       }
       else if (jenis == "kering") {
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit kering <br>
-1. Hydrapeel 300k
-2. Oxygen 210k
-paket
-1. Oxy + Pdt 240k
-2. Hydrapeel + Oxy 380k
-3. Micro + Oxy 290k
-          <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
+        $.get("/rekomendasi_kering").done(function (data) {
+          const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
+          msgText
+          setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)
+        });
       } else if (jenis == "normal") {
-        setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", `rekomendasi untuk kulit normal:<br>
-        <ol style="margin-left:15px">
-          <h2>1. Pembersihan (Cleansing)</h2>
-    <ul>
-        <li>Gunakan pembersih wajah yang lembut dan sesuai untuk kulit normal.</li>
-        <li>Bersihkan wajah dua kali sehari, pagi dan malam.</li>
-        <li>Hindari pembersih yang mengandung alkohol atau bahan kimia keras.</li>
-    </ul>
-    
-    <h2>2. Pelembapan (Moisturizing)</h2>
-    <ul>
-        <li>Gunakan pelembap wajah ringan yang cocok untuk kulit normal.</li>
-        <li>Pilih pelembap dengan kandungan gliserin atau asam hialuronat.</li>
-    </ul>
-    
-    <h2>3. Perlindungan dari Matahari (Sun Protection)</h2>
-    <ul>
-        <li>Gunakan tabir surya setiap hari dengan SPF minimal 30.</li>
-        <li>Pilih produk yang sesuai dengan tekstur kulit Anda.</li>
-    </ul>
-    
-    <h2>4. Diet Sehat (Healthy Diet)</h2>
-    <ul>
-        <li>Konsumsi makanan kaya antioksidan, vitamin, dan mineral.</li>
-        <li>Minum cukup air setiap hari untuk menjaga hidrasi kulit.</li>
-    </ul>
-    
-    
-    <h2>5. Gaya Hidup Sehat (Healthy Lifestyle)</h2>
-    <ul>
-        <li>Hindari merokok dan konsumsi alkohol berlebihan.</li>
-        <li>Pastikan untuk tidur cukup setiap malam.</li>
-    </ul>
-    normal
-1. Microdermabrasi 190k
-2. Oxygen 210k
-3. Microlightening 225k
-paket
-1. Microlightening + Pdt 260k
-2. Detox + Micro + Ultrasound 300k
-          <button class="btn btn-info" onclick="document.location.href='/products'">pilih paket facial</button>`), 3000);
+        $.get("/rekomendasi_normal").done(function (data) {
+          const msgText = data+'<a class="btn btn-info" href="/products">pilih paket facial</a>';
+          msgText
+          setTimeout(appendMessage(BOT_NAME, BOT_IMG, "left", msgText), 3000)
+        });
       }
     }
     $("#btn-berminyak").on("click", function () {

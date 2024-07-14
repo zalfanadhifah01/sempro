@@ -40,11 +40,16 @@
     </div>
   </div>
 </div>
-<div class="container-fluid"></div>
 <div class="container-fluid">
+  
+</div>
+<div class="container-fluid">
+  <!-- ============================================================= -->
+  <!-- Start Page Content -->
+  <!-- ============================================================= -->
   <div class="row mb-3">
     <div class="col-md-6 col-lg-6">
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="categoryFilter">Filter by Category:</label>
         <select id="categoryFilter" class="form-control">
           <option value="all">All</option>
@@ -54,9 +59,10 @@
           <option value="bekas-jerawat">Bekas Jerawat</option>
           <option value="anti-aging">Anti Aging/Flek</option>
         </select>
-      </div>
+      </div> -->
     </div>
-    <div class="col-md-3 col-lg-4 d-flex align-items-end"></div>
+    <div class="col-md-3 col-lg-4 d-flex align-items-end">
+      </div>
     <div class="col-md-3 col-lg-2 d-flex align-items-end">
       <label class="me-2" for="toggleDescriptions">Show All Descriptions</label>
       <div class="form-check form-switch">
@@ -65,36 +71,56 @@
     </div>
   </div>
   <div class="row" id="productList">
-    {% for i in list_products %}
-    <div class="col-lg-3 col-xl-3 d-flex align-items-stretch product-card d-block" data-category='{{ i.kategori | tojson }}'>
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="/products_detail/{{ i.id }}">
-            <img src="{{ i.gambar }}" width="100" class="img-fluid" alt="..."/>
-          </a>
-        </div>
-        <div class="card-body">
-          <a href="/products_detail/{{ i.id }}" class="font-weight-medium text-dark fs-6">{{ i.nama }}</a>
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">{{ i.harga }}</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7 myIcon"></i>
-            </a>
-          </div>
-          {% set truncated_description = i.deskripsi.split(' ')[:5] | join(' ') + '...' %}
-          <div class="description" data-full-description="{{ i.deskripsi }}">{{ truncated_description }}</div>
-          <a href="/products_detail/{{ i.id }}" class="btn btn-outline-primary w-100 d-block mt-3">Detail</a>
-        </div>
-      </div>
+{% for i in list_products %}
+<div class="col-lg-3 col-xl-3 d-flex align-items-stretch product-card" data-category="{{ i.kategori }}">
+  <div class="card w-100">
+    <div class="text-center pt-4">
+      <a href="eco-products-detail.html">
+        <img
+          src="{{ i.gambar }}"
+          width="100"
+          class="img-fluid"
+          alt="..."
+        />
+      </a>
     </div>
-    {% endfor %}
+    <div class="card-body">
+      <a
+        href="/products_detail/{{ i.id }}"
+        class="font-weight-medium text-dark fs-6"
+        >{{ i.nama }}</a
+      >
+      <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">{{ i.harga }}</h5>
+      <div class="product-footer">
+        <a href="#" class="link">
+          <i class="ri-heart-line fs-7 myIcon" ></i>
+        </a>
+      </div>
+      {% set truncated_description = i.deskripsi.split(' ')[:5] | join(' ') + '...' %}
+      <div class="description" data-full-description="{{ i.deskripsi }}">{{ truncated_description }}</div>
+      <a
+        href="/products_detail/{{ i.id }}"
+        class="btn btn-outline-primary w-100 d-block mt-3"
+        >Detail</a
+      >
+    </div>
   </div>
 </div>
+{% endfor %}
+  </div>
+  <!-- ============================================================= -->
+  <!-- End Page Content -->
+  <!-- ============================================================= -->
+</div>
 
+<!-- ============================================================= -->
+<!-- End Page Content -->
+<!-- ============================================================= -->
+</div>
 <script>
   document.addEventListener('DOMContentLoaded', (event) => {
       const icons = document.querySelectorAll('.myIcon');
-      const categoryFilter = document.getElementById('categoryFilter');
+      // const categoryFilter = document.getElementById('categoryFilter');
       const productList = document.getElementById('productList');
       const products = productList.querySelectorAll('.product-card');
       const descriptions = document.querySelectorAll('.description');
@@ -106,25 +132,16 @@
           });
       });
 
-      categoryFilter.addEventListener('change', () => {
-          const selectedCategory = categoryFilter.value.toLowerCase();
-          console.log("Selected Category:", selectedCategory);  // Debugging log
-          products.forEach(product => {
-              const categories = JSON.parse(product.dataset.category);
-              console.log("Product Categories:", categories);  // Debugging log
-              const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
-              console.log("Matches:", matches);  // Debugging log
-              if (selectedCategory === 'all' || matches) {
-                  console.log('Show:', product);  // Debugging log
-                  product.classList.add('d-block');
-                  product.classList.remove('d-none');
-              } else {
-                  console.log('Hide:', product);  // Debugging log
-                  product.classList.add('d-none');
-                  product.classList.remove('d-block');
-              }
-          });
-      });
+      // categoryFilter.addEventListener('change', () => {
+      //     const selectedCategory = categoryFilter.value;
+      //     products.forEach(product => {
+      //         if (selectedCategory === 'all' || product.dataset.category === selectedCategory) {
+      //             product.style.display = 'block';
+      //         } else {
+      //             product.style.display = 'none';
+      //         }
+      //     });
+      // });
 
       descriptions.forEach(description => {
           description.addEventListener('click', () => {

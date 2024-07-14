@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<body>
+    <h2>Admin Page</h2>
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <h3>Products</h3>
+    <ul>
+        {% for product in products %}
+            <li>{{ product['nama'] }} - {{ product['harga'] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

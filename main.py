@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify,flash
 import os
 import uuid
 import json
@@ -21,6 +21,7 @@ from copy import deepcopy
 import shutil
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
@@ -28,14 +29,73 @@ project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder
 app.config['SECRET_KEY'] = 'bukan rahasia'
-# load db
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+# Load users from JSON file
+def load_users():
+    with open('users.json', 'r') as file:
+        return json.load(file)
+
+class User(UserMixin):
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
+
+@login_manager.user_loader
+def load_user(user_id):
+    users = load_users()
+    user = next((u for u in users if u['id'] == int(user_id)), None)
+    if user:
+        return User(user['id'], user['username'], user['password'])
+    return None
+
+# Load products from JSON file
 def load_products():
     with open('products.json', 'r') as file:
         return json.load(file)
 
+# Save products to JSON file
+def save_bookings(bookings):
+    with open('bookings.json', 'w') as file:
+        json.dump(bookings, file, indent=4)
+
+# Load products from JSON file
+def load_bookings():
+    with open('bookings.json', 'r') as file:
+        return json.load(file)
+
+# Save products to JSON file
 def save_products(products):
     with open('products.json', 'w') as file:
         json.dump(products, file, indent=4)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        users = load_users()
+        user = next((u for u in users if u['username'] == username and u['password'] == password), None)
+        if user:
+            login_user(User(user['id'], user['username'], user['password']))
+            return redirect(url_for('admin'))
+        flash('Invalid credentials')
+    return render_template('admin/login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/admin')
+@login_required
+def admin():
+    products = load_products()
+    return render_template('admin/index.html', products=products)
 # Variabel Global untuk Chatbot
 global responses, lemmatizer, tokenizer, le, model, input_shape
 input_shape = 11
@@ -106,20 +166,6 @@ def home():
 def chatbot():
     return render_template("chatbot.html")
 
-@app.route("/products")
-def products():
-    list_products = load_products()
-    return render_template("products.html", list_products=list_products)
-
-@app.route("/products_detail/<int:id>")
-def products_detail(id):
-    list_products = load_products()
-    product = next((product for product in list_products if product["id"] == id), None)
-    if product:
-        return render_template("product_detail.html", product=product)
-    else:
-        return jsonify({"error": "Product not found"}), 404
-
 @app.route("/skin_detection")
 def skin_detection():
     return redirect(url_for('home'))
@@ -130,6 +176,52 @@ def get_bot_response():
     result = generate_response(user_input)
     return str(result)
 
+@app.route("/rekomendasi_kering")
+def get_rekomendasi_kering():
+    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
+    list_products = load_products()
+    for product in list_products:
+        if product['id'] == 19:
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 7:
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
+        elif product['id'] == 10:
+            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 22:
+            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+    return rekomendasi
+
+@app.route("/rekomendasi_berminyak")
+def get_rekomendasi_berminyak():
+    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
+    list_products = load_products()
+    for product in list_products:
+        if product['id'] == 17:
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 15:
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
+        elif product['id'] == 11:
+            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 12:
+            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+    return rekomendasi
+
+@app.route("/rekomendasi_normal")
+def get_rekomendasi_normal():
+    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
+    list_products = load_products()
+    for product in list_products:
+        if product['id'] == 14:
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 7:
+            rekomendasi += f"1. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 15:
+            rekomendasi += f"2. {product['nama']} {product['harga']}<br> Paket <br>"
+        elif product['id'] == 16:
+            rekomendasi += f"3. {product['nama']} {product['harga']}<br>"
+        elif product['id'] == 20:
+            rekomendasi += f"4. {product['nama']} {product['harga']}<br><br>"
+    return rekomendasi
 @app.route("/skin_detection")
 def skin_detect():
     return render_template("skin_detection.html")
@@ -201,20 +293,47 @@ def skin_detection_submit():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-def load_products():
-    with open('products.json', 'r') as file:
-        return json.load(file)
+@app.route("/products_old")
+def products_old():
+    list_products = load_products()
+    list_product_by_treatment = []
+    for product in list_products:
+        if product['id'] in [1, 2, 3, 4, 5]:
+            list_product_by_treatment.append(product)
+    return render_template("products_old.html", list_products=list_product_by_treatment)
 
-def save_products(products):
-    with open('products.json', 'w') as file:
-        json.dump(products, file, indent=4)
+@app.route("/products")
+def products():
+    list_products = load_products()
+    all_product = []
+    for product in list_products:
+        if product['id'] in [1, 2, 3, 4, 5]:
+            None
+        else:
+            all_product.append(product)
+    return render_template("products.html", list_products=all_product)
+@app.route("/products_detail/<int:id>")
+def products_detail(id):
+    list_products = load_products()
+    list_bookings = load_bookings()
+    print(list_bookings)  # Debugging purposes
+    
+    bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
+    print(bookings)  # Debugging purposes
+    
+    product = next((product for product in list_products if product["id"] == id), None)
+    
+    if product:
+        return render_template("product_detail.html", product=product, bookings=bookings)
+    else:
+        return jsonify({"error": "Product not found"}), 404
 
-@app.route('/products', methods=['GET'])
+@app.route('/api/products', methods=['GET'])
 def get_products():
     products = load_products()
     return jsonify(products)
 
-@app.route('/products/<int:product_id>', methods=['GET'])
+@app.route('/api/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
     products = load_products()
     product = next((prod for prod in products if prod['id'] == product_id), None)
@@ -222,7 +341,32 @@ def get_product(product_id):
         return jsonify({'error': 'Product not found'}), 404
     return jsonify(product)
 
+@app.route('/bookings', methods=['POST'])
+def book():
+    data = request.json
+    bookings = load_bookings()
+    # Check if the booking with the same product_id, date, and time already exists
+    for booking in bookings:
+        if (booking['product_id'] == data['product_id'] and 
+            booking['tanggal'] == data['date'] and 
+            booking['jam'] == data['time']):
+            return jsonify({'message': 'The selected slot is already booked.'}), 409
+    new_booking = {
+        'id': len(bookings) + 1,
+        'product_id': data['product_id'],
+        'product_name': data['productName'],
+        'nama_client': data['name'],
+        'alamat': data['address'],
+        'no_hp': data['phone'],
+        'tanggal': data['date'],
+        'jam': data['time']
+    }
+    bookings.append(new_booking)
+    save_bookings(bookings)
+    return jsonify({'message': 'Booking successful'}), 200
+
 @app.route('/products', methods=['POST'])
+@login_required
 def add_product():
     new_product = request.json
     products = load_products()
@@ -232,6 +376,7 @@ def add_product():
     return jsonify(new_product), 201
 
 @app.route('/products/<int:product_id>', methods=['PUT'])
+@login_required
 def update_product(product_id):
     updated_product = request.json
     products = load_products()
@@ -243,6 +388,7 @@ def update_product(product_id):
     return jsonify({'error': 'Product not found'}), 404
 
 @app.route('/products/<int:product_id>', methods=['DELETE'])
+@login_required
 def delete_product(product_id):
     products = load_products()
     products = [prod for prod in products if prod['id'] != product_id]
@@ -251,7 +397,7 @@ def delete_product(product_id):
 
 def backup_file():
     source = 'products.json'
-    destination = '/path/to/backup/directory'
+    destination = '/backup_db'
     if not os.path.exists(destination):
         os.makedirs(destination)
     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -266,4 +412,3 @@ scheduler.start()
 
 if __name__ == '__main__':
     app.run(debug=True)
-

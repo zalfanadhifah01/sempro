@@ -99,7 +99,7 @@
                 <label for="time" class="mr-2">Pilih Jam</label>
                 <input type="text" class="form-control" id="time" placeholder="Choose a time">
             </div>
-            <button type="button" class="btn btn-primary mb-2" id="checkBookingButton">Book Now</button>
+            <button type="submit" class="btn btn-primary mb-2">Book Now</button>
         </form>
 
             </div>
@@ -109,7 +109,7 @@
       <div class="card">
         <div class="card-body">
           <div class="col-lg-12 col-md-12 col-sm-12">
-            <h3>Keterangan</h3>
+            <h3>Price List</h3>
             <div class="table-responsive mb-3" id="example" style="width:100%">
               <table>
                 <thead>
@@ -144,42 +144,11 @@
 <!-- ============================================================= -->
 </div>
 
-<!-- Modal Bootstrap -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bookingModalLabel">Booking Treatment</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="modalBookingForm">
-          <div class="mb-3">
-            <label for="name" class="form-label">Nama</label>
-            <input type="text" class="form-control" id="name" required>
-          </div>
-          <div class="mb-3">
-            <label for="address" class="form-label">Alamat</label>
-            <input type="text" class="form-control" id="address" required>
-          </div>
-          <div class="mb-3">
-            <label for="phone" class="form-label">No HP</label>
-            <input type="text" class="form-control" id="phone" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
 {% endblock %}
 {% block js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
 <script>
-    const bookings = JSON.parse('{{ bookings|tojson|safe }}');
-
     $(document).ready(function () {
         $('#date').datepicker({
             format: 'yyyy-mm-dd',
@@ -193,75 +162,25 @@
             defaultTime: false
         });
 
-        $('#checkBookingButton').on('click', function () {
+        $('#bookingForm').on('submit', function (e) {
+            e.preventDefault();
+
             var date = $('#date').val();
             var time = $('#time').val();
-            console.log(date)
             if (date && time) {
-                if (bookings === ""||bookings==="[]"){
+                var timeParts = time.split(':');
+                var hours = parseInt(timeParts[0]);
+                var minutes = parseInt(timeParts[1]);
 
-                }
-                else{
-                var isBooked = bookings.some(function (booking) {
-                    console.log("db :",booking.tanggal)
-                    console.log("db :",booking.jam)
-                    console.log("user input:",date)
-                    console.log("user input:",time)
-                    return booking.tanggal === date && booking.jam === time;
-                });
-            }
-
-                if (isBooked) {
-                    alert('The selected slot is already booked. Please choose another time.');
+                if (hours < 9 || hours >= 17 || (hours === 17 && minutes > 0)) {
+                    alert('Maaf, kami hanya buka dari jam 09:00 - 17:00 WIB.');
                 } else {
-                    $('#bookingModal').modal('show');
+                    var message = `Hallo, Saya mau Memesan {{ product.nama }} pada ${date} jam ${time}.`;
+                    var whatsappUrl = `https://api.whatsapp.com/send/?phone=6281398957791&text=${encodeURIComponent(message)}`;
+                    window.location.href = whatsappUrl;
                 }
             } else {
                 alert('Please select both date and time.');
-            }
-        });
-
-        $('#modalBookingForm').on('submit', function (e) {
-            e.preventDefault();
-
-            var name = $('#name').val();
-            var address = $('#address').val();
-            var phone = $('#phone').val();
-            var date = $('#date').val();
-            var time = $('#time').val();
-
-            if (name && address && phone && date && time) {
-                $.ajax({
-                    url: '/bookings',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        product_id: "{{ product.id }}",
-                        productName: "{{ product.nama }}",
-                        name: name,
-                        address: address,
-                        phone: phone,
-                        date: date,
-                        time: time
-                    }),
-                    success: function(response) {
-                        var message = `Hallo, Saya mau Konfirmsi Booking {{ product.nama }} pada ${date} jam ${time}.\nNama: ${name}\nAlamat: ${address}\nNo HP: ${phone}`;
-                        var whatsappUrl = `https://api.whatsapp.com/send/?phone=6281398957791&text=${encodeURIComponent(message)}`;
-                        window.location.href = whatsappUrl;
-                    },
-                    error: function(xhr) {
-                        if (xhr.responseJSON.message !== null) {
-                            alert(xhr.responseJSON.message);
-                            location.reload();
-                        } else {
-                            alert('Failed to book. Please try again.');
-                            location.reload();
-                        }
-                    }
-                });
-            } else {
-                alert('Please fill in all fields.');
-                location.reload();
             }
         });
     });

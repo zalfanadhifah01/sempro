@@ -38,5 +38,15 @@
         "no_hp": "8996961797",
         "tanggal": "2024-07-24",
         "jam": "12:12"
+    },
+    {
+        "id": 5,
+        "product_id": "6",
+        "product_name": "Photodinamic Therapy",
+        "nama_client": "Outlet 1",
+        "alamat": "jl jalak barat gang 3 no16A rt 07/06, kel. pekauman, kec. tegal barat, kota tegal",
+        "no_hp": "8996961797",
+        "tanggal": "2024-07-15",
+        "jam": "14:24"
     }
 ]

@@ -1,0 +1,163 @@
+{% extends 'root/base_admin.html' %}
+{% block content %}
+<head>
+  <style>
+    .myIcon {
+      color: #67757c; /* Warna default */
+      cursor: pointer;
+    }
+
+    .myIcon.clicked {
+      color: rgba(255, 0, 0, 0.822); /* Warna saat diklik */
+    }
+
+    .description {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .description.expanded {
+      white-space: normal;
+      text-overflow: clip;
+    }
+  </style>  
+</head>
+<div class="page-titles pb-2">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-12 align-self-center">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb=0 d-flex align-items-center">
+          <li class="breadcrumb-item">
+            <a href="/login" class="link"><i class="ri-home-3-line fs-5"></i></a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">LIST TREATMENT</li>
+        </ol>
+      </nav>
+      <h1 class="mb-0 fw-bold">LIST TREATMENT</h1>
+    </div>
+  </div>
+</div>
+<div class="container-fluid"></div>
+<div class="container-fluid">
+  <div class="row mb-3">
+    <div class="col-md-6 col-lg-6">
+      <div class="form-group">
+        <label for="categoryFilter">Filter by Category:</label>
+        <select id="categoryFilter" class="form-control">
+          <option value="all">All</option>
+          <option value="acne">Acne</option>
+          <option value="glowing">Glowing/Whitening</option>
+          <option value="facial">Facial</option>
+          <option value="bekas-jerawat">Bekas Jerawat</option>
+          <option value="anti-aging">Anti Aging/Flek</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-3 col-lg-4 d-flex align-items-end"></div>
+    <div class="col-md-3 col-lg-2 d-flex align-items-end">
+      <label class="me-2" for="toggleDescriptions">Show All Descriptions</label>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="toggleDescriptions">
+      </div>
+    </div>
+  </div>
+  <div class="row" id="productList">
+    {% for i in list_products %}
+    <div class="col-lg-3 col-xl-3 d-flex align-items-stretch product-card d-block" data-category='{{ i.kategori | tojson }}'>
+      <div class="card w-100">
+        <div class="text-center pt-4">
+          <a href="/admin/edit_product_detail/{{ i.id }}">
+            <img src="{{ i.gambar }}" width="100" class="img-fluid" alt="..."/>
+          </a>
+        </div>
+        <div class="card-body">
+          <a href="/admin/edit_product_detail/{{ i.id }}" class="font-weight-medium text-dark fs-6">{{ i.nama }}</a>
+          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">{{ i.harga }}</h5>
+          <div class="product-footer">
+            <a href="#" class="link">
+              <i class="ri-heart-line fs-7 myIcon"></i>
+            </a>
+          </div>
+          {% set truncated_description = i.deskripsi.split(' ')[:5] | join(' ') + '...' %}
+          <div class="description" data-full-description="{{ i.deskripsi }}">{{ truncated_description }}</div>
+          <a href="/admin/edit_product_detail/{{ i.id }}" class="btn btn-outline-primary w-100 d-block mt-3">Ubah</a>
+            
+            <!-- Template untuk produk -->
+            <div class="product-card">
+                <!-- ... konten produk lainnya ... -->
+                <a href="#" onclick='function confirmDeletion(event) { event.preventDefault(); var confirmation = confirm("Apakah Anda yakin ingin menghapus produk ini?"); if (confirmation) { fetch("/admin/products/{{ i.id }}", { method: "DELETE", headers: { "Content-Type": "application/json" } }) .then(response => { if (response.ok) { alert("Produk berhasil dihapus"); window.location.reload();  } else { alert("Gagal menghapus produk"); } }) .catch(error => { console.error("Error:", error); alert("Gagal menghapus produk"); }); } }' class="btn btn-outline-danger w-100 d-block mt-3">Hapus</a>
+            </div>
+  
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+      const icons = document.querySelectorAll('.myIcon');
+      const categoryFilter = document.getElementById('categoryFilter');
+      const productList = document.getElementById('productList');
+      const products = productList.querySelectorAll('.product-card');
+      const descriptions = document.querySelectorAll('.description');
+      const toggleDescriptions = document.getElementById('toggleDescriptions');
+
+      icons.forEach(icon => {
+          icon.addEventListener('click', () => {
+              icon.classList.toggle('clicked');
+          });
+      });
+
+      categoryFilter.addEventListener('change', () => {
+          const selectedCategory = categoryFilter.value.toLowerCase();
+          console.log("Selected Category:", selectedCategory);  // Debugging log
+          products.forEach(product => {
+              const categories = JSON.parse(product.dataset.category);
+              console.log("Product Categories:", categories);  // Debugging log
+              const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
+              console.log("Matches:", matches);  // Debugging log
+              if (selectedCategory === 'all' || matches) {
+                  console.log('Show:', product);  // Debugging log
+                  product.classList.add('d-block');
+                  product.classList.remove('d-none');
+              } else {
+                  console.log('Hide:', product);  // Debugging log
+                  product.classList.add('d-none');
+                  product.classList.remove('d-block');
+              }
+          });
+      });
+
+      descriptions.forEach(description => {
+          description.addEventListener('click', () => {
+              if (description.classList.contains('expanded')) {
+                  description.classList.remove('expanded');
+                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
+              } else {
+                  description.classList.add('expanded');
+                  description.textContent = description.dataset.fullDescription;
+              }
+          });
+      });
+
+      toggleDescriptions.addEventListener('change', () => {
+          const expandAll = toggleDescriptions.checked;
+          descriptions.forEach(description => {
+              if (expandAll) {
+                  description.classList.add('expanded');
+                  description.textContent = description.dataset.fullDescription;
+              } else {
+                  description.classList.remove('expanded');
+                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
+              }
+          });
+      });
+  });
+</script>
+
+{% endblock %}

@@ -2,16 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>Dashboard</title>
+    <!-- Tambahkan link ke Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h2>Admin Page</h2>
-    <a href="{{ url_for('logout') }}">Logout</a>
-    <h3>Products</h3>
-    <ul>
-        {% for product in products %}
-            <li>{{ product['nama'] }} - {{ product['harga'] }}</li>
-        {% endfor %}
-    </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Card untuk fitur 1 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit </h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 1.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 1</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card untuk fitur 2 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 2</h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 2.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 2</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card untuk fitur 3 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 3</h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 3.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 3</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <!-- Card untuk fitur 4 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 4</h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 4.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 4</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card untuk fitur 5 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 5</h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 5.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 5</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card untuk fitur 6 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Feature 6</h5>
+                        <p class="card-text">Deskripsi singkat tentang fitur 6.</p>
+                        <a href="#" class="btn btn-primary">Go to Feature 6</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tambahkan link ke Bootstrap JS dan dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

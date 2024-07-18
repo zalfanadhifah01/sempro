@@ -1,156 +1,84 @@
 {% extends 'root/base_admin.html' %}
 {% block content %}
 <head>
-  <style>
-    .myIcon {
-      color: #67757c; /* Warna default */
-      cursor: pointer;
-    }
-
-    .myIcon.clicked {
-      color: rgba(255, 0, 0, 0.822); /* Warna saat diklik */
-    }
-
-    .description {
-      display: block;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      cursor: pointer;
-    }
-
-    .description.expanded {
-      white-space: normal;
-      text-overflow: clip;
-    }
-  </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<div class="page-titles pb-2">
+<div class="container mt-5">
+  <h1 class="mb-4">Bookings</h1>
   <div class="row">
-    <div class="col-lg-8 col-md-6 col-12 align-self-center">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb=0 d-flex align-items-center">
-          <li class="breadcrumb-item">
-            <a href="/home" class="link"><i class="ri-home-3-line fs-5"></i></a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">LIST TREATMENT</li>
-        </ol>
-      </nav>
-      <h1 class="mb-0 fw-bold">LIST TREATMENT</h1>
+    <div class="col-md-6">
+        <h2>Daily Bookings</h2>
+        <canvas id="dailyChart"></canvas>
     </div>
-  </div>
+    <div class="col-md-6">
+        <h2>Monthly Bookings</h2>
+        <canvas id="monthlyChart"></canvas>
+    </div>
 </div>
-<div class="container-fluid"></div>
-<div class="container-fluid">
-  <div class="row mb-3">
-    <div class="col-md-6 col-lg-6">
-      <div class="form-group">
-        <label for="categoryFilter">Filter by Category:</label>
-        <select id="categoryFilter" class="form-control">
-          <option value="all">All</option>
-          <option value="acne">Acne</option>
-          <option value="glowing">Glowing/Whitening</option>
-          <option value="facial">Facial</option>
-          <option value="bekas-jerawat">Bekas Jerawat</option>
-          <option value="anti-aging">Anti Aging/Flek</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-3 col-lg-4 d-flex align-items-end"></div>
-    <div class="col-md-3 col-lg-2 d-flex align-items-end">
-      <label class="me-2" for="toggleDescriptions">Show All Descriptions</label>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="toggleDescriptions">
-      </div>
-    </div>
+<div class="table-responsive">
+  <table id="bookingsTable" class="table table-bordered">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Treatment</th>
+              <th>No Hp</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for booking in bookings %}
+          <tr>
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.tanggal }}</td>
+              <td>{{ booking.nama_client }}</td>
+              <td>{{ booking.product_name }}</td>
+              <td>{{ booking.no_hp }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
   </div>
-  <div class="row" id="productList">
-    {% for i in list_products %}
-    <div class="col-lg-3 col-xl-3 d-flex align-items-stretch product-card d-block" data-category='{{ i.kategori | tojson }}'>
-      <div class="card w-100">
-        <div class="text-center pt-4">
-          <a href="/products_detail/{{ i.id }}">
-            <img src="{{ i.gambar }}" width="100" class="img-fluid" alt="..."/>
-          </a>
-        </div>
-        <div class="card-body">
-          <a href="/products_detail/{{ i.id }}" class="font-weight-medium text-dark fs-6">{{ i.nama }}</a>
-          <h5 class="fs-5 text-muted fw-normal mb-0 mt-1">{{ i.harga }}</h5>
-          <div class="product-footer">
-            <a href="#" class="link">
-              <i class="ri-heart-line fs-7 myIcon"></i>
-            </a>
-          </div>
-          {% set truncated_description = i.deskripsi.split(' ')[:5] | join(' ') + '...' %}
-          <div class="description" data-full-description="{{ i.deskripsi }}">{{ truncated_description }}</div>
-          <a href="/products_detail/{{ i.id }}" class="btn btn-outline-primary w-100 d-block mt-3">Detail</a>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
+
+ 
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-      const icons = document.querySelectorAll('.myIcon');
-      const categoryFilter = document.getElementById('categoryFilter');
-      const productList = document.getElementById('productList');
-      const products = productList.querySelectorAll('.product-card');
-      const descriptions = document.querySelectorAll('.description');
-      const toggleDescriptions = document.getElementById('toggleDescriptions');
-
-      icons.forEach(icon => {
-          icon.addEventListener('click', () => {
-              icon.classList.toggle('clicked');
-          });
-      });
-
-      categoryFilter.addEventListener('change', () => {
-          const selectedCategory = categoryFilter.value.toLowerCase();
-          console.log("Selected Category:", selectedCategory);  // Debugging log
-          products.forEach(product => {
-              const categories = JSON.parse(product.dataset.category);
-              console.log("Product Categories:", categories);  // Debugging log
-              const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
-              console.log("Matches:", matches);  // Debugging log
-              if (selectedCategory === 'all' || matches) {
-                  console.log('Show:', product);  // Debugging log
-                  product.classList.add('d-block');
-                  product.classList.remove('d-none');
-              } else {
-                  console.log('Hide:', product);  // Debugging log
-                  product.classList.add('d-none');
-                  product.classList.remove('d-block');
-              }
-          });
-      });
-
-      descriptions.forEach(description => {
-          description.addEventListener('click', () => {
-              if (description.classList.contains('expanded')) {
-                  description.classList.remove('expanded');
-                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
-              } else {
-                  description.classList.add('expanded');
-                  description.textContent = description.dataset.fullDescription;
-              }
-          });
-      });
-
-      toggleDescriptions.addEventListener('change', () => {
-          const expandAll = toggleDescriptions.checked;
-          descriptions.forEach(description => {
-              if (expandAll) {
-                  description.classList.add('expanded');
-                  description.textContent = description.dataset.fullDescription;
-              } else {
-                  description.classList.remove('expanded');
-                  description.textContent = description.dataset.fullDescription.split(' ').slice(0, 5).join(' ') + '...';
-              }
-          });
-      });
+document.addEventListener('DOMContentLoaded', function () {
+  $('#bookingsTable').DataTable();
+  var data_daily = JSON.parse("{{ daily | tojson |safe }}")
+  var data_monthly = JSON.parse("{{ monthly | tojson | safe}}")
+  const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+  const dailyChart = new Chart(dailyCtx, {
+      type: 'line',
+      data: {
+          labels: Array.from({ length: 31 }, (_, i) => i + 1),
+          datasets: [{
+              label: 'Daily Bookings',
+              data: data_daily,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              fill: true
+          }]
+      }
+  })
+  const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+  const monthlyChart = new Chart(monthlyCtx, {
+      type: 'bar',
+      data: {
+          labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+          datasets: [{
+              label: 'Monthly Bookings',
+              data: data_monthly,
+              borderColor: 'rgba(153, 102, 255, 1)',
+              backgroundColor: 'rgba(153, 102, 255, 0.2)',
+              fill: true
+          }]
+      }
   });
+})
+    
 </script>
 
 {% endblock %}

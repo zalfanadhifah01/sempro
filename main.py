@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify,fl
 import os,uuid, json,random,string, pickle ,nltk,shutil,torch
 from PIL import Image
 import numpy as np
+from collections import defaultdict
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -295,16 +296,30 @@ def add_product():
         'harga': product_price,
         'gambar': file_url
     }
-
     products.append(new_product)
     save_products(products)
     return redirect(url_for('admin'))
 
-@app.route('/bookings')
+@app.route('/admin/bookings', methods=['GET'])
 @login_required
-def view_bookings():
+def get_bookings():
     bookings = load_bookings()
-    return render_template('admin/bookings.html', bookings=bookings)
+    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
+    daily_data = defaultdict(int)
+    monthly_data = defaultdict(int)
+
+    for booking in bookings:
+        date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
+        day = date_obj.day
+        month = date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
+    monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
+
+    return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
+
 @app.route("/admin/edit_product")
 @login_required
 def edit_product():
@@ -351,7 +366,7 @@ def update_product(product_id):
                     random_name = uuid.uuid4().hex + ".jpg"
                     destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
                     img.save(destination)
-                    updated_product["gambar"] = destination
+                    updated_product["gambar"] = "/static/upload/"+random_name
                 except Exception as e:
                     return jsonify({"error": str(e)}), 400
             else:

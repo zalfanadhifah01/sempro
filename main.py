@@ -357,7 +357,6 @@ def edit_product():
 @login_required
 def edit_product_detail(id):
     list_products = load_products()
-    print(list_bookings) 
     product = next((product for product in list_products if product["id"] == id), None)
     if product:
         return render_template("admin/product_detail_edit.html", product=product)

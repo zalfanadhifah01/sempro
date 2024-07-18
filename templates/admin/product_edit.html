@@ -111,7 +111,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="addTreatmentForm" method="post" action="/admin/add_treatment">
+        <form id="addTreatmentForm" method="post" enctype="multipart/form-data" action="/admin/products">
           <div class="mb-3">
             <label for="treatmentName" class="form-label">Nama Treatment</label>
             <input type="text" class="form-control" id="treatmentName" name="nama" required>
@@ -137,15 +137,7 @@
           </div>
           <div class="mb-3">
             <label for="treatmentImage" class="form-label">Gambar</label>
-            <input type="text" class="form-control" id="treatmentImage" name="gambar" required>
-          </div>
-          <div class="mb-3">
-            <label for="treatmentRating" class="form-label">Rating</label>
-            <input type="text" class="form-control" id="treatmentRating" name="rating" required>
-          </div>
-          <div class="mb-3">
-            <label for="treatmentReview" class="form-label">Review</label>
-            <input type="text" class="form-control" id="treatmentReview" name="review" required>
+            <input type="file" class="form-control" id="treatmentImage" name="gambar" >
           </div>
           <div class="mb-3">
             <label for="treatmentDiscount" class="form-label">Diskon</label>
@@ -156,8 +148,8 @@
             <textarea class="form-control" id="treatmentKeyHighlights" name="key_highlight" rows="3" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="treatmentSpecification" class="form-label">Spesifikasi</label>
-            <textarea class="form-control" id="treatmentSpecification" name="spesification" rows="3"></textarea>
+            <label for="treatmentSpecification" class="form-label">Keterangan</label>
+            <textarea class="form-control" id="treatmentSpecification" name="keterangan" rows="3"></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Tambah</button>
         </form>

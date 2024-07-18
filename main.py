@@ -273,32 +273,53 @@ def book():
     save_bookings(bookings)
     return jsonify({'message': 'Booking successful'}), 200
 
-@app.route('/products', methods=['POST'])
+@app.route('/admin/products', methods=['POST'])
 @login_required
 def add_product():
     products = load_products()  # Muat produk dari file JSON
-    product_name = request.form['productName']
-    product_description = request.form['productDescription']
-    product_price = request.form['productPrice']
-    product_image = request.files['productImage']
+    product_name = request.form['nama']
+    product_description = request.form['deskripsi']
+    product_price = request.form['harga']
+    product_image = request.files['gambar']
+    product_key_highlight = request.form['key_highlight']
+    product_kategori = request.form['kategori']
+    product_keterangan = request.form['keterangan']
+    product_diskon = request.form['diskon']
 
     if product_image:
-        filename = secure_filename(product_image.filename)
-        file_url = os.path.join(app.config['UPLOAD_FOLDER'],filename)
-        product_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        try:
+            img = Image.open(product_image)
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
+            random_name = uuid.uuid4().hex + ".jpg"
+            destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+            img.save(destination)
+            file_url  = "/static/upload/"+random_name
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
     else:
-        file_url = os.path.join(app.config['UPLOAD_FOLDER'],"treatment_5_icon.jpg")
-
+        file_url = "/static/upload/"+"treatment_5_icon.jpg"
+    if products:
+        last_id = max(product['id'] for product in products)
+        product_id = last_id + 1
+    else:
+        product_id = 1  # Jika list kosong, mulai dari 1
     new_product = {
-        'id': len(products) + 1,
+        'id': product_id,
         'nama': product_name,
         'deskripsi': product_description,
         'harga': product_price,
-        'gambar': file_url
+        'gambar': file_url,
+        "rating": "4.5",
+        "review": "100",
+        "key_highlight": product_key_highlight,
+        "kategori": product_kategori,
+        "keterangan":product_keterangan,
     }
     products.append(new_product)
     save_products(products)
-    return redirect(url_for('admin'))
+
+    return redirect(url_for('edit_product'))
 
 @app.route('/admin/bookings', methods=['GET'])
 @login_required
@@ -336,20 +357,14 @@ def edit_product():
 @login_required
 def edit_product_detail(id):
     list_products = load_products()
-    list_bookings = load_bookings()
-    print(list_bookings)  # Debugging purposes
-    
-    bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
-    print(bookings)  # Debugging purposes
-    
+    print(list_bookings) 
     product = next((product for product in list_products if product["id"] == id), None)
-    
     if product:
-        return render_template("admin/product_detail_edit.html", product=product, bookings=bookings)
+        return render_template("admin/product_detail_edit.html", product=product)
     else:
         return jsonify({"error": "Product not found"}), 404
 
-@app.route('/products/<int:product_id>', methods=['PUT'])
+@app.route('/admin/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     products = load_products()
     updated_product = request.form.to_dict()

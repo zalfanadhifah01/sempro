@@ -492,5 +492,17 @@
         "discount": "36",
         "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
         "keterangan": ""
+    },
+    {
+        "id": 27,
+        "nama": "ADMIN",
+        "deskripsi": "dummy",
+        "harga": "dummy",
+        "gambar": "/static/upload/2bfbcbd688a743f88cba064532a54e56.jpg",
+        "rating": "4.5",
+        "review": "100",
+        "key_highlight": "dummy",
+        "kategori": "acne",
+        "keterangan": "dummy"
     }
 ]

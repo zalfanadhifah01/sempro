@@ -111,7 +111,7 @@
       formData.append('keterangan', document.getElementById('product_keterangan').value);
 
       $.ajax({
-        url: "/products/{{ product.id }}",
+        url: "/admin/products/{{ product.id }}",
         data: formData,
         cache: false,
         contentType: false,
@@ -122,6 +122,7 @@
           console.log(data);
           $("#save_edit").html("Save Edit")
           alert("Product updated successfully!");
+          location.reload();
           if (data.image) {
             $("#img_placeholder").attr('src', data.image);
           }
@@ -130,6 +131,7 @@
           console.log("error", error);
           $("#save_edit").html("Save Edit")
           alert("Failed to update product.");
+          location.reload();
         }
       });
     });

@@ -335,16 +335,33 @@ def edit_product_detail(id):
         return jsonify({"error": "Product not found"}), 404
 
 @app.route('/products/<int:product_id>', methods=['PUT'])
-@login_required
 def update_product(product_id):
-    updated_product = request.json
     products = load_products()
+    updated_product = request.form.to_dict()
+
     for i, product in enumerate(products):
         if product['id'] == product_id:
+            updated_product["id"]=int(product_id)
+            file = request.files.get('gambar')
+            if file:
+                try:
+                    img = Image.open(file)
+                    if img.mode == 'RGBA':
+                        img = img.convert('RGB')
+                    random_name = uuid.uuid4().hex + ".jpg"
+                    destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+                    img.save(destination)
+                    updated_product["gambar"] = destination
+                except Exception as e:
+                    return jsonify({"error": str(e)}), 400
+            else:
+                updated_product['gambar'] = product["gambar"]
             products[i] = updated_product
             save_products(products)
             return jsonify(updated_product)
+    
     return jsonify({'error': 'Product not found'}), 404
+    
 
 @app.route('/admin/products/<int:product_id>', methods=['DELETE'])
 @login_required

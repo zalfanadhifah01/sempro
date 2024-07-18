@@ -79,10 +79,14 @@
   });
  $("#kirim").on("click", function () {
         $("#kirim").html("Loading...")
-        let formData = new FormData();
-        jQuery.each(jQuery('#FormGambar')[0].files, function (i, file) {
-          formData.append('gambar', file);
-        });
+        <label for="treatmentCategory" class="form-label">Kategori</label>
+              <select class="form-control" id="product_kategori" name="kategori" multiple required>
+                <option value="acne" {% if 'acne' in product.kategori %}selected{% endif %}>Acne</option>
+                <option value="glowing" {% if 'glowing' in product.kategori %}selected{% endif %}>Glowing/Whitening</option>
+                <option value="facial" {% if 'facial' in product.kategori %}selected{% endif %}>Facial</option>
+                <option value="bekas-jerawat" {% if 'bekas-jerawat' in product.kategori %}selected{% endif %}>Bekas Jerawat</option>
+                <option value="anti-aging" {% if 'anti-aging' in product.kategori %}selected{% endif %}>Anti Aging/Flek</option>
+              </select>
         $.ajax({
           url: "/skin_detection_submit",
           data: formData,

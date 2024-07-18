@@ -237,20 +237,14 @@
     {
         "id": 6,
         "nama": "Photodinamic Therapy",
-        "harga": "155k",
-        "kategori": "['ACNE', 'BEKAS-JERAWAT']",
-        "deskripsi": "Terapi menggunakan cahaya untuk mengaktifkan obat fotosensitif guna menghancurkan sel abnormal atau bakteri pada kulit.",
-        "gambar": "/static/kumpulan_foto_treatment/1.png",
         "rating": "52,912",
         "review": "4,01",
-        "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "harga": "Rp 300.000,00",
+        "deskripsi": "Terapi menggunaka dan cahaya untuk mengaktifkan \r\nobat fotosensitif guna menghancurkan sel abnormal atau bakteri pada kulit.",
+        "key_highlight": "Menggunakan Teknologi Terkini\r\ntanpa menggunakan bahan kimia terlarang\r\nruangan nyaman dan ber AC\r\nTestimoni banyak",
+        "kategori": "facial,bekas-jerawat",
+        "keterangan": "",
+        "gambar": "/static/kumpulan_foto_treatment/1.png"
     },
     {
         "id": 7,
@@ -262,13 +256,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 8,
@@ -280,13 +269,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 10,
@@ -298,13 +282,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 11,
@@ -316,13 +295,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 12,
@@ -334,13 +308,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 13,
@@ -352,13 +321,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 14,
@@ -370,13 +334,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 15,
@@ -388,13 +347,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 16,
@@ -406,13 +360,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 17,
@@ -424,13 +373,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 18,
@@ -442,13 +386,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 19,
@@ -460,13 +399,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 20,
@@ -478,13 +412,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 21,
@@ -496,13 +425,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 22,
@@ -514,13 +438,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 23,
@@ -532,13 +451,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 24,
@@ -550,13 +464,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 25,
@@ -568,13 +477,8 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     },
     {
         "id": 26,
@@ -586,12 +490,7 @@
         "rating": "52,912",
         "review": "4,01",
         "discount": "36",
-        "key_highlight": [
-            "Menggunakan Teknologi Terkini",
-            "tanpa menggunakan bahan kimia terlarang",
-            "ruangan nyaman dan ber AC",
-            "Testimoni banyak"
-        ],
-        "spesification": ""
+        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
+        "keterangan": ""
     }
 ]

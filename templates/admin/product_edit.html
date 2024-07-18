@@ -36,10 +36,14 @@
           <li class="breadcrumb-item active" aria-current="page">LIST TREATMENT</li>
         </ol>
       </nav>
-      <h1 class="mb-0 fw-bold">LIST TREATMENT</h1>
+      <div class="d-flex">
+      <h1 class="mb-0 fw-bold " style="margin-right:15px">LIST TREATMENT</h1>
+      <a href="#" class="btn btn-outline-success d-block ml-3" data-bs-toggle="modal" data-bs-target="#addTreatmentModal">Tambah</a>
+    </div>
     </div>
   </div>
 </div>
+
 <div class="container-fluid"></div>
 <div class="container-fluid">
   <div class="row mb-3">
@@ -95,6 +99,70 @@
       </div>
     </div>
     {% endfor %}
+  </div>
+</div>
+
+<!-- Modal Tambah Treatment -->
+<div class="modal fade" id="addTreatmentModal" tabindex="-1" aria-labelledby="addTreatmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTreatmentModalLabel">Tambah Treatment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addTreatmentForm" method="post" action="/admin/add_treatment">
+          <div class="mb-3">
+            <label for="treatmentName" class="form-label">Nama Treatment</label>
+            <input type="text" class="form-control" id="treatmentName" name="nama" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentPrice" class="form-label">Harga</label>
+            <input type="text" class="form-control" id="treatmentPrice" name="harga" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentCategory" class="form-label">Kategori</label>
+            <select class="form-control" id="treatmentCategory" name="kategori" multiple required>
+              <option value="acne">Acne</option>
+              <option value="glowing">Glowing/Whitening</option>
+              <option value="facial">Facial</option>
+              <option value="bekas-jerawat">Bekas Jerawat</option>
+              <option value="anti-aging">Anti Aging/Flek</option>
+              <!-- Tambahkan kategori lainnya sesuai kebutuhan -->
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentDescription" class="form-label">Deskripsi</label>
+            <textarea class="form-control" id="treatmentDescription" name="deskripsi" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentImage" class="form-label">Gambar</label>
+            <input type="text" class="form-control" id="treatmentImage" name="gambar" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentRating" class="form-label">Rating</label>
+            <input type="text" class="form-control" id="treatmentRating" name="rating" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentReview" class="form-label">Review</label>
+            <input type="text" class="form-control" id="treatmentReview" name="review" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentDiscount" class="form-label">Diskon</label>
+            <input type="text" class="form-control" id="treatmentDiscount" name="discount" required>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentKeyHighlights" class="form-label">Key Highlights</label>
+            <textarea class="form-control" id="treatmentKeyHighlights" name="key_highlight" rows="3" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="treatmentSpecification" class="form-label">Spesifikasi</label>
+            <textarea class="form-control" id="treatmentSpecification" name="spesification" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Tambah</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -161,3 +229,4 @@
 </script>
 
 {% endblock %}
+

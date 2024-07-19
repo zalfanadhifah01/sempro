@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify,flash
+from flask import Flask, render_template, request, redirect, url_for, jsonify,flash,session
 import os,uuid, json,random,string, pickle ,nltk,shutil,torch
 from PIL import Image
 import numpy as np
@@ -90,6 +90,7 @@ def preparation():
         tokenizer = pickle.load(f)
     le = pickle.load(open('model_chatbot/le.pkl', 'rb'))
     model = load_model('model_chatbot/chat_model.h5')
+    #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
     nltk.download('punkt', quiet=True)
     nltk.download('wordnet', quiet=True)
@@ -119,10 +120,13 @@ def generate_response(text):
     vector = vectorization(text)
     response_tag = predict(vector)
     if response_tag == "jenis kulit saya normal":
+        session["jenis_kulit"]="normal"
         return response_tag
     elif response_tag == "jenis kulit saya berminyak":
+        session["jenis_kulit"]="berminyak"
         return response_tag
     elif response_tag == "jenis kulit saya kering":
+        session["jenis_kulit"]="kering"
         return response_tag
     elif response_tag not in responses:
         return "Sorry, I didn't understand."
@@ -194,6 +198,7 @@ def skin_detection_submit():
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
         hasil = predict_skin(destination)
+        session["jenis_kulit"]=hasil
         if hasil == False:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
@@ -217,12 +222,9 @@ def products_detail(id):
     list_products = load_products()
     list_bookings = load_bookings()
     print(list_bookings)  # Debugging purposes
-    
     bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
     print(bookings)  # Debugging purposes
-    
     product = next((product for product in list_products if product["id"] == id), None)
-    
     if product:
         return render_template("product_detail.html", product=product, bookings=bookings)
     else:
@@ -241,6 +243,7 @@ def products_old():
 def get_products():
     products = load_products()
     return jsonify(products)
+
 @app.route('/api/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
     products = load_products()
@@ -285,7 +288,6 @@ def add_product():
     product_kategori = request.form['kategori']
     product_keterangan = request.form['keterangan']
     product_diskon = request.form['diskon']
-
     if product_image:
         try:
             img = Image.open(product_image)
@@ -318,7 +320,6 @@ def add_product():
     }
     products.append(new_product)
     save_products(products)
-
     return redirect(url_for('edit_product'))
 
 @app.route('/admin/bookings', methods=['GET'])
@@ -328,17 +329,14 @@ def get_bookings():
     sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
     daily_data = defaultdict(int)
     monthly_data = defaultdict(int)
-
     for booking in bookings:
         date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
         day = date_obj.day
         month = date_obj.strftime('%B')
         daily_data[day] += 1
         monthly_data[month] += 1
-
     daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
     monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
-
     return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
 
 @app.route("/admin/edit_product")
@@ -350,9 +348,11 @@ def edit_product():
         if product['id'] in [1, 2, 3, 4, 5]:
             None
         else:
+            product["kategori"] = product["kategori"].split(",")
             all_product.append(product)
     print(all_product)
     return render_template("admin/product_edit.html", list_products=all_product)
+
 @app.route("/admin/edit_product_detail/<int:id>")
 @login_required
 def edit_product_detail(id):
@@ -367,7 +367,6 @@ def edit_product_detail(id):
 def update_product(product_id):
     products = load_products()
     updated_product = request.form.to_dict()
-
     for i, product in enumerate(products):
         if product['id'] == product_id:
             updated_product["id"]=int(product_id)
@@ -388,7 +387,6 @@ def update_product(product_id):
             products[i] = updated_product
             save_products(products)
             return jsonify(updated_product)
-    
     return jsonify({'error': 'Product not found'}), 404
     
 
@@ -400,7 +398,6 @@ def delete_product(product_id):
     products = [prod for prod in products if prod['id'] != product_id]
     save_products(products)
     final_count = len(products)
-    
     if initial_count == final_count:
         app.logger.error(f"Produk dengan ID {product_id} tidak ditemukan.")
     else:
@@ -411,7 +408,6 @@ def delete_product(product_id):
 def get_rekomendasi_kering():
     rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
     list_products = load_products()
-    "19,7,10,22"
     rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
     rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
@@ -422,7 +418,6 @@ def get_rekomendasi_kering():
 def get_rekomendasi_berminyak():
     rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
     list_products = load_products()
-    "17,15,11,12"
     rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
     rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
     rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
@@ -433,7 +428,6 @@ def get_rekomendasi_berminyak():
 def get_rekomendasi_normal():
     rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
     list_products = load_products()
-    "14,7,115,16,20"
     rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
     rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"

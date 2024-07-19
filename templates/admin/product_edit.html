@@ -92,9 +92,35 @@
             <!-- Template untuk produk -->
             <div class="product-card">
                 <!-- ... konten produk lainnya ... -->
-                <a href="#" onclick='function confirmDeletion(event) { event.preventDefault(); var confirmation = confirm("Apakah Anda yakin ingin menghapus produk ini?"); if (confirmation) { fetch("/admin/products/{{ i.id }}", { method: "DELETE", headers: { "Content-Type": "application/json" } }) .then(response => { if (response.ok) { alert("Produk berhasil dihapus"); window.location.reload();  } else { alert("Gagal menghapus produk"); } }) .catch(error => { console.error("Error:", error); alert("Gagal menghapus produk"); }); } }' class="btn btn-outline-danger w-100 d-block mt-3">Hapus</a>
+                <button id="hapus-{{ i.id }}" class="btn btn-outline-danger w-100 d-block mt-3">Hapus</button>
             </div>
-  
+            <script>
+              function confirmDeletion(event) {
+                  event.preventDefault();
+                  var confirmation = confirm("Apakah Anda yakin ingin menghapus produk ini?");
+                  if (confirmation) {
+                      fetch("/admin/products/{{ i.id }}", {
+                          method: "DELETE",
+                          headers: {
+                              "Content-Type": "application/json"
+                          }
+                      })
+                      .then(response => {
+                          if (response.ok) {
+                              alert("Produk berhasil dihapus");
+                              window.location.reload();
+                          } else {
+                              alert("Gagal menghapus produk");
+                          }
+                      })
+                      .catch(error => {
+                          console.error("Error:", error);
+                          alert("Gagal menghapus produk");
+                      });
+                  }
+              }
+              $("#hapus-{{ i.id }}").click(confirmDeletion)
+              </script>
         </div>
       </div>
     </div>
@@ -174,19 +200,18 @@
       });
 
       categoryFilter.addEventListener('change', () => {
-          const selectedCategory = categoryFilter.value.toLowerCase();
-          console.log("Selected Category:", selectedCategory);  // Debugging log
           products.forEach(product => {
-              const categories = JSON.parse(product.dataset.category);
-              console.log("Product Categories:", categories);  // Debugging log
+              let categoryString = product.dataset.category 
+              let categories = categoryString.split(',').map(category => category.trim());
+              console.log("Product Categories:", categories);  
               const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
-              console.log("Matches:", matches);  // Debugging log
+              console.log("Matches:", matches);  
               if (selectedCategory === 'all' || matches) {
-                  console.log('Show:', product);  // Debugging log
+                  console.log('Show:', product);  
                   product.classList.add('d-block');
                   product.classList.remove('d-none');
               } else {
-                  console.log('Hide:', product);  // Debugging log
+                  console.log('Hide:', product);  
                   product.classList.add('d-none');
                   product.classList.remove('d-block');
               }

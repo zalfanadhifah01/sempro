@@ -110,8 +110,9 @@
           const selectedCategory = categoryFilter.value.toLowerCase();
           console.log("Selected Category:", selectedCategory);  // Debugging log
           products.forEach(product => {
-              const categories = JSON.parse(product.dataset.category);
-              console.log("Product Categories:", categories);  // Debugging log
+              let categoryString = product.dataset.category 
+              let categories = categoryString.split(',').map(category => category.trim());
+              console.log("Product Categories:", categories);  
               const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
               console.log("Matches:", matches);  // Debugging log
               if (selectedCategory === 'all' || matches) {

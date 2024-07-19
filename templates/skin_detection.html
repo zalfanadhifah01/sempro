@@ -56,17 +56,7 @@
   <!-- End PAge Content -->
   <!-- ============================================================= -->
 </div>
-{% if exif_data %}
-        <h2>EXIF Data</h2>
-        <ul>
-            {% for key, value in exif_data.items() %}
-                <li>{{ key }}: {{ value }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
-{% endblock %}
-{% block js %}
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const elements = document.querySelectorAll('.hidden');
@@ -79,7 +69,12 @@
   });
  $("#kirim").on("click", function () {
         $("#kirim").html("Loading...")
-       
+        let formData = new FormData();
+      
+      let gambarInput = $('#FormGambar')[0].files[0];
+      if (gambarInput) {
+        formData.append('gambar', gambarInput);
+      }
         $.ajax({
           url: "/skin_detection_submit",
           data: formData,
@@ -102,6 +97,7 @@
                   $("#ke_chatbot").show()
                   $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
                   $("#kirim").html("kirim")
+                  localStorage.setItem("jenis_kulit", data.hasil);
               } else {
                   alert("Status: "+data.msg);
                   window.location.href = "/skin_detection";

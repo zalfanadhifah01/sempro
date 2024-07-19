@@ -5,7 +5,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import SGD
+from tensorflow.keras.optimizers import legacy
 from sklearn.preprocessing import LabelEncoder
 
 nltk.download('punkt')
@@ -36,7 +36,7 @@ words = sorted(set(words))
 
 classes = sorted(set(classes))
 
-print(f'Words: {words}')
+print(f'Words: {len(words)}')  # Tambahkan ini untuk melihat panjang words
 print(f'Classes: {classes}')
 
 training = []
@@ -59,6 +59,9 @@ training = np.array(training, dtype=object)
 train_x = np.array(list(training[:, 0]))
 train_y = np.array(list(training[:, 1]))
 
+print(f'Train_x shape: {train_x.shape}')  # Tambahkan ini untuk melihat bentuk train_x
+print(f'Train_y shape: {train_y.shape}')  # Tambahkan ini untuk melihat bentuk train_y
+
 # Building the model
 model = Sequential()
 model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
@@ -67,11 +70,11 @@ model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(len(train_y[0]), activation='softmax'))
 
-sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = legacy.SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 # Training the model
 hist = model.fit(x=train_x, y=train_y, epochs=200, batch_size=5, verbose=1)
-model.save('model_chatbot/chatbot_model.h5', hist)
+model.save('model_chatbot2/chatbot_model.h5', hist)
 
 print("Model trained and saved as 'chat_model.h5'")

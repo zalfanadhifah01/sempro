@@ -165,12 +165,6 @@ def home():
 def home_view():
     return render_template("index.html")
 
-@app.route('/admin')
-@login_required
-def admin():
-    products = load_products()
-    return render_template('admin/index.html', products=products)
-
 # Chatbot Routes
 @app.route("/bot")
 def chatbot():

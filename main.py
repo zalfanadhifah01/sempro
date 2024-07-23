@@ -342,7 +342,6 @@ def edit_product():
         if product['id'] in [1, 2, 3, 4, 5]:
             None
         else:
-            product["kategori"] = product["kategori"].split(",")
             all_product.append(product)
     print(all_product)
     return render_template("admin/product_edit.html", list_products=all_product)
@@ -496,3 +495,4 @@ scheduler.start()
 
 if __name__ == '__main__':
     app.run(debug=True)
+

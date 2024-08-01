@@ -93,7 +93,7 @@ def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
     file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
-    with open(file_path, 'rb',encoding='utf-8') as f:
+    with open(file_path, 'rb') as f:
         tokenizer = pickle.load(f)
     le = pickle.load(os.path.join(project_directory,'model_chatbot','le.pkl'))
     model = load_model(os.path.join(project_directory,'model_chatbot','chat_model.h5'))

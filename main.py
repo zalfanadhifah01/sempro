@@ -29,7 +29,8 @@ login_manager.login_view = 'login'
 
 # Load users from JSON file
 def load_users():
-    with open('./users.json', 'r') as file:
+    file_path = os.path.join(project_directory, 'users.json')
+    with open(file_path, 'r') as file:
         return json.load(file)
 
 class User(UserMixin):
@@ -48,7 +49,8 @@ def load_user(user_id):
 
 # Load products from JSON file
 def load_products():
-    with open('./products.json', 'r') as file:
+    file_path = os.path.join(project_directory, 'products.json')
+    with open(file_path, 'r') as file:
         products = json.load(file)
         for product in products:
             product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
@@ -56,17 +58,20 @@ def load_products():
 
 # Save products to JSON file
 def save_bookings(bookings):
-    with open('./bookings.json', 'w') as file:
+    file_path = os.path.join(project_directory, 'bookings.json')
+    with open(file_path, 'w') as file:
         json.dump(bookings, file, indent=4)
 
 # Load products from JSON file
 def load_bookings():
-    with open('./bookings.json', 'r') as file:
+    file_path = os.path.join(project_directory, 'bookings.json')
+    with open(file_path, 'r') as file:
         return json.load(file)
 
 # Save products to JSON file
 def save_products(products):
-    with open('./products.json', 'w') as file:
+    file_path = os.path.join(project_directory, 'products.json')
+    with open(file_path, 'w') as file:
         json.dump(products, file, indent=4)
 
 # Variabel Global untuk Chatbot
@@ -77,7 +82,8 @@ input_shape = 11
 def load_response():
     global responses
     responses = {}
-    with open('./model_chatbot/dataset.json') as file:
+    file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
+    with open(file_path) as file:
         data = json.load(file)
     for intent in data['intents']:
         responses[intent['tag']] = intent['responses']
@@ -86,10 +92,11 @@ def load_response():
 def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
-    with open('./model_chatbot/tokenizers.pkl', 'rb') as f:
+    file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
+    with open(file_path, 'rb') as f:
         tokenizer = pickle.load(f)
-    le = pickle.load(open('./model_chatbot/le.pkl', 'rb'))
-    model = load_model('model_chatbot/chat_model.h5')
+    le = pickle.load(os.path.join(project_directory,'model_chatbot','le.pkl'))
+    model = load_model(os.path.join(project_directory,'model_chatbot','chat_model.h5'))
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
     nltk.download('punkt', quiet=True)
@@ -453,7 +460,8 @@ optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
 # Load the checkpoint
-checkpoint = torch.load('./model_detection/best_model_checkpoint.pth', map_location=torch.device('cpu'))
+model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint.pth')
+checkpoint = torch.load(model_location, map_location=torch.device('cpu'))
 model_skin.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
@@ -482,19 +490,24 @@ def predict_skin(image_path):
     else:
         return False
 
-def backup_file():
-    source = 'products.json'
-    destination = '/backup_db'
+def backup_files():
+    files_to_backup = ['products.json', 'bookings.json']
+    destination = os.path.join(project_directory, 'backup_db')
     if not os.path.exists(destination):
         os.makedirs(destination)
-    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-    backup_filename = f"products_backup_{timestamp}.json"
-    backup_path = os.path.join(destination, backup_filename)
-    shutil.copy2(source, backup_path)
-    print(f"Backup created at {backup_path}")
+    for file_name in files_to_backup:
+        source = os.path.join(project_directory, file_name)
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        backup_filename = f"{os.path.splitext(file_name)[0]}_backup_{timestamp}.json"
+        backup_path = os.path.join(destination, backup_filename)
+        if os.path.exists(source):
+            shutil.copy2(source, backup_path)
+            print(f"Backup created at {backup_path}")
+        else:
+            print(f"Source file {source} does not exist.")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=backup_file, trigger="cron", hour=0, minute=0)
+scheduler.add_job(func=backup_files, trigger="cron", hour=0, minute=0)
 scheduler.start()
 
 if __name__ == '__main__':

@@ -8,7 +8,6 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.models import load_model
 from torchvision import transforms
-
 from torchvision.models import resnet50, ResNet50_Weights
 from torch import nn
 from facenet_pytorch import MTCNN

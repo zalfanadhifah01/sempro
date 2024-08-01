@@ -30,7 +30,7 @@ login_manager.login_view = 'login'
 # Load users from JSON file
 def load_users():
     file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r',encoding='utf-8') as file:
         return json.load(file)
 
 class User(UserMixin):
@@ -83,7 +83,7 @@ def load_response():
     global responses
     responses = {}
     file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
-    with open(file_path) as file:
+    with open(file_path,encoding='utf-8') as file:
         data = json.load(file)
     for intent in data['intents']:
         responses[intent['tag']] = intent['responses']

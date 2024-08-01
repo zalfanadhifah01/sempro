@@ -200,18 +200,20 @@
       });
 
       categoryFilter.addEventListener('change', () => {
+          const selectedCategory = categoryFilter.value.toLowerCase();
+          console.log("Selected Category:", selectedCategory);  // Debugging log
           products.forEach(product => {
               let categoryString = product.dataset.category 
               let categories = categoryString.split(',').map(category => category.trim());
               console.log("Product Categories:", categories);  
               const matches = categories.some(category => category.toLowerCase().includes(selectedCategory));
-              console.log("Matches:", matches);  
+              console.log("Matches:", matches);  // Debugging log
               if (selectedCategory === 'all' || matches) {
-                  console.log('Show:', product);  
+                  console.log('Show:', product);  // Debugging log
                   product.classList.add('d-block');
                   product.classList.remove('d-none');
               } else {
-                  console.log('Hide:', product);  
+                  console.log('Hide:', product);  // Debugging log
                   product.classList.add('d-none');
                   product.classList.remove('d-block');
               }

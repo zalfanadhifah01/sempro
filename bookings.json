@@ -48,5 +48,15 @@
         "no_hp": "8996961797",
         "tanggal": "2024-07-15",
         "jam": "14:24"
+    },
+    {
+        "id": 6,
+        "product_id": "7",
+        "product_name": "Oxygen",
+        "nama_client": "Rizky Dwi Saputra",
+        "alamat": "jl balamoa selatan rt 03/01 kec pangkah kab tegal",
+        "no_hp": "08996961797",
+        "tanggal": "2024-08-13",
+        "jam": "8:11"
     }
 ]

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify,flash,session
-import os,uuid, json,random,string, pickle ,nltk,shutil,torch
+import os,uuid, json,random,string, pickle ,nltk,shutil,torch, gc
 from PIL import Image
 import numpy as np
 from collections import defaultdict
@@ -195,6 +195,10 @@ def skin_detection_submit():
         session["jenis_kulit"]=hasil
         if hasil == False:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
+        # Bebaskan RAM setelah prediksi
+        del img
+        torch.cuda.empty_cache()
+        gc.collect()
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -494,5 +498,5 @@ scheduler.add_job(func=backup_file, trigger="cron", hour=0, minute=0)
 scheduler.start()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0",debug=True)
 

@@ -95,8 +95,10 @@ def preparation():
     file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
     with open(file_path, 'rb') as f:
         tokenizer = pickle.load(f)
-    le = pickle.load(os.path.join(project_directory,'model_chatbot','le.pkl'))
-    model = load_model(os.path.join(project_directory,'model_chatbot','chat_model.h5'))
+    le_path = os.path.join(project_directory,'model_chatbot','le.pkl')
+    le = pickle.load(le_path)
+    model_path = os.path.join(project_directory,'model_chatbot','chat_model.h5')
+    model = load_model(model_path)
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
     nltk.download('punkt', quiet=True)

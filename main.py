@@ -50,7 +50,7 @@ def load_user(user_id):
 # Load products from JSON file
 def load_products():
     file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8') as file:
         products = json.load(file)
         for product in products:
             product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
@@ -59,19 +59,19 @@ def load_products():
 # Save products to JSON file
 def save_bookings(bookings):
     file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w',encoding='utf-8') as file:
         json.dump(bookings, file, indent=4)
 
 # Load products from JSON file
 def load_bookings():
     file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r',encoding='utf-8') as file:
         return json.load(file)
 
 # Save products to JSON file
 def save_products(products):
     file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w',encoding='utf-8') as file:
         json.dump(products, file, indent=4)
 
 # Variabel Global untuk Chatbot
@@ -93,7 +93,7 @@ def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
     file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
-    with open(file_path, 'rb') as f:
+    with open(file_path, 'rb',encoding='utf-8') as f:
         tokenizer = pickle.load(f)
     le = pickle.load(os.path.join(project_directory,'model_chatbot','le.pkl'))
     model = load_model(os.path.join(project_directory,'model_chatbot','chat_model.h5'))

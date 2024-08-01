@@ -29,7 +29,7 @@ login_manager.login_view = 'login'
 
 # Load users from JSON file
 def load_users():
-    with open('users.json', 'r') as file:
+    with open('./users.json', 'r') as file:
         return json.load(file)
 
 class User(UserMixin):
@@ -48,7 +48,7 @@ def load_user(user_id):
 
 # Load products from JSON file
 def load_products():
-    with open('products.json', 'r') as file:
+    with open('./products.json', 'r') as file:
         products = json.load(file)
         for product in products:
             product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
@@ -56,17 +56,17 @@ def load_products():
 
 # Save products to JSON file
 def save_bookings(bookings):
-    with open('bookings.json', 'w') as file:
+    with open('./bookings.json', 'w') as file:
         json.dump(bookings, file, indent=4)
 
 # Load products from JSON file
 def load_bookings():
-    with open('bookings.json', 'r') as file:
+    with open('./bookings.json', 'r') as file:
         return json.load(file)
 
 # Save products to JSON file
 def save_products(products):
-    with open('products.json', 'w') as file:
+    with open('./products.json', 'w') as file:
         json.dump(products, file, indent=4)
 
 # Variabel Global untuk Chatbot
@@ -77,7 +77,7 @@ input_shape = 11
 def load_response():
     global responses
     responses = {}
-    with open('model_chatbot/dataset.json') as file:
+    with open('./model_chatbot/dataset.json') as file:
         data = json.load(file)
     for intent in data['intents']:
         responses[intent['tag']] = intent['responses']
@@ -86,9 +86,9 @@ def load_response():
 def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
-    with open('model_chatbot/tokenizers.pkl', 'rb') as f:
+    with open('./model_chatbot/tokenizers.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    le = pickle.load(open('model_chatbot/le.pkl', 'rb'))
+    le = pickle.load(open('./model_chatbot/le.pkl', 'rb'))
     model = load_model('model_chatbot/chat_model.h5')
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()

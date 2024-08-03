@@ -237,27 +237,26 @@
     {
         "id": 6,
         "nama": "Photodinamic Therapy",
-        "rating": "4,02",
-        "review": "100",
+        "rating": "",
+        "review": "",
         "harga": "Rp 300.000,00",
         "deskripsi": "Terapi menggunaka dan cahaya untuk mengaktifkan \r\nobat fotosensitif guna menghancurkan sel abnormal atau bakteri pada kulit.",
         "key_highlight": "Menggunakan Teknologi Terkini\r\ntanpa menggunakan bahan kimia terlarang\r\nruangan nyaman dan ber AC\r\nTestimoni banyak",
         "kategori": "facial,bekas-jerawat",
         "keterangan": "",
-        "gambar": "/static/kumpulan_foto_treatment/1.png"
+        "gambar": "/static/upload/2e0b5ad617194cf4a4d225f22023c02b.jpg"
     },
     {
         "id": 7,
-        "nama": "Oxygen",
-        "harga": "210k",
-        "kategori": "ACNE,GLOWING/BRIGHTENING,GLOWING/WHITENING",
-        "deskripsi": "Perawatan yang memanfaatkan oksigen murni untuk meningkatkan sirkulasi darah dan memberikan nutrisi ke kulit.",
-        "gambar": "/static/kumpulan_foto_treatment/2.jpg",
+        "nama": "Oxygen type A",
         "rating": "4,02",
         "review": "100",
-        "discount": "36",
+        "harga": "210k",
+        "deskripsi": "Perawatan yang memanfaatkan oksigen murni untuk meningkatkan sirkulasi darah dan memberikan nutrisi ke kulit.",
         "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
-        "keterangan": ""
+        "kategori": "",
+        "keterangan": "",
+        "gambar": "/static/kumpulan_foto_treatment/2.jpg"
     },
     {
         "id": 8,
@@ -461,19 +460,6 @@
         "kategori": "GLOWING/BRIGHTENING,GLOWING/WHITENING,ANTI-AGING/FLEK",
         "deskripsi": "Perawatan menggunakan ekstrak DNA ikan salmon untuk meremajakan kulit dan meningkatkan regenerasi sel kulit.",
         "gambar": "/static/kumpulan_foto_treatment/18.jpg",
-        "rating": "4,02",
-        "review": "100",
-        "discount": "36",
-        "key_highlight": "Menggunakan Teknologi Terkini \r\n tanpa menggunakan bahan kimia terlarang \r\n  ruangan nyaman dan ber AC \r\n  Testimoni banyak",
-        "keterangan": ""
-    },
-    {
-        "id": 25,
-        "nama": "Kefir Facial",
-        "harga": "100k",
-        "kategori": "facial",
-        "deskripsi": "Perawatan wajah menggunakan kefir untuk memberikan nutrisi, hidrasi, dan meningkatkan kesehatan kulit.",
-        "gambar": "/static/kumpulan_foto_treatment/19.png",
         "rating": "4,02",
         "review": "100",
         "discount": "36",

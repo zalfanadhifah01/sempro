@@ -3,7 +3,6 @@ import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 from copy import deepcopy
 from torchvision import transforms
 from torchvision.models import resnet50, ResNet50_Weights
-from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset, DataLoader
 import torch
 import torch.nn as nn

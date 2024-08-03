@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify,flash,session
-import os,uuid, json,random,string, pickle ,nltk,shutil,torch, gc
+import os,uuid, json,random,string, pickle ,nltk,shutil,torch
 from PIL import Image
 import numpy as np
 from collections import defaultdict
@@ -29,8 +29,7 @@ login_manager.login_view = 'login'
 
 # Load users from JSON file
 def load_users():
-    file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
+    with open('users.json', 'r') as file:
         return json.load(file)
 
 class User(UserMixin):
@@ -49,8 +48,7 @@ def load_user(user_id):
 
 # Load products from JSON file
 def load_products():
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open('products.json', 'r') as file:
         products = json.load(file)
         for product in products:
             product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
@@ -58,20 +56,17 @@ def load_products():
 
 # Save products to JSON file
 def save_bookings(bookings):
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
+    with open('bookings.json', 'w') as file:
         json.dump(bookings, file, indent=4)
 
 # Load products from JSON file
 def load_bookings():
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
+    with open('bookings.json', 'r') as file:
         return json.load(file)
 
 # Save products to JSON file
 def save_products(products):
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
+    with open('products.json', 'w') as file:
         json.dump(products, file, indent=4)
 
 # Variabel Global untuk Chatbot
@@ -82,8 +77,7 @@ input_shape = 11
 def load_response():
     global responses
     responses = {}
-    file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
-    with open(file_path,encoding='utf-8') as file:
+    with open('model_chatbot/dataset.json') as file:
         data = json.load(file)
     for intent in data['intents']:
         responses[intent['tag']] = intent['responses']
@@ -92,13 +86,10 @@ def load_response():
 def preparation():
     load_response()
     global lemmatizer, tokenizer, le, model
-    file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
-    with open(file_path, 'rb') as f:
+    with open('model_chatbot/tokenizers.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    le_path = os.path.join(project_directory,'model_chatbot','le.pkl')
-    le = pickle.load(open(le_path, 'rb'))
-    model_path = os.path.join(project_directory,'model_chatbot','chat_model.h5')
-    model = load_model(model_path)
+    le = pickle.load(open('model_chatbot/le.pkl', 'rb'))
+    model = load_model('model_chatbot/chat_model.h5')
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
     nltk.download('punkt', quiet=True)
@@ -204,10 +195,6 @@ def skin_detection_submit():
         session["jenis_kulit"]=hasil
         if hasil == False:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
-        # Bebaskan RAM setelah prediksi
-        del img
-        torch.cuda.empty_cache()
-        gc.collect()
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -294,7 +281,7 @@ def add_product():
     product_key_highlight = request.form['key_highlight']
     product_kategori = request.form['kategori']
     product_keterangan = request.form['keterangan']
-    product_diskon = request.form['diskon']
+    product_diskon = request.form['discount']
     if product_image:
         try:
             img = Image.open(product_image)
@@ -462,8 +449,7 @@ optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
 # Load the checkpoint
-model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint.pth')
-checkpoint = torch.load(model_location, map_location=torch.device('cpu'))
+checkpoint = torch.load('./model_detection/best_model_checkpoint.pth', map_location=torch.device('cpu'))
 model_skin.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
@@ -492,26 +478,21 @@ def predict_skin(image_path):
     else:
         return False
 
-def backup_files():
-    files_to_backup = ['products.json', 'bookings.json']
-    destination = os.path.join(project_directory, 'backup_db')
+def backup_file():
+    source = 'products.json'
+    destination = '/backup_db'
     if not os.path.exists(destination):
         os.makedirs(destination)
-    for file_name in files_to_backup:
-        source = os.path.join(project_directory, file_name)
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        backup_filename = f"{os.path.splitext(file_name)[0]}_backup_{timestamp}.json"
-        backup_path = os.path.join(destination, backup_filename)
-        if os.path.exists(source):
-            shutil.copy2(source, backup_path)
-            print(f"Backup created at {backup_path}")
-        else:
-            print(f"Source file {source} does not exist.")
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    backup_filename = f"products_backup_{timestamp}.json"
+    backup_path = os.path.join(destination, backup_filename)
+    shutil.copy2(source, backup_path)
+    print(f"Backup created at {backup_path}")
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=backup_files, trigger="cron", hour=0, minute=0)
+scheduler.add_job(func=backup_file, trigger="cron", hour=0, minute=0)
 scheduler.start()
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",debug=True)
+    app.run(debug=True)
 

@@ -442,7 +442,6 @@ def get_rekomendasi_normal():
     return rekomendasi
 
 # Fungsi Prediksi Kulit
-mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 label_index = {"dry": 0, "normal": 1, "oily": 2}
 index_label = {0: "kering", 1: "normal", 2: "berminyak"}
 LR = 0.1
@@ -468,6 +467,7 @@ model_skin.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
 
+mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((IMG_SIZE, IMG_SIZE)),

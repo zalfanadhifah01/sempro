@@ -75,6 +75,6 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 
 # Training the model
 hist = model.fit(x=train_x, y=train_y, epochs=200, batch_size=5, verbose=1)
-model.save('model_chatbot2/chatbot_model.h5', hist)
+model.save('model_chatbot/chat_model_new.h5', hist)
 
 print("Model trained and saved as 'chat_model.h5'")

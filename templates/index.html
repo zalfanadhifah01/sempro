@@ -110,6 +110,13 @@
       height: auto;
       /* Pastikan gambar menyesuaikan rasio aspek */
     }
+
+    .navbar-sticky {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1030; 
+}
   </style>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -120,6 +127,44 @@
 </head>
 
 <body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+    <!-- ============================================================= -->
+    <!-- Topbar header - style you can find in pages.scss -->
+    <!-- ============================================================= -->
+    {% if current_user.role == "admin" %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-sticky">
+        <div class="container-fluid">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" href="/admin/edit_product">Edit Product</a></li>
+                        <li><a class="dropdown-item" href="/admin/bookings">Lihat Bookings</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% elif current_user.role == 'user' %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-sticky">
+        <div class="container-fluid">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ current_user.username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                        <li><a class="dropdown-item" href="/user/histroy_deteksi">History Deteksi Jenis Kulit Wajah</a></li>
+                        <li><a class="dropdown-item" href="/user/history_bookings">History pemesanan</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
   <div id="navbar-main">
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
@@ -141,6 +186,7 @@
             <li> <a href="#contact"> Contact</a></li>
           </ul>
         </div>
+        <a class="btn btn-info" href="/login"> Login</a>
         <!--/.nav-collapse -->
       </div>
     </div>

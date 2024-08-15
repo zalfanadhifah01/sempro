@@ -1,0 +1,46 @@
+{% extends 'root/base.html' %}
+{% block content %}
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<div class="container mt-5">
+  <h1 class="mb-4"> History Bookings</h1>
+ 
+<div class="table-responsive">
+  <table id="bookingsTable" class="table table-bordered">
+      <thead>
+          <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Treatment</th>
+              <th>No Hp</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for booking in bookings %}
+          <tr>
+              <td>{{ booking.id }}</td>
+              <td>{{ booking.tanggal }}</td>
+              <td>{{ booking.nama_client }}</td>
+              <td>{{ booking.product_name }}</td>
+              <td>{{ booking.no_hp }}</td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  </div>
+
+ 
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  $('#bookingsTable').DataTable();
+ 
+})
+    
+</script>
+
+{% endblock %}

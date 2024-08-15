@@ -57,6 +57,12 @@ def load_products():
         return products
 
 # Save products to JSON file
+def save_products(products):
+    file_path = os.path.join(project_directory, 'products.json')
+    with open(file_path, 'w',encoding='utf-8') as file:
+        json.dump(products, file, indent=4)
+
+# Save products to JSON file
 def save_bookings(bookings):
     file_path = os.path.join(project_directory, 'bookings.json')
     with open(file_path, 'w',encoding='utf-8') as file:
@@ -67,13 +73,18 @@ def load_bookings():
     file_path = os.path.join(project_directory, 'bookings.json')
     with open(file_path, 'r',encoding='utf-8') as file:
         return json.load(file)
-
-# Save products to JSON file
-def save_products(products):
-    file_path = os.path.join(project_directory, 'products.json')
+    
+# Save Deteksi to JSON file
+def save_history_deteksi(history_deteksi):
+    file_path = os.path.join(project_directory, 'history_deteksi.json')
     with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(products, file, indent=4)
+        json.dump(history_deteksi, file, indent=4)
 
+# Load Deteksi from JSON file
+def load_history_deteksi():
+    file_path = os.path.join(project_directory, 'history_deteksi.json')
+    with open(file_path, 'r',encoding='utf-8') as file:
+        return json.load(file)
 # Variabel Global untuk Chatbot
 global responses, lemmatizer, tokenizer, le, model, input_shape
 input_shape = 11
@@ -153,7 +164,7 @@ def login():
         users = load_users()
         user = next((u for u in users if u['username'] == username and u['password'] == password), None)
         if user:
-            login_user(User(user['id'], user['username'], user['password']))
+            login_user(User(user['id'], user['username'], user['role']))
             return redirect(url_for('edit_product'))
         flash('Invalid credentials')
     return render_template('admin/login.html')
@@ -208,6 +219,17 @@ def skin_detection_submit():
         del img
         torch.cuda.empty_cache()
         gc.collect()
+        if current_user.role == "user":
+            history_deteksi = load_history_deteksi()
+            new_history_deteksi = {
+                'id':  len(history_deteksi) + 1,
+                'username': current_user.username,
+                "tanggal":"2024-08-01",
+                "image_url":"/static/upload"+random_name,
+                "terdeteksi_kulit":hasil
+            }
+            history_deteksi.append(new_history_deteksi)
+            save_history_deteksi(history_deteksi)
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
     except Exception as e:
         return jsonify({"error": str(e)})

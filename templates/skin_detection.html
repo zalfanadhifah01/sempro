@@ -3,109 +3,78 @@
 <head>
   <style>
     .hidden {
-    display: none;
-}
+      display: none;
+    }
   </style>
 </head>
 <div class="page-titles">
-  <div class="row">
-    <div class="col-lg-8 col-md-6 col-12 align-self-center">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0 d-flex align-items-center">
-          <li class="breadcrumb-item">
-            <a href="/home" class="link"><i class="ri-home-3-line fs-5"></i></a>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">Cek Kulit Wajah</li>
-        </ol>
-      </nav>
-      <h1 class="mb-0 fw-bold">Skin Detection</h1>
-      <small>Cek Jenis kulit Wajah anda apakah normal / berminyak / kering</small>
-    </div>
-  </div>
+  <!-- ... -->
+</div>
 
-  <!-- ============================================================= -->
-  <!-- Start Page Content -->
-  <!-- ============================================================= -->
-  <div class="row mt-3 ">
-    <div class="col-12">
-      <div class="card">
-        <div class="border-bottom title-part-padding">
-          <h4 class="mb-0">Masukan Foto Wajah Anda</h4>
-        </div>
-        <div class="card-body">
-          <h6 class="card-subtitle mb-3">
-            masukan foto wajah anda 
-          </h6>
-          <form class="">
-            <div class="fallback">
-              <input id="FormGambar" name="file" type="file" accept="image/*" />
-            </div>
-            <button id="kirim" class="btn btn-success mt-2" type="submit">kirim</button>
-          </form>
-        </div>
-        <div class="hasil text-center align-items-center d-block">
-        <img id="img_placeholder" class="img img-responsive hidden" style="width: 300px; height: 300px;" src="">
-        <p id="hasil_deteksi"></p>
-        <button id="ke_chatbot" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
-        </div>
+<!-- ... -->
+
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="border-bottom title-part-padding">
+        <h4 class="mb-0">Deteksi Wajah Anda</h4>
+      </div>
+      <div class="card-body">
+        <h6 class="card-subtitle mb-3">
+          Gunakan kamera untuk mendeteksi wajah anda secara realtime.
+        </h6>
+        <video id="videoElement" width="640" height="480" autoplay></video>
+        <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+        <button id="startDetection" class="btn btn-success mt-2" type="button">Mulai Deteksi</button>
       </div>
     </div>
   </div>
 </div>
-  <!-- ============================================================= -->
-  <!-- End PAge Content -->
-  <!-- ============================================================= -->
-</div>
+
+<!-- ... -->
+
+<script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.hidden');
+  document.addEventListener("DOMContentLoaded", function () {
+    async function setupCamera() {
+      const video = document.getElementById('videoElement');
 
-    elements.forEach(element => {
-        element.classList.remove('hidden');
-    });
-    $("#img_placeholder").hide()
-    $("#ke_chatbot").hide()
-  });
- $("#kirim").on("click", function () {
-        $("#kirim").html("Loading...")
-        let formData = new FormData();
-      
-      let gambarInput = $('#FormGambar')[0].files[0];
-      if (gambarInput) {
-        formData.append('gambar', gambarInput);
+      // Dapatkan akses ke webcam
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (error) {
+        console.error("Error accessing webcam: ", error);
       }
-        $.ajax({
-          url: "/skin_detection_submit",
-          data: formData,
-          cache: false,
-          contentType: false,
-          processData: false,
-          method: 'POST',
-          type: 'POST',
-        }).done(function (data) {
-          console.log(data);
-          try {
-              if (data.msg === "SUKSES") {
-                  alert("Status : Sukses ");
-                  var img_path = "/static/upload/"+data.img
-                  $("#img_placeholder").attr('src',img_path)
-                  $("#img_placeholder").show()
-                  $("#ke_chatbot").show()
-                  $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
-                  $("#kirim").html("kirim")
-                  localStorage.setItem("jenis_kulit", data.hasil);
-              } else {
-                  alert("Status: "+data.msg);
-                  window.location.href = "/skin_detection";
-              }
-          } catch (error) {
-              console.log(error);
-              alert("Error: " + error);
-              window.location.href = "/skin_detection";
+
+      // Muat model Face API
+      await faceapi.nets.tinyFaceDetector.loadFromUri('/static/models');
+
+      video.addEventListener('play', () => {
+        const canvas = document.getElementById('overlay');
+        const displaySize = { width: video.width, height: video.height };
+        faceapi.matchDimensions(canvas, displaySize);
+
+        setInterval(async () => {
+          const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+          const resizedDetections = faceapi.resizeResults(detections, displaySize);
+          canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+          faceapi.draw.drawDetections(canvas, resizedDetections);
+
+          // Hitung jarak berdasarkan bounding box
+          if (resizedDetections.length > 0) {
+            const box = resizedDetections[0].detection.box;
+            const faceSize = box.width * box.height;
+            console.log(`Face size: ${faceSize}`);
           }
-        });
-        event.preventDefault();
+        }, 100);
       });
+    }
+
+    setupCamera();
+  });
 </script>
+
 {% endblock %}

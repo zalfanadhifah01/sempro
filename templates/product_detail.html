@@ -213,9 +213,10 @@
                         time: time
                     }),
                     success: function(response) {
-                        var message = `Hallo, Saya mau Konfirmsi Booking {{ product.nama }} pada ${date} jam ${time}.\nNama: ${name}\nAlamat: ${address}\nNo HP: ${phone}`;
-                        var whatsappUrl = `https://api.whatsapp.com/send/?phone=62882003875404&text=${encodeURIComponent(message)}`;
-                        window.location.href = whatsappUrl;
+                        alert("Terima Kasih Telah Booking Treatment dari Kami :) ")
+                        //var message = `Hallo, Saya mau Konfirmsi Booking {{ product.nama }} pada ${date} jam ${time}.\nNama: ${name}\nAlamat: ${address}\nNo HP: ${phone}`;
+                        //var whatsappUrl = `https://api.whatsapp.com/send/?phone=62882003875404&text=${encodeURIComponent(message)}`;
+                        //window.location.href = whatsappUrl;
                     },
                     error: function(xhr) {
                         if (xhr.responseJSON.message !== null) {

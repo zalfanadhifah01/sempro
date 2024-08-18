@@ -117,6 +117,25 @@
     right: 0;
     z-index: 1030; 
 }
+  /* Gaya untuk tombol di pojok kanan bawah */
+  #openPopup {
+            position: fixed;
+            top: 12px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #openPopup:hover {
+            background-color: #0056b3;
+        }
   </style>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -164,6 +183,8 @@
             </ul>
         </div>
     </nav>
+    {% else %}
+    <a id="openPopup" href="/login" class="btn btn-info">Login</a>
     {% endif %}
   <div id="navbar-main">
     <!-- Fixed navbar -->
@@ -186,7 +207,6 @@
             <li> <a href="#contact"> Contact</a></li>
           </ul>
         </div>
-        <a class="btn btn-info" href="/login"> Login</a>
         <!--/.nav-collapse -->
       </div>
     </div>

@@ -22,7 +22,7 @@ app = Flask(__name__)
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder
-app.config['SECRET_KEY'] = 'bukan rahasia'
+app.config['SECRET_KEY'] = 'dmo42901i41;/.p`'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -32,7 +32,11 @@ def load_users():
     file_path = os.path.join(project_directory, 'users.json')
     with open(file_path, 'r',encoding='utf-8') as file:
         return json.load(file)
-
+# Save users to JSON file
+def save_products(products):
+    file_path = os.path.join(project_directory, 'users.json')
+    with open(file_path, 'w',encoding='utf-8') as file:
+        json.dump(products, file, indent=4)
 class User(UserMixin):
     def __init__(self, id, username, password):
         self.id = id
@@ -108,7 +112,7 @@ def preparation():
         tokenizer = pickle.load(f)
     le_path = os.path.join(project_directory,'model_chatbot','le.pkl')
     le = pickle.load(open(le_path, 'rb'))
-    model_path = os.path.join(project_directory,'model_chatbot','chat_model.h5')
+    model_path = os.path.join(project_directory,'model_chatbot2','chatbot_model.h5')
     model = load_model(model_path)
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
@@ -158,17 +162,46 @@ preparation()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        users = load_users()
-        user = next((u for u in users if u['username'] == username and u['password'] == password), None)
-        if user:
-            login_user(User(user['id'], user['username'], user['role']))
-            return redirect(url_for('edit_product'))
-        flash('Invalid credentials')
-    return render_template('admin/login.html')
-
+    if current_user.role == "admin":
+        return redirect(url_for("history_pemesanan"))
+    elif current_user.role == 'user':
+        return redirect(url_for("get_bookings"))
+    else:
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            users = load_users()
+            user = next((u for u in users if u['username'] == username and u['password'] == password), None)
+            if user:
+                login_user(User(user['id'], user['username'], user['role']))
+                if user['role'] == "admin":
+                    return redirect(url_for('edit_product'))
+                else:
+                    return redirect(url_for('edit_product'))
+            flash('Invalid credentials')
+        return render_template('admin/login.html')
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.role == "admin":
+        return redirect(url_for("history_pemesanan"))
+    elif current_user.role == 'user':
+        return redirect(url_for("get_bookings"))
+    else:
+        if request.method == 'POST':
+            email = request.form['email']
+            username = request.form['username']
+            password = request.form['password']
+            users = load_users()
+            cek_username = next((u for u in users if u['username'] == username ), None)
+            if cek_username:
+                flash("username sudah terdaftar")
+                return redirect(url_for('register'))
+            cek_email = next((u for u in users if u['email'] == email ), None)
+            if cek_email:
+                flash("email sudah terdaftar")
+                return redirect(url_for('register'))
+            
+        return render_template('admin/login.html')
 @app.route('/logout')
 @login_required
 def logout():
@@ -280,6 +313,26 @@ def get_product(product_id):
     if product is None:
         return jsonify({'error': 'Product not found'}), 404
     return jsonify(product)
+
+@app.route('/user/history_booking', methods=['GET'])
+@login_required
+def history_pemesanan():
+    bookings = load_bookings()
+    daily_data = defaultdict(int)
+    monthly_data = defaultdict(int)
+    history_bookings = []
+    for booking in bookings:
+        date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
+        day = date_obj.day
+        month = date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+        if booking.nama_client == current_user.fullname :
+             history_bookings.append(booking)
+    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
+    monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
+    return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
 
 @app.route('/bookings', methods=['POST'])
 def book():

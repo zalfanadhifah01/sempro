@@ -14,11 +14,15 @@ from facenet_pytorch import MTCNN
 from copy import deepcopy
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
+from models import db, User, Product, HistoryDeteksi, Booking
+import os
 
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder
@@ -27,56 +31,28 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Load users from JSON file
-def load_users():
-    file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
-# Save users to JSON file
-def save_products(products):
-    file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(products, file, indent=4)
 
+db.init_app(app)
 
-# Load products from JSON file
-def load_products():
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'r', encoding='utf-8') as file:
-        products = json.load(file)
-        for product in products:
-            product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
-        return products
+# Create tables
+def create_tables():
+    with app.app_context():
+        db.create_all()
+class LoginUser(UserMixin):
+    def __init__(self, id, username, password, role):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.role = role
+    def get_role(self):
+        return self.role
 
-# Save products to JSON file
-def save_products(products):
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(products, file, indent=4)
-
-# Save products to JSON file
-def save_bookings(bookings):
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(bookings, file, indent=4)
-
-# Load products from JSON file
-def load_bookings():
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
-    
-# Save Deteksi to JSON file
-def save_history_deteksi(history_deteksi):
-    file_path = os.path.join(project_directory, 'history_deteksi.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(history_deteksi, file, indent=4)
-
-# Load Deteksi from JSON file
-def load_history_deteksi():
-    file_path = os.path.join(project_directory, 'history_deteksi.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(int(user_id))
+    if user:
+        return LoginUser(user.id, user.username, user.password,user.role)
+    return None
 # Variabel Global untuk Chatbot
 global responses, lemmatizer, tokenizer, le, model, input_shape
 input_shape = 11
@@ -150,15 +126,16 @@ preparation()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.role == "admin":
-        return redirect(url_for("history_pemesanan"))
-    elif current_user.role == 'user':
-        return redirect(url_for("get_bookings"))
+    if current_user.is_authenticated:
+        if current_user.role == "admin":
+            return redirect(url_for("history_pemesanan"))
+        elif current_user.role == 'user':
+            return redirect(url_for("get_bookings"))
     else:
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            users = load_users()
+            users = User.query.all()
             user = next((u for u in users if u['username'] == username and u['password'] == password), None)
             if user:
                 login_user(User(user['id'], user['username'], user['role']))
@@ -170,16 +147,17 @@ def login():
         return render_template('admin/login.html')
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.role == "admin":
-        return redirect(url_for("history_pemesanan"))
-    elif current_user.role == 'user':
-        return redirect(url_for("get_bookings"))
+    if current_user.is_authenticated :
+        if current_user.role == "admin":
+            return redirect(url_for("history_pemesanan"))
+        elif current_user.role == 'user':
+            return redirect(url_for("get_bookings"))
     else:
         if request.method == 'POST':
             email = request.form['email']
             username = request.form['username']
             password = request.form['password']
-            users = load_users()
+            users = User.query.all()
             cek_username = next((u for u in users if u['username'] == username ), None)
             if cek_username:
                 flash("username sudah terdaftar")
@@ -189,7 +167,7 @@ def register():
                 flash("email sudah terdaftar")
                 return redirect(url_for('register'))
             
-        return render_template('admin/login.html')
+        return render_template('admin/register.html')
 @app.route('/logout')
 @login_required
 def logout():
@@ -241,7 +219,7 @@ def skin_detection_submit():
         torch.cuda.empty_cache()
         gc.collect()
         if current_user.role == "user":
-            history_deteksi = load_history_deteksi()
+            history_deteksi = HistoryDeteksi.query.all()
             new_history_deteksi = {
                 'id':  len(history_deteksi) + 1,
                 'username': current_user.username,
@@ -258,7 +236,7 @@ def skin_detection_submit():
 # Products Routes
 @app.route("/products")
 def products():
-    list_products = load_products()
+    list_products = Product.query.all()
     all_product = []
     for product in list_products:
         if product['id'] in [1, 2, 3, 4, 5]:
@@ -269,8 +247,8 @@ def products():
 
 @app.route("/products_detail/<int:id>")
 def products_detail(id):
-    list_products = load_products()
-    list_bookings = load_bookings()
+    list_products = Product.query.all()
+    list_bookings = Booking.query.all()
     print(list_bookings)  # Debugging purposes
     bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
     print(bookings)  # Debugging purposes
@@ -282,7 +260,7 @@ def products_detail(id):
 
 @app.route("/products_old")
 def products_old():
-    list_products = load_products()
+    list_products = Product.query.all()
     list_product_by_treatment = []
     for product in list_products:
         if product['id'] in [1, 2, 3, 4, 5]:
@@ -291,12 +269,12 @@ def products_old():
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
-    products = load_products()
+    products = Product.query.all()
     return jsonify(products)
 
 @app.route('/api/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
-    products = load_products()
+    products = Product.query.all()
     product = next((prod for prod in products if prod['id'] == product_id), None)
     if product is None:
         return jsonify({'error': 'Product not found'}), 404
@@ -305,7 +283,7 @@ def get_product(product_id):
 @app.route('/user/history_booking', methods=['GET'])
 @login_required
 def history_pemesanan():
-    bookings = load_bookings()
+    bookings = Booking.query.all()
     daily_data = defaultdict(int)
     monthly_data = defaultdict(int)
     history_bookings = []
@@ -325,7 +303,7 @@ def history_pemesanan():
 @app.route('/bookings', methods=['POST'])
 def book():
     data = request.json
-    bookings = load_bookings()
+    bookings = Booking.query.all()
     # Check if the booking with the same product_id, date, and time already exists
     for booking in bookings:
         if (booking['product_id'] == data['product_id'] and 
@@ -348,8 +326,8 @@ def book():
 
 @app.route('/admin/products', methods=['POST'])
 @login_required
-def add_product():
-    products = load_products()  # Muat produk dari file JSON
+def tambah_product():
+    products = Product.query.all()  # Muat produk dari file JSON
     product_name = request.form['nama']
     product_description = request.form['deskripsi']
     product_price = request.form['harga']
@@ -395,7 +373,7 @@ def add_product():
 @app.route('/admin/bookings', methods=['GET'])
 @login_required
 def get_bookings():
-    bookings = load_bookings()
+    bookings = Booking.query.all()
     sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
     daily_data = defaultdict(int)
     monthly_data = defaultdict(int)
@@ -411,8 +389,8 @@ def get_bookings():
 
 @app.route("/admin/edit_product")
 @login_required
-def edit_product():
-    list_products = load_products()
+def edit_productt():
+    list_products = Product.query.all()
     all_product = []
     for product in list_products:
         if product['id'] in [1, 2, 3, 4, 5]:
@@ -425,7 +403,7 @@ def edit_product():
 @app.route("/admin/edit_product_detail/<int:id>")
 @login_required
 def edit_product_detail(id):
-    list_products = load_products()
+    list_products = Product.query.all()
     product = next((product for product in list_products if product["id"] == id), None)
     if product:
         return render_template("admin/product_detail_edit.html", product=product)
@@ -434,7 +412,7 @@ def edit_product_detail(id):
 
 @app.route('/admin/products/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
-    products = load_products()
+    products = Product.query.all()
     updated_product = request.form.to_dict()
     for i, product in enumerate(products):
         if product['id'] == product_id:
@@ -461,8 +439,8 @@ def update_product(product_id):
 
 @app.route('/admin/products/<int:product_id>', methods=['DELETE'])
 @login_required
-def delete_product(product_id):
-    products = load_products()
+def hapus_product(product_id):
+    products = Product.query.all()
     initial_count = len(products)
     products = [prod for prod in products if prod['id'] != product_id]
     save_products(products)
@@ -476,7 +454,7 @@ def delete_product(product_id):
 @app.route("/rekomendasi_kering")
 def get_rekomendasi_kering():
     rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
-    list_products = load_products()
+    list_products = Product.query.all()
     rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
     rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
@@ -486,7 +464,7 @@ def get_rekomendasi_kering():
 @app.route("/rekomendasi_berminyak")
 def get_rekomendasi_berminyak():
     rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
-    list_products = load_products()
+    list_products = Product.query.all()
     rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
     rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
     rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
@@ -496,7 +474,7 @@ def get_rekomendasi_berminyak():
 @app.route("/rekomendasi_normal")
 def get_rekomendasi_normal():
     rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
-    list_products = load_products()
+    list_products = Product.query.all()
     rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
     rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
@@ -575,6 +553,149 @@ scheduler = BackgroundScheduler()
 scheduler.add_job(func=backup_files, trigger="cron", hour=0, minute=0)
 scheduler.start()
 
-if __name__ == '__main__':
-    app.run(host="0.0.0.0",debug=True)
 
+# CRUD for Users
+@app.route('/users')
+def list_users():
+    users = User.query.all()
+    return render_template('list_users.html', users=users)
+
+@app.route('/users/add', methods=['GET', 'POST'])
+def add_user():
+    if request.method == 'POST':
+        username = request.form['username']
+        role = request.form['role']
+        password = request.form['password']
+        user = User(username=username, role=role, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('list_users'))
+    return render_template('add_user.html')
+
+@app.route('/users/edit/<int:id>', methods=['GET', 'POST'])
+def edit_user(id):
+    user = User.query.get_or_404(id)
+    if request.method == 'POST':
+        user.username = request.form['username']
+        user.role = request.form['role']
+        user.password = request.form['password']
+        db.session.commit()
+        return redirect(url_for('list_users'))
+    return render_template('edit_user.html', user=user)
+
+@app.route('/users/delete/<int:id>')
+def delete_user(id):
+    user = User.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('list_users'))
+
+# CRUD for Products
+@app.route('/products')
+def list_products():
+    products = Product.query.all()
+    return render_template('list_products.html', products=products)
+
+@app.route('/products/add', methods=['GET', 'POST'])
+def add_product():
+    if request.method == 'POST':
+        product = Product(
+            nama=request.form['nama'],
+            rating=request.form['rating'],
+            review=request.form['review'],
+            harga=request.form['harga'],
+            deskripsi=request.form['deskripsi'],
+            key_highlight=request.form['key_highlight'],
+            kategori=request.form['kategori'],
+            keterangan=request.form['keterangan'],
+            gambar=request.form['gambar']
+        )
+        db.session.add(product)
+        db.session.commit()
+        return redirect(url_for('list_products'))
+    return render_template('add_product.html')
+
+@app.route('/products/edit/<int:id>', methods=['GET', 'POST'])
+def edit_product(id):
+    product = Product.query.get_or_404(id)
+    if request.method == 'POST':
+        product.nama = request.form['nama']
+        product.rating = request.form['rating']
+        product.review = request.form['review']
+        product.harga = request.form['harga']
+        product.deskripsi = request.form['deskripsi']
+        product.key_highlight = request.form['key_highlight']
+        product.kategori = request.form['kategori']
+        product.keterangan = request.form['keterangan']
+        product.gambar = request.form['gambar']
+        db.session.commit()
+        return redirect(url_for('list_products'))
+    return render_template('edit_product.html', product=product)
+
+@app.route('/products/delete/<int:id>')
+def delete_product(id):
+    product = Product.query.get_or_404(id)
+    db.session.delete(product)
+    db.session.commit()
+    return redirect(url_for('list_products'))
+
+# CRUD for History Deteksi
+@app.route('/history_deteksi')
+def list_history_deteksi():
+    histories = HistoryDeteksi.query.all()
+    return render_template('list_history_deteksi.html', histories=histories)
+
+@app.route('/history_deteksi/add', methods=['GET', 'POST'])
+def add_history_deteksi():
+    if request.method == 'POST':
+        history = HistoryDeteksi(
+            username=request.form['username'],
+            tanggal=request.form['tanggal'],
+            image_url=request.form['image_url'],
+            terdeteksi_kulit=request.form['terdeteksi_kulit']
+        )
+        db.session.add(history)
+        db.session.commit()
+        return redirect(url_for('list_history_deteksi'))
+    return render_template('add_history_deteksi.html')
+
+@app.route('/history_deteksi/delete/<int:id>')
+def delete_history_deteksi(id):
+    history = HistoryDeteksi.query.get_or_404(id)
+    db.session.delete(history)
+    db.session.commit()
+    return redirect(url_for('list_history_deteksi'))
+
+# CRUD for Bookings
+@app.route('/bookings')
+def list_bookings():
+    bookings = Booking.query.all()
+    return render_template('list_bookings.html', bookings=bookings)
+
+@app.route('/bookings/add', methods=['GET', 'POST'])
+def add_booking():
+    if request.method == 'POST':
+        booking = Booking(
+            product_id=request.form['product_id'],
+            product_name=request.form['product_name'],
+            nama_client=request.form['nama_client'],
+            alamat=request.form['alamat'],
+            no_hp=request.form['no_hp'],
+            tanggal=request.form['tanggal'],
+            jam=request.form['jam']
+        )
+        db.session.add(booking)
+        db.session.commit()
+        return redirect(url_for('list_bookings'))
+    return render_template('add_booking.html')
+
+@app.route('/bookings/delete/<int:id>')
+def delete_booking(id):
+    booking = Booking.query.get_or_404(id)
+    db.session.delete(booking)
+    db.session.commit()
+    return redirect(url_for('list_bookings'))
+
+if __name__ == '__main__':
+    create_tables()
+    app.run(host="0.0.0.0",debug=True)

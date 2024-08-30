@@ -1,17 +1,25 @@
-{% extends 'root/base.html' %}
-{% block content %}
+<!DOCTYPE html>
+
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
   <style>
     .hidden {
       display: none;
     }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   </style>
-</head>
-<div class="page-titles">
-  <!-- ... -->
-</div>
 
-<!-- ... -->
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+<body>
+    
 
 <div class="row mt-3">
   <div class="col-12">
@@ -23,52 +31,48 @@
         <h6 class="card-subtitle mb-3">
           Gunakan kamera untuk mendeteksi wajah anda secara realtime.
         </h6>
-        <video id="videoElement" width="640" height="480" autoplay></video>
-        <canvas id="overlay" width="640" height="480" style="position: absolute; top: 0; left: 0;"></canvas>
+        <video id="videoElement" width="720" height="560" autoplay muted></video>
+        <canvas id="overlay" width="720" height="560"></canvas>
         <button id="startDetection" class="btn btn-success mt-2" type="button">Mulai Deteksi</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ... -->
-
-<script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
-
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    async function setupCamera() {
-      const video = document.getElementById('videoElement');
+async function loadModels() {
+  await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
+  await faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
+  await faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
+}
 
-      // Dapatkan akses ke webcam
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-      } catch (error) {
-        console.error("Error accessing webcam: ", error);
-      }
+async function setupCamera() {
+  const video = document.getElementById('videoElement');
 
-      // Muat model Face API
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/static/models');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+  } catch (error) {
+    console.error("Error accessing webcam: ", error);
+  }
+
+  await loadModels();
 
       video.addEventListener('play', () => {
-        const canvas = document.getElementById('overlay');
+        const videoContainer = document.querySelector('.card-body');
+        const canvas = faceapi.createCanvasFromMedia(video);
+        videoContainer.append(canvas);
         const displaySize = { width: video.width, height: video.height };
         faceapi.matchDimensions(canvas, displaySize);
 
         setInterval(async () => {
-          const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+          const detections = await faceapi.detectAllFaces(video, 
+              new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
           const resizedDetections = faceapi.resizeResults(detections, displaySize);
           canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
           faceapi.draw.drawDetections(canvas, resizedDetections);
-
-          // Hitung jarak berdasarkan bounding box
-          if (resizedDetections.length > 0) {
-            const box = resizedDetections[0].detection.box;
-            const faceSize = box.width * box.height;
-            console.log(`Face size: ${faceSize}`);
-          }
+          faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
         }, 100);
       });
     }
@@ -76,5 +80,5 @@
     setupCamera();
   });
 </script>
-
-{% endblock %}
+</body>
+</html>

@@ -135,38 +135,35 @@ def login():
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            users = User.query.all()
-            user = next((u for u in users if u['username'] == username and u['password'] == password), None)
+            user = User.query.filter_by(username=username, password=password).first()
             if user:
-                login_user(User(user['id'], user['username'], user['role']))
-                if user['role'] == "admin":
-                    return redirect(url_for('edit_product'))
+                login_user(user)
+                if user.role == "admin":
+                    return redirect(url_for('history_pemesanan'))
                 else:
-                    return redirect(url_for('edit_product'))
+                    return redirect(url_for('get_bookings'))
             flash('Invalid credentials')
         return render_template('admin/login.html')
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated :
+    if current_user.is_authenticated:
         if current_user.role == "admin":
             return redirect(url_for("history_pemesanan"))
         elif current_user.role == 'user':
             return redirect(url_for("get_bookings"))
     else:
         if request.method == 'POST':
-            email = request.form['email']
             username = request.form['username']
             password = request.form['password']
-            users = User.query.all()
-            cek_username = next((u for u in users if u['username'] == username ), None)
-            if cek_username:
-                flash("username sudah terdaftar")
+            existing_user = User.query.filter_by(username=username).first()
+            if existing_user:
+                flash("Username already exists")
                 return redirect(url_for('register'))
-            cek_email = next((u for u in users if u['email'] == email ), None)
-            if cek_email:
-                flash("email sudah terdaftar")
-                return redirect(url_for('register'))
-            
+            new_user = User(username=username, password=password, role='user')
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for('get_bookings'))
         return render_template('admin/register.html')
 @app.route('/logout')
 @login_required
@@ -211,7 +208,7 @@ def skin_detection_submit():
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
         hasil = predict_skin(destination)
-        session["jenis_kulit"]=hasil
+        session["jenis_kulit"] = hasil
         if hasil == False:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
         # Bebaskan RAM setelah prediksi
@@ -219,16 +216,14 @@ def skin_detection_submit():
         torch.cuda.empty_cache()
         gc.collect()
         if current_user.role == "user":
-            history_deteksi = HistoryDeteksi.query.all()
-            new_history_deteksi = {
-                'id':  len(history_deteksi) + 1,
-                'username': current_user.username,
-                "tanggal":"2024-08-01",
-                "image_url":"/static/upload"+random_name,
-                "terdeteksi_kulit":hasil
-            }
-            history_deteksi.append(new_history_deteksi)
-            save_history_deteksi(history_deteksi)
+            new_history_deteksi = HistoryDeteksi(
+                username=current_user.username,
+                tanggal=datetime.now().strftime("%Y-%m-%d"),
+                image_url=f"/static/upload/{random_name}",
+                terdeteksi_kulit=hasil
+            )
+            db.session.add(new_history_deteksi)
+            db.session.commit()
         return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -236,27 +231,16 @@ def skin_detection_submit():
 # Products Routes
 @app.route("/products")
 def products():
-    list_products = Product.query.all()
-    all_product = []
-    for product in list_products:
-        if product['id'] in [1, 2, 3, 4, 5]:
-            None
-        else:
-            all_product.append(product)
-    return render_template("products.html", list_products=all_product)
+    products = Product.query.all()
+    return render_template("products.html", list_products=products)
 
 @app.route("/products_detail/<int:id>")
 def products_detail(id):
-    list_products = Product.query.all()
-    list_bookings = Booking.query.all()
-    print(list_bookings)  # Debugging purposes
-    bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
-    print(bookings)  # Debugging purposes
-    product = next((product for product in list_products if product["id"] == id), None)
-    if product:
-        return render_template("product_detail.html", product=product, bookings=bookings)
-    else:
+    product = Product.query.get(id)
+    if not product:
         return jsonify({"error": "Product not found"}), 404
+    bookings = Booking.query.filter_by(product_id=id).all()
+    return render_template("product_detail.html", product=product, bookings=bookings)
 
 @app.route("/products_old")
 def products_old():
@@ -283,46 +267,51 @@ def get_product(product_id):
 @app.route('/user/history_booking', methods=['GET'])
 @login_required
 def history_pemesanan():
-    bookings = Booking.query.all()
+    bookings = Booking.query.filter_by(nama_client=current_user.username).order_by(Booking.tanggal.desc()).all()
     daily_data = defaultdict(int)
     monthly_data = defaultdict(int)
-    history_bookings = []
     for booking in bookings:
-        date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
+        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
         day = date_obj.day
         month = date_obj.strftime('%B')
         daily_data[day] += 1
         monthly_data[month] += 1
-        if booking.nama_client == current_user.fullname :
-             history_bookings.append(booking)
-    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
     daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
     monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
-    return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
+    return render_template('admin/bookings.html', bookings=bookings, daily=daily_chart_data, monthly=monthly_chart_data)
 
 @app.route('/bookings', methods=['POST'])
 def book():
-    data = request.json
-    bookings = Booking.query.all()
-    # Check if the booking with the same product_id, date, and time already exists
-    for booking in bookings:
-        if (booking['product_id'] == data['product_id'] and 
-            booking['tanggal'] == data['date'] and 
-            booking['jam'] == data['time']):
-            return jsonify({'message': 'The selected slot is already booked.'}), 409
-    new_booking = {
-        'id': len(bookings) + 1,
-        'product_id': data['product_id'],
-        'product_name': data['productName'],
-        'nama_client': data['name'],
-        'alamat': data['address'],
-        'no_hp': data['phone'],
-        'tanggal': data['date'],
-        'jam': data['time']
-    }
-    bookings.append(new_booking)
-    save_bookings(bookings)
-    return jsonify({'message': 'Booking successful'}), 200
+        data = request.json if request.is_json else request.form
+        product_id = data.get('product_id')
+        date = data.get('date', datetime.now().strftime("%Y-%m-%d"))
+        time = data.get('time')
+
+        # Filter untuk memeriksa apakah slot yang dipilih sudah dipesan
+        existing_booking = Booking.query.filter_by(product_id=product_id, tanggal=date, jam=time).first()
+        if existing_booking:
+            if request.is_json:
+                return jsonify({'message': 'The selected slot is already booked.'}), 409
+            else:
+                flash("Slot yang dipilih sudah dipesan.")
+                return redirect(url_for('get_bookings'))
+
+        # Proses pemesanan baru
+        new_booking = Booking(
+            product_id=product_id,
+            nama_client=current_user.username,
+            tanggal=date,
+            jam=time,
+            status='pending'
+        )
+        db.session.add(new_booking)
+        db.session.commit()
+
+        if request.is_json:
+            return jsonify({'message': 'Booking successful'}), 200
+        else:
+            flash("Booking berhasil dilakukan")
+            return redirect(url_for('get_bookings'))
 
 @app.route('/admin/products', methods=['POST'])
 @login_required
@@ -533,26 +522,19 @@ def predict_skin(image_path):
     else:
         return False
 
-def backup_files():
-    files_to_backup = ['products.json', 'bookings.json']
-    destination = os.path.join(project_directory, 'backup_db')
-    if not os.path.exists(destination):
-        os.makedirs(destination)
-    for file_name in files_to_backup:
-        source = os.path.join(project_directory, file_name)
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        backup_filename = f"{os.path.splitext(file_name)[0]}_backup_{timestamp}.json"
-        backup_path = os.path.join(destination, backup_filename)
-        if os.path.exists(source):
-            shutil.copy2(source, backup_path)
-            print(f"Backup created at {backup_path}")
-        else:
-            print(f"Source file {source} does not exist.")
+# Custom Error Handling
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Page not found"}), 404
+
+# Bersihkan cache setiap 24 jam
+def clear_cache():
+    torch.cuda.empty_cache()
+    gc.collect()
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=backup_files, trigger="cron", hour=0, minute=0)
+scheduler.add_job(func=clear_cache, trigger="interval", hours=24)
 scheduler.start()
-
 
 # CRUD for Users
 @app.route('/users')

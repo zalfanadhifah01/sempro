@@ -1,24 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify,flash,session
-import os,uuid, json,random,string, pickle ,nltk,shutil,torch, gc
-from PIL import Image
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, Response
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
+from models import db, User, Product, HistoryDeteksi, Booking
+import os, uuid, json, random, string, pickle,nltk
 import numpy as np
-from collections import defaultdict
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.preprocessing.text import Tokenizer
 from keras.models import load_model
-from torchvision import transforms
-from torchvision.models import resnet50, ResNet50_Weights
-from torch import nn
-from facenet_pytorch import MTCNN
 from copy import deepcopy
 from datetime import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
+from collections import defaultdict
+from PIL import Image
+import gc
+import tensorflow as tf
+import cv2
+import torch
+from torchvision import transforms
+from torch import nn
+from torchvision.models import resnet50, ResNet50_Weights
 
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder
@@ -26,57 +30,33 @@ app.config['SECRET_KEY'] = 'dmo42901i41;/.p`'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+db.init_app(app)
 
-# Load users from JSON file
-def load_users():
-    file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
-# Save users to JSON file
-def save_products(products):
-    file_path = os.path.join(project_directory, 'users.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(products, file, indent=4)
+# Create tables
+def create_tables():
+    with app.app_context():
+        db.create_all()
 
+class LoginUser(UserMixin):
+    def __init__(self, id, username, password, role):
+        self.id = id
+        self.username = username
+        self.password = password
+        self.role = role
 
-# Load products from JSON file
-def load_products():
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'r', encoding='utf-8') as file:
-        products = json.load(file)
-        for product in products:
-            product['kategori'] = str(product.get('kategori', ''))  # Ensure 'kategori' is JSON serializable
-        return products
+    def get_role(self):
+        return self.role
 
-# Save products to JSON file
-def save_products(products):
-    file_path = os.path.join(project_directory, 'products.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(products, file, indent=4)
-
-# Save products to JSON file
-def save_bookings(bookings):
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(bookings, file, indent=4)
-
-# Load products from JSON file
-def load_bookings():
-    file_path = os.path.join(project_directory, 'bookings.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(int(user_id))
+    if user:
+        return LoginUser(user.id, user.username, user.password, user.role)
     
-# Save Deteksi to JSON file
-def save_history_deteksi(history_deteksi):
-    file_path = os.path.join(project_directory, 'history_deteksi.json')
-    with open(file_path, 'w',encoding='utf-8') as file:
-        json.dump(history_deteksi, file, indent=4)
+# ==========================================================
+# Chatbot Functionality
+# ==========================================================
 
-# Load Deteksi from JSON file
-def load_history_deteksi():
-    file_path = os.path.join(project_directory, 'history_deteksi.json')
-    with open(file_path, 'r',encoding='utf-8') as file:
-        return json.load(file)
 # Variabel Global untuk Chatbot
 global responses, lemmatizer, tokenizer, le, model, input_shape
 input_shape = 11
@@ -148,64 +128,6 @@ def generate_response(text):
 # Persiapan Chatbot
 preparation()
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.role == "admin":
-        return redirect(url_for("history_pemesanan"))
-    elif current_user.role == 'user':
-        return redirect(url_for("get_bookings"))
-    else:
-        if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            users = load_users()
-            user = next((u for u in users if u['username'] == username and u['password'] == password), None)
-            if user:
-                login_user(User(user['id'], user['username'], user['role']))
-                if user['role'] == "admin":
-                    return redirect(url_for('edit_product'))
-                else:
-                    return redirect(url_for('edit_product'))
-            flash('Invalid credentials')
-        return render_template('admin/login.html')
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.role == "admin":
-        return redirect(url_for("history_pemesanan"))
-    elif current_user.role == 'user':
-        return redirect(url_for("get_bookings"))
-    else:
-        if request.method == 'POST':
-            email = request.form['email']
-            username = request.form['username']
-            password = request.form['password']
-            users = load_users()
-            cek_username = next((u for u in users if u['username'] == username ), None)
-            if cek_username:
-                flash("username sudah terdaftar")
-                return redirect(url_for('register'))
-            cek_email = next((u for u in users if u['email'] == email ), None)
-            if cek_email:
-                flash("email sudah terdaftar")
-                return redirect(url_for('register'))
-            
-        return render_template('admin/login.html')
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-# Static Page Routes
-@app.route('/')
-def home():
-    return render_template('skin_detection.html')
-
-# Route Landing Page
-@app.route("/home")
-def home_view():
-    return render_template("index.html")
-
 # Chatbot Routes
 @app.route("/bot")
 def chatbot():
@@ -217,296 +139,16 @@ def get_bot_response():
     result = generate_response(user_input)
     return str(result)
 
-# Skin Detection Routes
-@app.route("/skin_detection")
-def skin_detection():
-    return redirect(url_for('home'))
+# ==============================================
+# Fungsi dan Route untuk Prediksi Kulit
+# ==============================================
+# Mapping antara label dan index
 
-@app.route("/skin_detection_submit", methods=["POST"])
-def skin_detection_submit():
-    file = request.files['gambar']
-    try:
-        img = Image.open(file)
-        if img.mode == 'RGBA':
-            img = img.convert('RGB')
-        random_name = uuid.uuid4().hex + ".jpg"
-        destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
-        img.save(destination)
-        hasil = predict_skin(destination)
-        session["jenis_kulit"]=hasil
-        if hasil == False:
-            return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
-        # Bebaskan RAM setelah prediksi
-        del img
-        torch.cuda.empty_cache()
-        gc.collect()
-        if current_user.role == "user":
-            history_deteksi = load_history_deteksi()
-            new_history_deteksi = {
-                'id':  len(history_deteksi) + 1,
-                'username': current_user.username,
-                "tanggal":"2024-08-01",
-                "image_url":"/static/upload"+random_name,
-                "terdeteksi_kulit":hasil
-            }
-            history_deteksi.append(new_history_deteksi)
-            save_history_deteksi(history_deteksi)
-        return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
-    except Exception as e:
-        return jsonify({"error": str(e)})
 
-# Products Routes
-@app.route("/products")
-def products():
-    list_products = load_products()
-    all_product = []
-    for product in list_products:
-        if product['id'] in [1, 2, 3, 4, 5]:
-            None
-        else:
-            all_product.append(product)
-    return render_template("products.html", list_products=all_product)
+# Mapping label dan index
+label_index = {"dry": 0, "normal": 1, "oily": 2, "kombinasi": 3, "sensitive": 4}
+index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sensitive"}
 
-@app.route("/products_detail/<int:id>")
-def products_detail(id):
-    list_products = load_products()
-    list_bookings = load_bookings()
-    print(list_bookings)  # Debugging purposes
-    bookings = [booking for booking in list_bookings if int(booking["product_id"]) == id]
-    print(bookings)  # Debugging purposes
-    product = next((product for product in list_products if product["id"] == id), None)
-    if product:
-        return render_template("product_detail.html", product=product, bookings=bookings)
-    else:
-        return jsonify({"error": "Product not found"}), 404
-
-@app.route("/products_old")
-def products_old():
-    list_products = load_products()
-    list_product_by_treatment = []
-    for product in list_products:
-        if product['id'] in [1, 2, 3, 4, 5]:
-            list_product_by_treatment.append(product)
-    return render_template("products_old.html", list_products=list_product_by_treatment)
-
-@app.route('/api/products', methods=['GET'])
-def get_products():
-    products = load_products()
-    return jsonify(products)
-
-@app.route('/api/products/<int:product_id>', methods=['GET'])
-def get_product(product_id):
-    products = load_products()
-    product = next((prod for prod in products if prod['id'] == product_id), None)
-    if product is None:
-        return jsonify({'error': 'Product not found'}), 404
-    return jsonify(product)
-
-@app.route('/user/history_booking', methods=['GET'])
-@login_required
-def history_pemesanan():
-    bookings = load_bookings()
-    daily_data = defaultdict(int)
-    monthly_data = defaultdict(int)
-    history_bookings = []
-    for booking in bookings:
-        date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
-        day = date_obj.day
-        month = date_obj.strftime('%B')
-        daily_data[day] += 1
-        monthly_data[month] += 1
-        if booking.nama_client == current_user.fullname :
-             history_bookings.append(booking)
-    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
-    daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
-    monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
-    return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
-
-@app.route('/bookings', methods=['POST'])
-def book():
-    data = request.json
-    bookings = load_bookings()
-    # Check if the booking with the same product_id, date, and time already exists
-    for booking in bookings:
-        if (booking['product_id'] == data['product_id'] and 
-            booking['tanggal'] == data['date'] and 
-            booking['jam'] == data['time']):
-            return jsonify({'message': 'The selected slot is already booked.'}), 409
-    new_booking = {
-        'id': len(bookings) + 1,
-        'product_id': data['product_id'],
-        'product_name': data['productName'],
-        'nama_client': data['name'],
-        'alamat': data['address'],
-        'no_hp': data['phone'],
-        'tanggal': data['date'],
-        'jam': data['time']
-    }
-    bookings.append(new_booking)
-    save_bookings(bookings)
-    return jsonify({'message': 'Booking successful'}), 200
-
-@app.route('/admin/products', methods=['POST'])
-@login_required
-def add_product():
-    products = load_products()  # Muat produk dari file JSON
-    product_name = request.form['nama']
-    product_description = request.form['deskripsi']
-    product_price = request.form['harga']
-    product_image = request.files['gambar']
-    product_key_highlight = request.form['key_highlight']
-    product_kategori = request.form['kategori']
-    product_keterangan = request.form['keterangan']
-    product_diskon = request.form['diskon']
-    if product_image:
-        try:
-            img = Image.open(product_image)
-            if img.mode == 'RGBA':
-                img = img.convert('RGB')
-            random_name = uuid.uuid4().hex + ".jpg"
-            destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
-            img.save(destination)
-            file_url  = "/static/upload/"+random_name
-        except Exception as e:
-            return jsonify({"error": str(e)}), 400
-    else:
-        file_url = "/static/upload/"+"treatment_5_icon.jpg"
-    if products:
-        last_id = max(product['id'] for product in products)
-        product_id = last_id + 1
-    else:
-        product_id = 1  # Jika list kosong, mulai dari 1
-    new_product = {
-        'id': product_id,
-        'nama': product_name,
-        'deskripsi': product_description,
-        'harga': product_price,
-        'gambar': file_url,
-        "rating": "4.5",
-        "review": "100",
-        "key_highlight": product_key_highlight,
-        "kategori": product_kategori,
-        "keterangan":product_keterangan,
-    }
-    products.append(new_product)
-    save_products(products)
-    return redirect(url_for('edit_product'))
-
-@app.route('/admin/bookings', methods=['GET'])
-@login_required
-def get_bookings():
-    bookings = load_bookings()
-    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x['tanggal'], '%Y-%m-%d'), reverse=True)
-    daily_data = defaultdict(int)
-    monthly_data = defaultdict(int)
-    for booking in bookings:
-        date_obj = datetime.strptime(booking['tanggal'], '%Y-%m-%d')
-        day = date_obj.day
-        month = date_obj.strftime('%B')
-        daily_data[day] += 1
-        monthly_data[month] += 1
-    daily_chart_data = [daily_data[i] for i in range(1, 32)]  # Data harian untuk 1-31
-    monthly_chart_data = [monthly_data[month] for month in ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]]
-    return render_template('admin/bookings.html', bookings=sorted_bookings,daily= daily_chart_data, monthly= monthly_chart_data)
-
-@app.route("/admin/edit_product")
-@login_required
-def edit_product():
-    list_products = load_products()
-    all_product = []
-    for product in list_products:
-        if product['id'] in [1, 2, 3, 4, 5]:
-            None
-        else:
-            all_product.append(product)
-    print(all_product)
-    return render_template("admin/product_edit.html", list_products=all_product)
-
-@app.route("/admin/edit_product_detail/<int:id>")
-@login_required
-def edit_product_detail(id):
-    list_products = load_products()
-    product = next((product for product in list_products if product["id"] == id), None)
-    if product:
-        return render_template("admin/product_detail_edit.html", product=product)
-    else:
-        return jsonify({"error": "Product not found"}), 404
-
-@app.route('/admin/products/<int:product_id>', methods=['PUT'])
-def update_product(product_id):
-    products = load_products()
-    updated_product = request.form.to_dict()
-    for i, product in enumerate(products):
-        if product['id'] == product_id:
-            updated_product["id"]=int(product_id)
-            file = request.files.get('gambar')
-            if file:
-                try:
-                    img = Image.open(file)
-                    if img.mode == 'RGBA':
-                        img = img.convert('RGB')
-                    random_name = uuid.uuid4().hex + ".jpg"
-                    destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
-                    img.save(destination)
-                    updated_product["gambar"] = "/static/upload/"+random_name
-                except Exception as e:
-                    return jsonify({"error": str(e)}), 400
-            else:
-                updated_product['gambar'] = product["gambar"]
-            products[i] = updated_product
-            save_products(products)
-            return jsonify(updated_product)
-    return jsonify({'error': 'Product not found'}), 404
-    
-
-@app.route('/admin/products/<int:product_id>', methods=['DELETE'])
-@login_required
-def delete_product(product_id):
-    products = load_products()
-    initial_count = len(products)
-    products = [prod for prod in products if prod['id'] != product_id]
-    save_products(products)
-    final_count = len(products)
-    if initial_count == final_count:
-        app.logger.error(f"Produk dengan ID {product_id} tidak ditemukan.")
-    else:
-        app.logger.info(f"Produk dengan ID {product_id} berhasil dihapus.")
-    return jsonify({'message': 'Product deleted'}), 200
-
-@app.route("/rekomendasi_kering")
-def get_rekomendasi_kering():
-    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
-    list_products = load_products()
-    rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
-    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
-    rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
-    return rekomendasi
-
-@app.route("/rekomendasi_berminyak")
-def get_rekomendasi_berminyak():
-    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
-    list_products = load_products()
-    rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
-    rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
-    rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
-    return rekomendasi
-
-@app.route("/rekomendasi_normal")
-def get_rekomendasi_normal():
-    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
-    list_products = load_products()
-    rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
-    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
-    rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
-    rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
-    return rekomendasi
-
-# Fungsi Prediksi Kulit
-label_index = {"dry": 0, "normal": 1, "oily": 2}
-index_label = {0: "kering", 1: "normal", 2: "berminyak"}
 LR = 0.1
 STEP = 15
 GAMMA = 0.1
@@ -524,57 +166,426 @@ optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
 # Load the checkpoint
-model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint.pth')
+model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint_old.pth')
 checkpoint = torch.load(model_location, map_location=torch.device('cpu'))
 model_skin.load_state_dict(checkpoint['model_state_dict'])
 optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
 scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
 
-mtcnn = MTCNN(keep_all=False, device='cuda' if torch.cuda.is_available() else 'cpu')
 transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-def predict_skin(image_path):
-    img = Image.open(image_path).convert("RGB")
-    boxes, _ = mtcnn.detect(img)
-    if boxes is not None:
-        box = boxes[0]
-        img = img.crop(box)
-        img = transform(img)  # Menggunakan transform untuk mengubah gambar menjadi tensor
-        img = img.unsqueeze(0)  # Menambahkan dimensi batch
-        model_skin.eval()
-        with torch.no_grad():
-            img = img.to(device)
-            out = model_skin(img)
-            index = out.argmax(1).item()
-            hasil = index_label[index]
-            return hasil
-    else:
-        return False
+# Deteksi wajah dan prediksi jenis kulit
+def predict_skin(frame):
+    prototxt = "E:\\swakala_joki_ta_sempro\\model_deteksi\\deploy.prototxt"
+    mobile_net_ssd = "E:\\swakala_joki_ta_sempro\\model_deteksi\\res10_300x300_ssd_iter_140000.caffemodel"
+    net = cv2.dnn.readNetFromCaffe(prototxt, mobile_net_ssd)
 
-def backup_files():
-    files_to_backup = ['products.json', 'bookings.json']
-    destination = os.path.join(project_directory, 'backup_db')
-    if not os.path.exists(destination):
-        os.makedirs(destination)
-    for file_name in files_to_backup:
-        source = os.path.join(project_directory, file_name)
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        backup_filename = f"{os.path.splitext(file_name)[0]}_backup_{timestamp}.json"
-        backup_path = os.path.join(destination, backup_filename)
-        if os.path.exists(source):
-            shutil.copy2(source, backup_path)
-            print(f"Backup created at {backup_path}")
+
+    (h, w) = frame.shape[:2]
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+    net.setInput(blob)
+    detections = net.forward()
+
+    for i in range(0, detections.shape[2]):
+        confidence = detections[0, 0, i, 2]
+        if confidence > 0.5:
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            face = frame[startY:endY, startX:endX]
+
+            # Proses prediksi kulit
+            img = Image.fromarray(cv2.cvtColor(face, cv2.COLOR_BGR2RGB)).convert("RGB")
+            img = transform(img).unsqueeze(0).to(device)
+
+            model_skin.eval()
+            with torch.no_grad():
+                out = model_skin(img)
+                index = out.argmax(1).item()
+                return index_label[index]
+
+    return None
+
+
+# Menggunakan kamera bawaan
+camera = cv2.VideoCapture(0)
+
+# Streaming video ke Flask
+def gen_frames():
+    while True:
+        success, frame = camera.read()  # Membaca frame dari kamera
+        if not success:
+            break
         else:
-            print(f"Source file {source} does not exist.")
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=backup_files, trigger="cron", hour=0, minute=0)
-scheduler.start()
+            # Encode frame ke format yang bisa dikirim ke browser
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+
+            # Mengirimkan frame ke browser
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+# Route utama untuk halaman HTML
+@app.route('/cobaa')
+def index():
+    return render_template('cobaa.html')
+
+# Route untuk streaming video
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+# Skin Detection Routes
+@app.route("/skin_detection")
+def skin_detection():
+    return redirect(url_for('home'))
+
+@app.route("/skin_detection_submit", methods=["POST"])
+def skin_detection_submit():
+    file = request.files['gambar']
+    try:
+        img = Image.open(file)
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
+        random_name = uuid.uuid4().hex + ".jpg"
+        destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+        img.save(destination)
+        hasil = predict_skin(destination)
+        session["jenis_kulit"] = hasil
+        if not hasil:
+            return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
+        # Bebaskan RAM setelah prediksi
+        del img
+        gc.collect()
+        if current_user.role == "user":
+            new_history_deteksi = HistoryDeteksi(
+                username=current_user.username,
+                tanggal=datetime.now().strftime("%Y-%m-%d"),
+                image_url=f"/static/upload/{random_name}",
+                terdeteksi_kulit=hasil
+            )
+            db.session.add(new_history_deteksi)
+            db.session.commit()
+        return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+# ==============================================
+# Fungsi dan Route lainnya
+# ==============================================
+# Static Page Routes
+
+# Route untuk tampilan utama
+@app.route('/')
+def home():
+    return render_template('skin_detection.html')
+
+# Route Landing Page
+@app.route("/home")
+def home_view():
+    return render_template("index.html")
+
+# Route untuk halaman login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        if current_user.role == "admin":
+            return redirect(url_for("history_pemesanan"))
+        elif current_user.role == 'user':
+            return redirect(url_for("get_bookings"))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
+            login_user(user)
+            if user.role == "admin":
+                return redirect(url_for('history_pemesanan'))
+            else:
+                return redirect(url_for('get_bookings'))
+        flash('Invalid credentials')
+    return render_template('admin/login.html')
+
+# Route untuk halaman register
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        if current_user.role == "admin":
+            return redirect(url_for("history_pemesanan"))
+        elif current_user.role == 'user':
+            return redirect(url_for("get_bookings"))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            flash("Username already exists")
+            return redirect(url_for('register'))
+        new_user = User(username=username, password=password, role='user')
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for('get_bookings'))
+    return render_template('admin/register.html')
+
+# Route untuk logout
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+# Route untuk daftar produk
+@app.route("/products")
+def products():
+    products = Product.query.all()
+    return render_template("products.html", list_products=products)
+
+# Route untuk detail produk
+@app.route("/products_detail/<int:id>")
+def products_detail(id):
+    product = Product.query.get(id)
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+    bookings = Booking.query.filter_by(product_id=id).all()
+    return render_template("product_detail.html", product=product, bookings=bookings)
+
+# Route untuk daftar produk lama
+@app.route("/products_old")
+def products_old():
+    list_products = Product.query.all()
+    list_product_by_treatment = [product for product in list_products if product.id in [1, 2, 3, 4, 5]]
+    return render_template("products_old.html", list_products=list_product_by_treatment)
+
+# API untuk mendapatkan semua produk
+@app.route('/api/products', methods=['GET'])
+def get_products():
+    products = Product.query.all()
+    return jsonify([product.serialize for product in products])
+
+# API untuk mendapatkan produk berdasarkan ID
+@app.route('/api/products/<int:product_id>', methods=['GET'])
+def get_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    return jsonify(product.serialize)
+
+# Route untuk history pemesanan user
+@app.route('/user/history_booking', methods=['GET'])
+@login_required
+def history_pemesanan():
+    bookings = Booking.query.filter_by(nama_client=current_user.username).order_by(Booking.tanggal.desc()).all()
+    daily_data = defaultdict(int)
+    monthly_data = defaultdict(int)
+    for booking in bookings:
+        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
+        day = date_obj.day
+        month = date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]
+    monthly_chart_data = [monthly_data[month] for month in [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"]]
+    return render_template('admin/bookings.html', bookings=bookings, daily=daily_chart_data, monthly=monthly_chart_data)
+
+# Route untuk melakukan pemesanan
+@app.route('/bookings', methods=['POST'])
+@login_required
+def book():
+    data = request.json if request.is_json else request.form
+    product_id = data.get('product_id')
+    date = data.get('date', datetime.now().strftime("%Y-%m-%d"))
+    time = data.get('time')
+
+    existing_booking = Booking.query.filter_by(product_id=product_id, tanggal=date, jam=time).first()
+    if existing_booking:
+        if request.is_json:
+            return jsonify({'message': 'The selected slot is already booked.'}), 409
+        else:
+            flash("Slot yang dipilih sudah dipesan.")
+            return redirect(url_for('get_bookings'))
+
+    new_booking = Booking(
+        product_id=product_id,
+        nama_client=current_user.username,
+        tanggal=date,
+        jam=time,
+        status='pending'
+    )
+    db.session.add(new_booking)
+    db.session.commit()
+
+    if request.is_json:
+        return jsonify({'message': 'Booking successful'}), 200
+    else:
+        flash("Booking berhasil dilakukan")
+        return redirect(url_for('get_bookings'))
+
+# Route untuk menambah produk
+@app.route('/admin/products', methods=['POST'])
+@login_required
+def tambah_product():
+    product_name = request.form['nama']
+    product_description = request.form['deskripsi']
+    product_price = request.form['harga']
+    product_image = request.files['gambar']
+    product_key_highlight = request.form['key_highlight']
+    product_kategori = request.form['kategori']
+    product_keterangan = request.form['keterangan']
+    product_diskon = request.form['diskon']
+    
+    if product_image:
+        try:
+            img = Image.open(product_image)
+            if img.mode == 'RGBA':
+                img = img.convert('RGB')
+            random_name = uuid.uuid4().hex + ".jpg"
+            destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+            img.save(destination)
+            file_url = "/static/upload/" + random_name
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+    else:
+        file_url = "/static/upload/treatment_5_icon.jpg"
+
+    last_product = Product.query.order_by(Product.id.desc()).first()
+    product_id = last_product.id + 1 if last_product else 1
+    
+    new_product = Product(
+        id=product_id,
+        nama=product_name,
+        deskripsi=product_description,
+        harga=product_price,
+        gambar=file_url,
+        key_highlight=product_key_highlight,
+        kategori=product_kategori,
+        keterangan=product_keterangan,
+        diskon=product_diskon
+    )
+    db.session.add(new_product)
+    db.session.commit()
+
+    return redirect(url_for('edit_product'))
+
+# Route untuk menampilkan daftar pemesanan
+@app.route('/admin/bookings', methods=['GET'])
+@login_required
+def get_bookings():
+    bookings = Booking.query.all()
+    daily_data, monthly_data = defaultdict(int), defaultdict(int)
+    
+    for booking in bookings:
+        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
+        day, month = date_obj.day, date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+    
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]
+    monthly_chart_data = [monthly_data[month] for month in [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"]]
+    
+    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x.tanggal, '%Y-%m-%d'), reverse=True)
+    
+    return render_template('admin/bookings.html', bookings=sorted_bookings, daily=daily_chart_data, monthly=monthly_chart_data)
+
+# Route untuk mengedit produk
+@app.route("/admin/edit_product")
+@login_required
+def edit_product():
+    list_products = Product.query.all()
+    all_product = [product for product in list_products if product.id not in [1, 2, 3, 4, 5]]
+    return render_template("admin/product_edit.html", list_products=all_product)
+
+# Route untuk detail edit produk
+@app.route("/admin/edit_product_detail/<int:id>")
+@login_required
+def edit_product_detail(id):
+    product = Product.query.get(id)
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+    return render_template("admin/product_detail_edit.html", product=product)
+
+# Route untuk memperbarui produk
+@app.route('/admin/products/<int:product_id>', methods=['PUT'])
+@login_required
+def update_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    updated_product = request.form.to_dict()
+    file_url = "/static/upload/treatment_5_icon.jpg"
+    
+    if 'gambar' in request.files:
+        image = request.files['gambar']
+        if image:
+            try:
+                img = Image.open(image)
+                if img.mode == 'RGBA':
+                    img = img.convert('RGB')
+                random_name = uuid.uuid4().hex + ".jpg"
+                destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+                img.save(destination)
+                file_url = "/static/upload/" + random_name
+            except Exception as e:
+                return jsonify({"error": str(e)}), 400
+    
+    product.nama = updated_product.get('nama', product.nama)
+    product.deskripsi = updated_product.get('deskripsi', product.deskripsi)
+    product.harga = updated_product.get('harga', product.harga)
+    product.gambar = file_url
+    product.key_highlight = updated_product.get('key_highlight', product.key_highlight)
+    product.kategori = updated_product.get('kategori', product.kategori)
+    product.keterangan = updated_product.get('keterangan', product.keterangan)
+    product.diskon = updated_product.get('diskon', product.diskon)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Product updated successfully'})
+
+@app.route("/rekomendasi_kering")
+def get_rekomendasi_kering():
+    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
+    list_products = Product.query.all()
+    rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
+    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
+    rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
+    return rekomendasi
+
+@app.route("/rekomendasi_berminyak")
+def get_rekomendasi_berminyak():
+    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
+    list_products = Product.query.all()
+    rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
+    rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
+    rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
+    return rekomendasi
+
+@app.route("/rekomendasi_normal")
+def get_rekomendasi_normal():
+    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
+    list_products = Product.query.all()
+    rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
+    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
+    rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+    rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
+    rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
+    return rekomendasi
+
+# Custom Error Handling
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "Page not found"}), 404
 
 if __name__ == '__main__':
+    create_tables()
     app.run(host="0.0.0.0",debug=True)
-

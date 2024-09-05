@@ -3,10 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Stream</title>
+    <title>Realtime Skin Type Prediction with WebSocket</title>
 </head>
 <body>
-    <h1>Video Stream</h1>
-    <img src="{{ url_for('video_feed') }}" width="720" height="480">
+    <h1>Realtime Skin Type Prediction with WebSocket</h1>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <p>Skin type: <span id="skin_type"></span></p>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const skinTypeSpan = document.getElementById('skin_type');
+
+        // Connect to WebSocket server
+        const socket = io();
+
+        // Start the camera feed
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                video.srcObject = stream;
+            });
+        }
+
+        // Capture and send frames to server using WebSocket
+        function captureFrame() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to base64 image data
+            const dataURL = canvas.toDataURL('image/jpeg');
+            const base64Data = dataURL.replace(/^data:image\/jpeg;base64,/, '');
+
+            // Send frame to server via WebSocket
+            socket.emit('image_frame', base64Data);
+        }
+
+        // Receive skin type prediction from server
+        socket.on('prediction', function(data) {
+            skinTypeSpan.innerText = data.skin_type;
+        });
+
+        // Capture a frame every 500ms
+        setInterval(captureFrame, 500);
+    </script>
 </body>
 </html>

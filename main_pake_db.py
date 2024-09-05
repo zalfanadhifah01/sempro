@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Product, HistoryDeteksi, Booking
-import os, uuid, json, random, string, pickle,nltk
+import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64
 import numpy as np
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -18,6 +18,7 @@ import torch
 from torchvision import transforms
 from torch import nn
 from torchvision.models import resnet50, ResNet50_Weights
+from flask_socketio import SocketIO, emit
 
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
@@ -146,9 +147,23 @@ def get_bot_response():
 
 
 # Mapping label dan index
+
+# WebSocket event for receiving image frames and sending back prediction
+socketio = SocketIO(app)
+@socketio.on('image_frame')
+def handle_image(data_image):
+    # Decode base64 image data
+    sbuf = io.BytesIO(base64.b64decode(data_image))
+    frame = np.array(Image.open(sbuf))
+
+    # Predict skin type from the frame
+    result = predict_skin(frame)
+
+    # Send the prediction result back to the client
+    emit('prediction', {'skin_type': result})
+
 label_index = {"dry": 0, "normal": 1, "oily": 2, "kombinasi": 3, "sensitive": 4}
 index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sensitive"}
-
 LR = 0.1
 STEP = 15
 GAMMA = 0.1
@@ -588,4 +603,4 @@ def not_found(e):
 
 if __name__ == '__main__':
     create_tables()
-    app.run(host="0.0.0.0",debug=True)
+    socketio.run(host="0.0.0.0",debug=True)

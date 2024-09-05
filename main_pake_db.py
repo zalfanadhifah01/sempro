@@ -600,7 +600,7 @@ def get_rekomendasi_normal():
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"error": "Page not found"}), 404
-
+#app.run(host="0.0.0.0",debug=True)
 if __name__ == '__main__':
     create_tables()
-    socketio.run(host="0.0.0.0",debug=True)
+    socketio.run(app,debug=True)

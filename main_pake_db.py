@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, Response
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Product, HistoryDeteksi, Booking
@@ -7,11 +7,17 @@ import numpy as np
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
+from copy import deepcopy
 from datetime import datetime
 from collections import defaultdict
 from PIL import Image
 import gc
 import tensorflow as tf
+import cv2
+import torch
+from torchvision import transforms
+from torch import nn
+from torchvision.models import resnet50, ResNet50_Weights
 
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
@@ -138,41 +144,100 @@ def get_bot_response():
 # ==============================================
 # Mapping antara label dan index
 
+
+# Mapping label dan index
 label_index = {"dry": 0, "normal": 1, "oily": 2, "kombinasi": 3, "sensitive": 4}
 index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sensitive"}
+
+LR = 0.1
+STEP = 15
+GAMMA = 0.1
+OUT_CLASSES = 3
 IMG_SIZE = 224
 
-# Load TFLite model
-interpreter = tf.lite.Interpreter(model_path="model_skin.tflite")
-interpreter.allocate_tensors()
+resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+num_ftrs = resnet.fc.in_features
+resnet.fc = nn.Linear(num_ftrs, OUT_CLASSES)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+model_skin = deepcopy(resnet)
+model_skin = model_skin.to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
+scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
-# Mendapatkan indeks input dan output dari TFLite model
-input_details = interpreter.get_input_details()
-output_details = interpreter.get_output_details()
+# Load the checkpoint
+model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint_old.pth')
+checkpoint = torch.load(model_location, map_location=torch.device('cpu'))
+model_skin.load_state_dict(checkpoint['model_state_dict'])
+optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
 
-def transform(image):
-    # Transform image to the required input size and normalize it
-    image = image.resize((IMG_SIZE, IMG_SIZE))
-    image = np.array(image) / 255.0
-    image = np.expand_dims(image, axis=0).astype(np.float32)
-    return image
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Resize((IMG_SIZE, IMG_SIZE)),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
 
-def predict_skin(image_path):
-    img = Image.open(image_path).convert("RGB")
-    img = transform(img)
+# Deteksi wajah dan prediksi jenis kulit
+def predict_skin(frame):
+    prototxt = "E:\\swakala_joki_ta_sempro\\model_deteksi\\deploy.prototxt"
+    mobile_net_ssd = "E:\\swakala_joki_ta_sempro\\model_deteksi\\res10_300x300_ssd_iter_140000.caffemodel"
+    net = cv2.dnn.readNetFromCaffe(prototxt, mobile_net_ssd)
 
-    # Set the tensor to the image
-    interpreter.set_tensor(input_details[0]['index'], img)
 
-    # Run the interpreter
-    interpreter.invoke()
+    (h, w) = frame.shape[:2]
+    blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+    net.setInput(blob)
+    detections = net.forward()
 
-    # The model's output is in the form of logits
-    output_data = interpreter.get_tensor(output_details[0]['index'])
-    index = np.argmax(output_data, axis=1)[0]
-    hasil = index_label[index]
+    for i in range(0, detections.shape[2]):
+        confidence = detections[0, 0, i, 2]
+        if confidence > 0.5:
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            face = frame[startY:endY, startX:endX]
 
-    return hasil
+            # Proses prediksi kulit
+            img = Image.fromarray(cv2.cvtColor(face, cv2.COLOR_BGR2RGB)).convert("RGB")
+            img = transform(img).unsqueeze(0).to(device)
+
+            model_skin.eval()
+            with torch.no_grad():
+                out = model_skin(img)
+                index = out.argmax(1).item()
+                return index_label[index]
+
+    return None
+
+
+# Menggunakan kamera bawaan
+camera = cv2.VideoCapture(0)
+
+# Streaming video ke Flask
+def gen_frames():
+    while True:
+        success, frame = camera.read()  # Membaca frame dari kamera
+        if not success:
+            break
+        else:
+
+            # Encode frame ke format yang bisa dikirim ke browser
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+
+            # Mengirimkan frame ke browser
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+# Route utama untuk halaman HTML
+@app.route('/cobaa')
+def index():
+    return render_template('cobaa.html')
+
+# Route untuk streaming video
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Skin Detection Routes
 @app.route("/skin_detection")

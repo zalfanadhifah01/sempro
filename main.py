@@ -200,7 +200,6 @@ def predict_skin(frame):
     mobile_net_ssd = "E:\\swakala_joki_ta_sempro\\model_deteksi\\res10_300x300_ssd_iter_140000.caffemodel"
     net = cv2.dnn.readNetFromCaffe(prototxt, mobile_net_ssd)
 
-
     (h, w) = frame.shape[:2]
     blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
     net.setInput(blob)
@@ -226,34 +225,10 @@ def predict_skin(frame):
     return None
 
 
-# Menggunakan kamera bawaan
-camera = cv2.VideoCapture(0)
-
-# Streaming video ke Flask
-def gen_frames():
-    while True:
-        success, frame = camera.read()  # Membaca frame dari kamera
-        if not success:
-            break
-        else:
-
-            # Encode frame ke format yang bisa dikirim ke browser
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-
-            # Mengirimkan frame ke browser
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
 # Route utama untuk halaman HTML
 @app.route('/cobaa')
 def index():
     return render_template('cobaa.html')
-
-# Route untuk streaming video
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Skin Detection Routes
 @app.route("/skin_detection")

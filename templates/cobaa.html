@@ -17,7 +17,7 @@
         const skinTypeSpan = document.getElementById('skin_type');
 
         // Connect to WebSocket server
-        const socket = io('ws://zalfa.site');
+        const socket = io();
 
         // Start the camera feed
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {

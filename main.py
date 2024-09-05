@@ -149,7 +149,8 @@ def get_bot_response():
 # Mapping label dan index
 
 # WebSocket event for receiving image frames and sending back prediction
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
+
 @socketio.on('image_frame')
 def handle_image(data_image):
     # Decode base64 image data

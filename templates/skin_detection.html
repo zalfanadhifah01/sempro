@@ -1,84 +1,149 @@
-<!DOCTYPE html>
-
-<html lang="en">
+@ -1,115 +1,112 @@
+{% extends 'root/base.html' %}
+{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
   <style>
     .hidden {
-      display: none;
-    }
-    #overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+    display: none;
+}
   </style>
-
-<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
-<body>
-    
+<div class="page-titles">
+  <div class="row">
+    <div class="col-lg-8 col-md-6 col-12 align-self-center">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0 d-flex align-items-center">
+          <li class="breadcrumb-item">
+            <a href="/home" class="link"><i class="ri-home-3-line fs-5"></i></a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Cek Kulit Wajah</li>
+        </ol>
+      </nav>
+      <h1 class="mb-0 fw-bold">Skin Detection</h1>
+      <small>Cek Jenis kulit Wajah anda apakah normal / berminyak / kering</small>
+    </div>
+  </div>
 
-<div class="row mt-3">
-  <div class="col-12">
-    <div class="card">
-      <div class="border-bottom title-part-padding">
-        <h4 class="mb-0">Deteksi Wajah Anda</h4>
-      </div>
-      <div class="card-body">
-        <h6 class="card-subtitle mb-3">
-          Gunakan kamera untuk mendeteksi wajah anda secara realtime.
-        </h6>
-        <video id="videoElement" width="720" height="560" autoplay muted></video>
-        <canvas id="overlay" width="720" height="560"></canvas>
-        <button id="startDetection" class="btn btn-success mt-2" type="button">Mulai Deteksi</button>
+  <!-- ============================================================= -->
+  <!-- Start Page Content -->
+  <!-- ============================================================= -->
+  <div class="row mt-3 ">
+    <div class="col-12">
+      <div class="card">
+        <div class="border-bottom title-part-padding">
+          <h4 class="mb-0">Masukan Foto Wajah Anda</h4>
+        </div>
+        <div class="card-body">
+          <h6 class="card-subtitle mb-3">
+            masukan foto wajah anda 
+          </h6>
+          <form class="">
+            <div class="fallback">
+              <input id="FormGambar" name="file" type="file" accept="image/*" />
+            </div>
+            <button id="kirim" class="btn btn-success mt-2" type="submit">kirim</button>
+          </form>
+        </div>
+        <div class="hasil text-center align-items-center d-block">
+        <img id="img_placeholder" class="img img-responsive hidden" style="width: 300px; height: 300px;" src="">
+        <p id="hasil_deteksi"></p>
+        <button id="ke_chatbot" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
+        
+        <video id="video" width="640" height="480" autoplay></video>
+        <p>Skin type: <span id="skin_type"></span></p>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
+  <!-- ============================================================= -->
+  <!-- End PAge Content -->
+  <!-- ============================================================= -->
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-async function loadModels() {
-  await faceapi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
-  await faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
-  await faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js/weights');
-}
-
-async function setupCamera() {
-  const video = document.getElementById('videoElement');
-
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    video.srcObject = stream;
-  } catch (error) {
-    console.error("Error accessing webcam: ", error);
-  }
-
-  await loadModels();
-
-      video.addEventListener('play', () => {
-        const videoContainer = document.querySelector('.card-body');
-        const canvas = faceapi.createCanvasFromMedia(video);
-        videoContainer.append(canvas);
-        const displaySize = { width: video.width, height: video.height };
-        faceapi.matchDimensions(canvas, displaySize);
-
-        setInterval(async () => {
-          const detections = await faceapi.detectAllFaces(video, 
-              new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors();
-          const resizedDetections = faceapi.resizeResults(detections, displaySize);
-          canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-          faceapi.draw.drawDetections(canvas, resizedDetections);
-          faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-        }, 100);
-      });
+    const video = document.getElementById('video');
+    const skinTypeSpan = document.getElementById('skin_type');
+    // Connect to WebSocket server
+    const socket = io();
+    // Start the camera feed
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+            video.srcObject = stream;
+        });
     }
-
-    setupCamera();
-  });
+    // Capture and send frames to server using WebSocket
+    function captureFrame() {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        // Convert canvas to base64 image data
+        const dataURL = canvas.toDataURL('image/jpeg');
+        const base64Data = dataURL.replace(/^data:image\/jpeg;base64,/, '');
+        // Send frame to server via WebSocket
+        socket.emit('image_frame', base64Data);
+    }
+    // Receive skin type prediction from server
+    socket.on('prediction', function(data) {
+        skinTypeSpan.innerText = data.skin_type;
+    });
+    // Capture a frame every 500ms
+    setInterval(captureFrame, 500);
 </script>
-</body>
-</html>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const elements = document.querySelectorAll('.hidden');
+
+    elements.forEach(element => {
+        element.classList.remove('hidden');
+    });
+    $("#img_placeholder").hide()
+    $("#ke_chatbot").hide()
+  });
+ $("#kirim").on("click", function () {
+        $("#kirim").html("Loading...")
+        let formData = new FormData();
+      
+      let gambarInput = $('#FormGambar')[0].files[0];
+      if (gambarInput) {
+        formData.append('gambar', gambarInput);
+      }
+        $.ajax({
+          url: "/skin_detection_submit",
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          method: 'POST',
+          type: 'POST',
+        //   headers: {
+        //     'Authorization': 'Bearer ' + token
+        // },
+        }).done(function (data) {
+          console.log(data);
+          try {
+              if (data.msg === "SUKSES") {
+                  alert("Status : Sukses ");
+                  var img_path = "/static/upload/"+data.img
+                  $("#img_placeholder").attr('src',img_path)
+                  $("#img_placeholder").show()
+                  $("#ke_chatbot").show()
+                  $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>"+data.hasil+"</h2>")
+                  $("#kirim").html("kirim")
+                  localStorage.setItem("jenis_kulit", data.hasil);
+              } else {
+                  alert("Status: "+data.msg);
+                  window.location.href = "/skin_detection";
+              }
+          } catch (error) {
+              console.log(error);
+              alert("Error: " + error);
+              window.location.href = "/skin_detection";
+          }
+        });
+        event.preventDefault();
+      });
+</script>
+{% endblock %}

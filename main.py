@@ -159,7 +159,9 @@ def handle_image(data_image):
 
     # Predict skin type from the frame
     result = predict_skin(frame)
-
+    # Bebaskan RAM setelah prediksi
+    del frame
+    gc.collect()
     # Send the prediction result back to the client
     emit('prediction', {'skin_type': result})
 
@@ -246,9 +248,9 @@ def skin_detection_submit():
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
         hasil = predict_skin(destination)
-        session["jenis_kulit"] = hasil
         if not hasil:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
+        session["jenis_kulit"] = hasil
         # Bebaskan RAM setelah prediksi
         del img
         gc.collect()

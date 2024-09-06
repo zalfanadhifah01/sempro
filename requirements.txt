@@ -13,3 +13,6 @@ Keras-Preprocessing
 pandas
 torch
 APScheduler
+opencv-python-headless
+flask-socketio
+eventlet

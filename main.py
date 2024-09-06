@@ -196,8 +196,8 @@ transform = transforms.Compose([
 
 # Deteksi wajah dan prediksi jenis kulit
 def predict_skin(frame):
-    prototxt = "E:\\swakala_joki_ta_sempro\\model_deteksi\\deploy.prototxt"
-    mobile_net_ssd = "E:\\swakala_joki_ta_sempro\\model_deteksi\\res10_300x300_ssd_iter_140000.caffemodel"
+    prototxt = os.path.join(project_directory,'model_detection','deploy.prototxt')
+    mobile_net_ssd = os.path.join(project_directory,'model_detection','res10_300x300_ssd_iter_140000.caffemodel')
     net = cv2.dnn.readNetFromCaffe(prototxt, mobile_net_ssd)
 
     (h, w) = frame.shape[:2]

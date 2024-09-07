@@ -236,7 +236,6 @@ def index():
 @app.route("/skin_detection")
 def skin_detection():
     return redirect(url_for('home'))
-
 @app.route("/skin_detection_submit", methods=["POST"])
 def skin_detection_submit():
     file = request.files['gambar']
@@ -247,14 +246,18 @@ def skin_detection_submit():
         random_name = uuid.uuid4().hex + ".jpg"
         destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
         img.save(destination)
-        hasil = predict_skin(destination)
+        
+        # Membaca gambar sebagai numpy array
+        img_array = np.array(Image.open(destination))
+
+        hasil = predict_skin(img_array)  # Memasukkan array gambar, bukan path
         if not hasil:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
         session["jenis_kulit"] = hasil
         # Bebaskan RAM setelah prediksi
         del img
         gc.collect()
-        if current_user.role == "user":
+        if current_user.is_authenticated:
             new_history_deteksi = HistoryDeteksi(
                 username=current_user.username,
                 tanggal=datetime.now().strftime("%Y-%m-%d"),
@@ -263,9 +266,13 @@ def skin_detection_submit():
             )
             db.session.add(new_history_deteksi)
             db.session.commit()
-        return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
+            return jsonify({"msg": "SUKSES_simpan", "hasil": hasil, "img": random_name})
+        else:
+            return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
+
     except Exception as e:
         return jsonify({"error": str(e)})
+
 
 # ==============================================
 # Fungsi dan Route lainnya
@@ -580,5 +587,6 @@ def not_found(e):
     return jsonify({"error": "Page not found"}), 404
 #app.run(host="0.0.0.0",debug=True)
 if __name__ == '__main__':
-    create_tables()
+    with app.app_context():
+        db.create_all()
     socketio.run(app,debug=True)

@@ -35,6 +35,8 @@ class Booking(db.Model):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False, default=0)  # Default value 0 for non-logged in users
+    status = db.Column(db.Integer, nullable=False)
     product_name = db.Column(db.String(100), nullable=False)
     nama_client = db.Column(db.String(100), nullable=False)
     alamat = db.Column(db.String(200), nullable=False)

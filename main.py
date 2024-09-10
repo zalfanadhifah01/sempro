@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, Response
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, Response,abort,send_from_directory
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Product, HistoryDeteksi, Booking
-import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64
+import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64,sys
 import numpy as np
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -19,20 +19,66 @@ from torchvision import transforms
 from torch import nn
 from torchvision.models import resnet50, ResNet50_Weights
 from flask_socketio import SocketIO, emit
-
+from flask_bcrypt import Bcrypt
+from functools import wraps
+from flask_cors import CORS
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 project_directory = os.path.abspath(os.path.dirname(__file__))
 upload_folder = os.path.join(project_directory, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = upload_folder
 app.config['SECRET_KEY'] = 'dmo42901i41;/.p`'
+app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
+app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT', b'asayibiuuoyo192382qo')
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 db.init_app(app)
+bcrypt = Bcrypt(app)
 
+# Allow CORS
+CORS(app)
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(app.static_folder, 'sitemap.xml')
+
+@app.route('/robots.txt')
+def robots():
+    return """User-agent: *
+    Disallow: /private/
+    Disallow: /cgi-bin/
+    Disallow: /images/
+    Disallow: /pages/thankyou.html
+    """
+
+@app.errorhandler(404)
+def page_not_found(error):
+    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+        response = jsonify({'error': 'Not found'})
+        response.status_code = 404
+        return response
+    return render_template('404.html'), 404
+
+@app.route('/invalid')
+def invalid():
+    abort(404)
+
+def login_role_required(required_role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'id' not in session:
+                return redirect(url_for('login'))
+            if session.get('role') != required_role:
+                return jsonify({"msg": "Permission denied"}), 403
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 # Create tables
 def create_tables():
     with app.app_context():
@@ -296,18 +342,25 @@ def login():
         if current_user.role == "admin":
             return redirect(url_for("history_pemesanan"))
         elif current_user.role == 'user':
-            return redirect(url_for("get_bookings"))
+            return redirect(url_for("user_get_bookings"))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username, password=password).first()
-        if user:
-            login_user(user)
-            if user.role == "admin":
-                return redirect(url_for('history_pemesanan'))
+        # Mencari user berdasarkan username atau email
+        user = User.query.filter_by(username=username).first()
+
+        # Pastikan user ditemukan sebelum login
+        if user: 
+            if bcrypt.check_password_hash(user.password, password):
+                login_user(user)  
+                if user.role == "admin":
+                    return redirect(url_for('history_pemesanan'))
+                else:
+                    return redirect(url_for('user_get_bookings'))
             else:
-                return redirect(url_for('get_bookings'))
-        flash('Invalid credentials')
+                flash('password salah', 'danger')
+        else:
+            flash('username tidak ada', 'danger')
     return render_template('admin/login.html')
 
 # Route untuk halaman register
@@ -317,7 +370,7 @@ def register():
         if current_user.role == "admin":
             return redirect(url_for("history_pemesanan"))
         elif current_user.role == 'user':
-            return redirect(url_for("get_bookings"))
+            return redirect(url_for("user_get_bookings"))
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -494,7 +547,46 @@ def get_bookings():
     sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x.tanggal, '%Y-%m-%d'), reverse=True)
     
     return render_template('admin/bookings.html', bookings=sorted_bookings, daily=daily_chart_data, monthly=monthly_chart_data)
-
+@app.route('/user/bookings', methods=['GET'])
+@login_required
+def user_get_bookings():
+    bookings = Booking.query.filter_by(user_id=current_user.id)
+    daily_data, monthly_data = defaultdict(int), defaultdict(int)
+    
+    for booking in bookings:
+        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
+        day, month = date_obj.day, date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+    
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]
+    monthly_chart_data = [monthly_data[month] for month in [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"]]
+    
+    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x.tanggal, '%Y-%m-%d'), reverse=True)
+    
+    return render_template('user/history_bookings.html', bookings=sorted_bookings, daily=daily_chart_data, monthly=monthly_chart_data)
+@app.route('/user/deteksi', methods=['GET'])
+@login_required
+def user_get_deteksi():
+    bookings = HistoryDeteksi.query.filter_by(username=current_user.username)
+    daily_data, monthly_data = defaultdict(int), defaultdict(int)
+    
+    for booking in bookings:
+        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
+        day, month = date_obj.day, date_obj.strftime('%B')
+        daily_data[day] += 1
+        monthly_data[month] += 1
+    
+    daily_chart_data = [daily_data[i] for i in range(1, 32)]
+    monthly_chart_data = [monthly_data[month] for month in [
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December"]]
+    
+    sorted_bookings = sorted(bookings, key=lambda x: datetime.strptime(x.tanggal, '%Y-%m-%d'), reverse=True)
+    
+    return render_template('user/history_deteksi.html', bookings=sorted_bookings, daily=daily_chart_data, monthly=monthly_chart_data)
 # Route untuk mengedit produk
 @app.route("/admin/edit_product")
 @login_required
@@ -585,6 +677,23 @@ def get_rekomendasi_normal():
 @app.errorhandler(404)
 def not_found(e):
     return jsonify({"error": "Page not found"}), 404
+import signal
+import sys
+
+def graceful_shutdown(signal, frame):
+    print("Shutting down gracefully...")
+    socketio.stop()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, graceful_shutdown)
+signal.signal(signal.SIGTERM, graceful_shutdown)
+import atexit
+
+def cleanup():
+    print("Cleaning up resources...")
+
+atexit.register(cleanup)
+
 #app.run(host="0.0.0.0",debug=True)
 if __name__ == '__main__':
     with app.app_context():

@@ -13,9 +13,10 @@ app.config['UPLOAD_FOLDER'] = upload_folder
 app.config['PROJECT_FOLDER'] = project_directory 
 app.config['DETECT_FOLDER'] = detect_folder 
 app.config['SQLALCHEMY_DATABASE_URI'] =  'sqlite:///database.db'
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'bukan rahasia')
+app.config['SECRET_KEY'] = 'dmo42901i41;/.p`'
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT', b'asayibiuuoyo192382qo')
+print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)

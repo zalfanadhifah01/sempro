@@ -68,17 +68,6 @@ def page_not_found(error):
 def invalid():
     abort(404)
 
-def login_role_required(required_role):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if 'id' not in session:
-                return redirect(url_for('login'))
-            if session.get('role') != required_role:
-                return jsonify({"msg": "Permission denied"}), 403
-            return f(*args, **kwargs)
-        return decorated_function
-    return decorator
 # Create tables
 def create_tables():
     with app.app_context():
@@ -216,7 +205,7 @@ index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sen
 LR = 0.1
 STEP = 15
 GAMMA = 0.1
-OUT_CLASSES = 3
+OUT_CLASSES = 5
 IMG_SIZE = 224
 
 resnet = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
@@ -230,11 +219,9 @@ optimizer = torch.optim.SGD(model_skin.parameters(), lr=LR)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=STEP, gamma=GAMMA)
 
 # Load the checkpoint
-model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint_old.pth')
+model_location = os.path.join(project_directory,'model_detection','best_model_checkpoint.pth')
 checkpoint = torch.load(model_location, map_location=torch.device('cpu'))
-model_skin.load_state_dict(checkpoint['model_state_dict'])
-optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
+
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -269,7 +256,8 @@ def predict_skin(frame):
                 out = model_skin(img)
                 index = out.argmax(1).item()
                 return index_label[index]
-
+        else:
+            return None
     return None
 
 
@@ -642,36 +630,36 @@ def update_product(product_id):
 
     return jsonify({'message': 'Product updated successfully'})
 
-@app.route("/rekomendasi_kering")
-def get_rekomendasi_kering():
-    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
-    list_products = Product.query.all()
-    rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
-    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
-    rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
-    return rekomendasi
+# @app.route("/rekomendasi_kering")
+# def get_rekomendasi_kering():
+#     rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
+#     list_products = Product.query.all()
+#     rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
+#     rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
+#     return rekomendasi
 
-@app.route("/rekomendasi_berminyak")
-def get_rekomendasi_berminyak():
-    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
-    list_products = Product.query.all()
-    rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
-    rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
-    rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
-    return rekomendasi
+# @app.route("/rekomendasi_berminyak")
+# def get_rekomendasi_berminyak():
+#     rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
+#     list_products = Product.query.all()
+#     rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+#     rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
+#     return rekomendasi
 
-@app.route("/rekomendasi_normal")
-def get_rekomendasi_normal():
-    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
-    list_products = Product.query.all()
-    rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
-    rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
-    rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-    rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
-    rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
-    return rekomendasi
+# @app.route("/rekomendasi_normal")
+# def get_rekomendasi_normal():
+#     rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
+#     list_products = Product.query.all()
+#     rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
+#     rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
+#     rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
+#     rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
+#     return rekomendasi
 
 # Custom Error Handling
 @app.errorhandler(404)

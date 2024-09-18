@@ -15,6 +15,35 @@
     #video_container {
       display: none;
     }
+    #img_placeholder{
+      width: 300px; 
+      height: 300px;
+    }
+     @media only screen and (max-width: 850px) {
+      #img_placeholder{
+        width:250px;
+        height:250px;
+      }
+    }
+    @media only screen and (max-width: 700px) {
+    .container {
+      display: block;
+      padding:0px;
+      justify-content: space-between;
+    }
+    .left, .right {
+      width: 100%;
+    }
+    .col-12{
+      padding:0px;
+    }
+  }
+    @media only screen and (max-width: 400px) {
+      #img_placeholder{
+        width:200px;
+        height:200px;
+      }
+    }
   </style>
 </head>
 
@@ -48,15 +77,17 @@
               <h6 class="card-subtitle mb-3">Masukan foto wajah anda</h6>
               <form>
                 <div class="fallback">
-                  <input id="FormGambar" name="file" type="file" accept="image/*" />
+                  <input class="form-control" id="FormGambar" name="file" type="file" accept="image/*" />
                 </div>
                 <button id="kirim" class="btn btn-success mt-2" type="submit">Kirim</button>
               </form>
-            </div>
             <div class="hasil text-center align-items-center d-block">
-              <img id="img_placeholder" class="img img-responsive hidden" style="width: 300px; height: 300px;" src="">
-              <p id="hasil_deteksi"></p>
+              <img id="img_placeholder" class="img img-responsive hidden" src="">
+              <p class="bold text-strong" id="hasil_deteksi"></p>
+              <p id="penjelasan_singkat"> </p>
+              <p id="rekomendasi"> </p>
               <button id="ke_chatbot" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
+            </div>
             </div>
           </div>
         </div>
@@ -75,6 +106,7 @@
               <div id="video_container" class="hidden mt-3">
                 <video id="video" width="100%" height="480" autoplay></video>
                 <p>Skin type: <span id="skin_type"></span></p>
+                <button id="stop_camera" class="btn btn-danger mt-2">Stop</button>
               </div>
             </div>
           </div>
@@ -95,6 +127,9 @@
   // WebSocket connection
   const socket = io();
 
+  const stopCameraButton = document.getElementById('stop_camera');
+  let stream;
+
   // Start camera on button click
   startCameraButton.addEventListener('click', function() {
     // Show video container
@@ -102,13 +137,23 @@
 
     // Access user's webcam
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+      navigator.mediaDevices.getUserMedia({ video: true }).then(function(localStream) {
+        stream = localStream;
         video.srcObject = stream;
       });
     }
 
     // Capture and send frames to server every 500ms
     setInterval(captureFrame, 500);
+  });
+
+  // Stop camera on button click
+  stopCameraButton.addEventListener('click', function() {
+    if (stream) {
+      // Stop all video tracks
+      stream.getTracks().forEach(track => track.stop());
+      videoContainer.style.display = 'none';
+    }
   });
 
   // Capture frame from video and send to server
@@ -149,10 +194,13 @@
       type: 'POST',
     }).done(function(data) {
       if (data.msg === "SUKSES" || data.msg === "SUKSES_simpan") {
+        console.log(data)
         var img_path = "/static/upload/" + data.img;
         $("#img_placeholder").attr('src', img_path).show();
         $("#ke_chatbot").show();
-        $("#hasil_deteksi").html("<p>Terdeteksi:</p><h2 color='green'>" + data.hasil + "</h2>");
+        $("#hasil_deteksi").html("<p style='margin-top:5px'>Terdeteksi:</p><h2 color='green'>" + data.hasil + "</h2>");
+        $("#penjelasan_singkat").html(data.penjelasan_singkat);
+        $("#rekomendasi").html(data.rekomendasi);
         $("#kirim").html("Kirim");
         localStorage.setItem("jenis_kulit", data.hasil);
       } else {

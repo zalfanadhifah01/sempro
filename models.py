@@ -43,3 +43,10 @@ class Booking(db.Model):
     no_hp = db.Column(db.String(20), nullable=False)
     tanggal = db.Column(db.String(20), nullable=False)
     jam = db.Column(db.String(10), nullable=False)
+
+class Recommendation(db.Model):
+    __tablename__ = 'recommendations'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    priority = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.String(50), nullable=False)

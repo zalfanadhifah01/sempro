@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, flash, session, Response,abort,send_from_directory
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
-from models import db, User, Product, HistoryDeteksi, Booking
+from models import db, User, Product, HistoryDeteksi, Booking,Recommendation
 import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64,sys
 import numpy as np
 from nltk.stem import WordNetLemmatizer
@@ -259,7 +259,18 @@ def predict_skin(frame):
         else:
             return None
     return None
-
+@app.route("/penjelasan_singkat/<skin_type>")
+def get_penjelasan_singkat(skin_type):
+    if  skin_type == "normal":
+     return "Kulit Normal adalah Kulit yang seimbang, tidak terlalu berminyak atau kering. Pori-pori kecil, tekstur halus, dan jarang mengalami masalah kulit."
+    if  skin_type == "kering":
+     return "Kulit Kering adalah Kulit yang kekurangan kelembapan, sering terasa kasar, kencang, atau bersisik. Cenderung lebih rentan terhadap kerutan."
+    if  skin_type == "berminyak":
+     return  "Kulit Berminyak adalah Produksi minyak berlebih, biasanya mengakibatkan wajah terlihat mengkilap. Rentan terhadap jerawat dan pori-pori besar."
+    if  skin_type == "kombinasi":
+     return "Kulit Kombinasi adalah Perpaduan kulit kering dan berminyak. Biasanya berminyak di area T-zone (dahi, hidung, dagu: dan kering di area lain."
+    if  skin_type == "sensitive":
+        return "Kulit Sensitif adalah Kulit yang mudah bereaksi terhadap produk atau lingkungan. Sering mengalami kemerahan, gatal, atau iritasi."
 
 # Route utama untuk halaman HTML
 @app.route('/cobaa')
@@ -291,6 +302,13 @@ def skin_detection_submit():
         # Bebaskan RAM setelah prediksi
         del img
         gc.collect()
+        print("1")
+        # penjelasan singkat
+        penjelasan_singkat = get_penjelasan_singkat(hasil)
+        print(penjelasan_singkat)
+        #rekomenadasi
+        rekomendasi = get_rekomendasi(hasil)
+        print(rekomendasi)
         if current_user.is_authenticated:
             new_history_deteksi = HistoryDeteksi(
                 username=current_user.username,
@@ -300,9 +318,12 @@ def skin_detection_submit():
             )
             db.session.add(new_history_deteksi)
             db.session.commit()
-            return jsonify({"msg": "SUKSES_simpan", "hasil": hasil, "img": random_name})
+            print("2")
+            return jsonify({"msg": "SUKSES_simpan", "hasil": hasil, "img": random_name,"penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
         else:
-            return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name})
+            
+            print("3")
+            return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name,"penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
 
     except Exception as e:
         return jsonify({"error": str(e)})
@@ -393,7 +414,8 @@ def products_detail(id):
     if not product:
         return jsonify({"error": "Product not found"}), 404
     bookings = Booking.query.filter_by(product_id=id).all()
-    return render_template("product_detail.html", product=product, bookings=bookings)
+    list_bookings = [book for book in bookings]
+    return render_template("product_detail.html", product=product, bookings=list_bookings)
 
 # Route untuk daftar produk lama
 @app.route("/products_old")
@@ -630,36 +652,126 @@ def update_product(product_id):
 
     return jsonify({'message': 'Product updated successfully'})
 
-# @app.route("/rekomendasi_kering")
-# def get_rekomendasi_kering():
-#     rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
-#     list_products = Product.query.all()
-#     rekomendasi += f"1. {list_products[19]['nama']} {list_products[19]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br> Paket <br>"
-#     rekomendasi += f"1. {list_products[10]['nama']} {list_products[10]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[22]['nama']} {list_products[22]['harga']}<br><br>"
-#     return rekomendasi
+@app.route("/rekomendasi_kering")
+def get_rekomendasi_kering():
+    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
+    list_products = Product.query.all()
 
-# @app.route("/rekomendasi_berminyak")
-# def get_rekomendasi_berminyak():
-#     rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
-#     list_products = Product.query.all()
-#     rekomendasi += f"1. {list_products[17]['nama']} {list_products[17]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-#     rekomendasi += f"1. {list_products[11]['nama']} {list_products[11]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[12]['nama']} {list_products[12]['harga']}<br><br>"
-#     return rekomendasi
+    # Pastikan produk yang diakses benar-benar ada
+    try:
+        rekomendasi += f"1. {list_products[18].nama} {list_products[18].harga}<br>"
+        rekomendasi += f"2. {list_products[6].nama} {list_products[6].harga}<br> Paket <br>"
+        rekomendasi += f"1. {list_products[9].nama} {list_products[9].harga}<br>"
+        rekomendasi += f"2. {list_products[21].nama} {list_products[21].harga}<br><br>"
+    except IndexError:
+        return "Error: Produk tidak tersedia atau indeks tidak valid."
 
-# @app.route("/rekomendasi_normal")
-# def get_rekomendasi_normal():
-#     rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
-#     list_products = Product.query.all()
-#     rekomendasi += f"1. {list_products[14]['nama']} {list_products[14]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[7]['nama']} {list_products[7]['harga']}<br>"
-#     rekomendasi += f"3. {list_products[15]['nama']} {list_products[15]['harga']}<br> Paket <br>"
-#     rekomendasi += f"1. {list_products[16]['nama']} {list_products[16]['harga']}<br>"
-#     rekomendasi += f"2. {list_products[20]['nama']} {list_products[20]['harga']}<br><br>"
-#     return rekomendasi
+    return rekomendasi
+
+
+@app.route("/rekomendasi_berminyak")
+def get_rekomendasi_berminyak():
+    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
+    list_products = Product.query.all()
+
+    try:
+        rekomendasi += f"1. {list_products[16].nama} {list_products[16].harga}<br>"
+        rekomendasi += f"2. {list_products[14].nama} {list_products[14].harga}<br> Paket <br>"
+        rekomendasi += f"1. {list_products[10].nama} {list_products[10].harga}<br>"
+        rekomendasi += f"2. {list_products[11].nama} {list_products[11].harga}<br><br>"
+    except IndexError:
+        return "Error: Produk tidak tersedia atau indeks tidak valid."
+
+    return rekomendasi
+
+
+@app.route("/rekomendasi_normal")
+def get_rekomendasi_normal():
+    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
+    list_products = Product.query.all()
+
+    try:
+        rekomendasi += f"1. {list_products[13].nama} {list_products[13].harga}<br>"
+        rekomendasi += f"2. {list_products[6].nama} {list_products[6].harga}<br>"
+        rekomendasi += f"3. {list_products[14].nama} {list_products[14].harga}<br> Paket <br>"
+        rekomendasi += f"1. {list_products[15].nama} {list_products[15].harga}<br>"
+        rekomendasi += f"2. {list_products[19].nama} {list_products[19].harga}<br><br>"
+    except IndexError:
+        return "Error: Produk tidak tersedia atau indeks tidak valid."
+
+    return rekomendasi
+
+
+
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, SelectField, SubmitField
+from wtforms.validators import DataRequired
+
+class RecommendationForm(FlaskForm):
+    product_id = IntegerField('Product ID', validators=[DataRequired()])
+    priority = IntegerField('Urutan', validators=[DataRequired()])
+    type = SelectField('Type', choices=[('normal', 'Kulit Normal'), 
+                                        ('kering', 'Kulit Kering'),
+                                        ('berminyak', 'Kulit Berminyak'),
+                                        ('kombinasi', 'Kulit Kombinasi'),
+                                        ('sensitive', 'Kulit Sensitif')],
+                       validators=[DataRequired()])
+    submit = SubmitField('Save')
+
+@app.route("/admin/recommendations", methods=['GET', 'POST'])
+def manage_recommendations():
+    form = RecommendationForm()
+    if form.validate_on_submit():
+        product_id = form.product_id.data
+        priority = form.priority.data
+        type = form.type.data
+        
+        # Check if recommendation already exists
+        recommendation = Recommendation.query.filter_by(product_id=product_id, type=type).first()
+        if recommendation:
+            recommendation.priority = priority
+        else:
+            recommendation = Recommendation(product_id=product_id, priority=priority, type=type)
+            db.session.add(recommendation)
+        
+        db.session.commit()
+        return redirect(url_for('manage_recommendations'))
+
+    recommendations = Recommendation.query.order_by(Recommendation.type, Recommendation.priority).all()
+    return render_template('admin/admin_recommendations.html', form=form, recommendations=recommendations)
+@app.route('/delete_recommendation/<int:rec_id>', methods=['POST'])
+def delete_recommendation(rec_id):
+    try:
+        recommendation = Recommendation.query.get(rec_id)
+        if recommendation:
+            db.session.delete(recommendation)
+            db.session.commit()
+            flash('Rekomendasi berhasil dihapus!', 'success')
+        else:
+            flash('Rekomendasi tidak ditemukan.', 'error')
+    except Exception as e:
+        flash('Terjadi kesalahan saat menghapus rekomendasi.', 'error')
+    return redirect(url_for('manage_recommendations'))
+
+@app.route("/rekomendasi/<skin_type>")
+def get_rekomendasi(skin_type):
+    try:
+        rekomendasi = f"Rekomendasi Treatment Kulit {skin_type.capitalize()}:<br>"
+        recommendations = Recommendation.query.filter_by(type=skin_type).order_by(Recommendation.priority).all()
+        print(recommendations)
+        if not recommendations:
+            rekomendasi = ""
+        else:
+            for rec in recommendations:
+                product = Product.query.get(rec.product_id)
+                if product:
+                    rekomendasi += f"{rec.priority}. {product.nama} {product.harga}<br>"
+                else:
+                    rekomendasi += f"{rec.priority}. Produk dengan ID {rec.product_id} tidak ditemukan.<br>"
+        print(rekomendasi)
+    except Exception as e:
+        rekomendasi = ""
+    return rekomendasi
 
 # Custom Error Handling
 @app.errorhandler(404)

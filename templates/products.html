@@ -23,6 +23,14 @@
       white-space: normal;
       text-overflow: clip;
     }
+    .custom-img {
+        width: 320px;
+        height: 200px;
+        object-fit: cover; /* Membuat gambar terpotong secara proporsional tanpa merusak aspek rasio */
+        border-radius: 50px;
+        padding :20px
+    }
+
   </style>
 </head>
 <div class="page-titles pb-2">
@@ -70,7 +78,7 @@
       <div class="card w-100">
         <div class="text-center pt-4">
           <a href="/products_detail/{{ i.id }}">
-            <img src="{{ i.gambar }}" width="80%" height="400px" class="img-fluid" alt="..."/>
+            <img src="{{ i.gambar }}" class="custom-img " alt="..."/>
           </a>
         </div>
         <div class="card-body">

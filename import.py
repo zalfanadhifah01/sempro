@@ -21,35 +21,6 @@ print("Database URI:", app.config['SQLALCHEMY_DATABASE_URI'])
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-# Allow CORS
-from flask_cors import CORS
-CORS(app)
-
-@app.route('/sitemap.xml')
-def sitemap():
-    return send_from_directory(app.static_folder, 'sitemap.xml')
-
-@app.route('/robots.txt')
-def robots():
-    return """User-agent: *
-    Disallow: /private/
-    Disallow: /cgi-bin/
-    Disallow: /images/
-    Disallow: /pages/thankyou.html
-    """
-
-@app.errorhandler(404)
-def page_not_found(error):
-    if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
-        response = jsonify({'error': 'Not found'})
-        response.status_code = 404
-        return response
-    return render_template('404.html'), 404
-
-@app.route('/invalid')
-def invalid():
-    abort(404)
-
 def login_role_required(required_role):
     def decorator(f):
         @wraps(f)
@@ -104,6 +75,13 @@ class Booking(db.Model):
     no_hp = db.Column(db.String(20), nullable=False)
     tanggal = db.Column(db.String(20), nullable=False)
     jam = db.Column(db.String(10), nullable=False)
+
+class Recommendation(db.Model):
+    __tablename__ = 'recommendations'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    priority = db.Column(db.Integer, nullable=False)
+    type = db.Column(db.String(50), nullable=False)
 
 if __name__ == '__main__':
     # Perform operations inside the app context
@@ -219,4 +197,3 @@ if __name__ == '__main__':
         data = Booking.query.all()
         print(data)        
         print("Database update complete.")
-    app.run(host="0.0.0.0", debug=True, port=4040)

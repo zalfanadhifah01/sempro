@@ -1,0 +1,75 @@
+{% extends 'root/base_admin.html' %}
+{% block content %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Manage Recommendations</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Manage Recommendations</h1>
+
+    <!-- Form untuk menambah rekomendasi baru -->
+    <div class="card mb-4">
+        <div class="card-header">
+            Tambah Rekomendasi Baru
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.product_id.label(class="form-label") }}
+                    {{ form.product_id(class="form-control") }}
+                    {% for error in form.product_id.errors %}
+                        <div class="text-danger">[{{ error }}]</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.priority.label(class="form-label") }}
+                    {{ form.priority(class="form-control") }}
+                    {% for error in form.priority.errors %}
+                        <div class="text-danger">[{{ error }}]</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.type.label(class="form-label") }}
+                    {{ form.type(class="form-control") }}
+                    {% for error in form.type.errors %}
+                        <div class="text-danger">[{{ error }}]</div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Tambah Rekomendasi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Daftar rekomendasi yang ada -->
+    <h2 class="mb-4">Rekomendasi Saat Ini</h2>
+    <ul class="list-group">
+        {% for rec in recommendations %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    Type: <strong>{{ rec.type }}</strong>, Urutan: <strong>{{ rec.priority }}</strong>, Product ID: <strong>{{ rec.product_id }}</strong>
+                    <a href="/products_detail/{{ rec.product_id }}" target="_blank">
+                        <strong> Detail</strong>
+                    </a>
+                </div>
+                <!-- Tombol Hapus -->
+                <form method="post" action="{{ url_for('delete_recommendation', rec_id=rec.id) }}">
+                    <button type="submit" class="btn btn-danger btn-sm mt-3">Hapus</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+{% endblock %}

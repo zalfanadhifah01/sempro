@@ -251,7 +251,7 @@
       "Kulit aku rentan berminyak"
       ],
       "responses": [
-        "response di chatbot.html"
+        "Kulit Berminyak adalah Produksi minyak berlebih, biasanya mengakibatkan wajah terlihat mengkilap. Rentan terhadap jerawat dan pori-pori besar."
       ]
     },
     {
@@ -269,8 +269,7 @@
       "Jenis kulit saya adalah kering.",
       "Kulit saya gampang kering.",
       "Kulitku kering.",
-      "Jenis kulit saya banyak minyaknya.",
-      "Saya memiliki kulit dengan banyak minyak.",
+      "Saya memiliki kulit yang kasar.",
       "Kulit saya rentan kering.",
       "Jenis kulit aku kering.",
       "Kulit aku cenderung kering.",
@@ -284,12 +283,12 @@
       "Aku punya kulit kering.",
       "Jenis kulit aku adalah kering.",
       "Kulitku gampang kering.",
-      "Kulitku banyak minyaknya.",
-      "Aku punya kulit dengan banyak minyak.",
+      "Kulitku banyak retakan atau pecahan kulit.",
+      "Aku punya kulit dengan banyak retakan atau pecahan kulit.",
       "Kulit aku rentan kering"
       ],
       "responses": [
-        "response di chatbot.html"
+        "Kulit Kering adalah Kulit yang kekurangan kelembapan, sering terasa kasar, kencang, atau bersisik. Cenderung lebih rentan terhadap kerutan."
       ]
     },
     {
@@ -327,7 +326,151 @@
       "Kulit aku rentan normal"
       ],
       "responses": [
-        "response di chatbot.html"
+        "Kulit Normal adalah Kulit yang seimbang, tidak terlalu berminyak atau kering. Pori-pori kecil, tekstur halus, dan jarang mengalami masalah kulit."
+      ]
+    },    
+    {
+      "tag": "jenis kulit saya kombinasi",
+      "patterns": [
+      "Kulit saya cenderung kombinasi.",
+      "Saya memiliki kulit kombinasi.",
+      "Jenis kulitku kombinasi.",
+      "Kulit wajahku tipe kombinasi.",
+      "Kulit saya termasuk kombinasi.",
+      "Saya memiliki tipe kulit kombinasi.",
+      "Kulit saya sering kombinasi.",
+      "Kulit saya kombinasi.",
+      "Saya punya kulit kombinasi.",
+      "Jenis kulit saya adalah kombinasi.",
+      "Kulit saya gampang kombinasi.",
+      "Kulitku kombinasi.",
+      "Jenis kulit saya banyak minyaknya.",
+      "Saya memiliki kulit dengan banyak minyak.",
+      "Kulit saya rentan kombinasi.",
+      "Jenis kulit aku kombinasi.",
+      "Kulit aku cenderung kombinasi.",
+      "Aku memiliki kulit kombinasi.",
+      "Jenis kulitku kombinasi.",
+      "Kulit wajahku tipe kombinasi.",
+      "Kulit aku termasuk kombinasi.",
+      "Aku punya tipe kulit kombinasi.",
+      "Kulitku sering kombinasi.",
+      "Kulitku kombinasi.",
+      "Aku punya kulit kombinasi.",
+      "Jenis kulit aku adalah kombinasi.",
+      "Kulitku gampang kombinasi.",
+      "Kulitku banyak minyaknya.",
+      "Aku punya kulit dengan banyak minyak.",
+      "Kulit aku rentan kombinasi",
+      
+      "Kulit saya cenderung campuran.",
+      "Saya memiliki kulit campuran.",
+      "Jenis kulitku campuran.",
+      "Kulit wajahku tipe campuran.",
+      "Kulit saya termasuk campuran.",
+      "Saya memiliki tipe kulit campuran.",
+      "Kulit saya sering campuran.",
+      "Kulit saya campuran.",
+      "Saya punya kulit campuran.",
+      "Jenis kulit saya adalah campuran.",
+      "Kulit saya gampang campuran.",
+      "Kulitku campuran.",
+      "Jenis kulit saya banyak Keringnya.",
+      "Saya memiliki kulit dengan banyak retakannya.",
+      "Kulit saya rentan campuran.",
+      "Jenis kulit aku campuran.",
+      "Kulit aku cenderung campuran.",
+      "Aku memiliki kulit campuran.",
+      "Jenis kulitku campuran.",
+      "Kulit wajahku tipe campuran.",
+      "Kulit aku termasuk campuran.",
+      "Aku punya tipe kulit campuran.",
+      "Kulitku sering campuran.",
+      "Kulitku campuran.",
+      "Aku punya kulit campuran.",
+      "Jenis kulit aku adalah campuran.",
+      "Kulitku gampang campuran.",
+      "Kulitku banyak Keringnya.",
+      "Aku punya kulit dengan banyak kering.",
+      "Kulit aku rentan campuran",
+
+      "Kulit saya cenderung kombinasi / campuran.",
+      "Saya memiliki kulit kombinasi / campuran.",
+      "Jenis kulitku kombinasi / campuran.",
+      "Kulit wajahku tipe kombinasi / campuran.",
+      "Kulit saya termasuk kombinasi / campuran.",
+      "Saya memiliki tipe kulit kombinasi / campuran.",
+      "Kulit saya sering kombinasi / campuran.",
+      "Kulit saya kombinasi / campuran.",
+      "Saya punya kulit kombinasi / campuran.",
+      "Jenis kulit saya adalah kombinasi / campuran.",
+      "Kulit saya gampang kombinasi / campuran.",
+      "Kulitku kombinasi / campuran.",
+      "Jenis kulit saya banyak Keringnya.",
+      "Saya memiliki kulit dengan banyak retakannya.",
+      "Kulit saya rentan kombinasi / campuran.",
+      "Jenis kulit aku kombinasi / campuran.",
+      "Kulit aku cenderung kombinasi / campuran.",
+      "Aku memiliki kulit kombinasi / campuran.",
+      "Jenis kulitku kombinasi / campuran.",
+      "Kulit wajahku tipe kombinasi / campuran.",
+      "Kulit aku termasuk kombinasi / campuran.",
+      "Aku punya tipe kulit kombinasi / campuran.",
+      "Kulitku sering kombinasi / campuran.",
+      "Kulitku kombinasi / campuran.",
+      "Aku punya kulit kombinasi / campuran.",
+      "Jenis kulit aku adalah kombinasi / campuran.",
+      "Kulitku gampang kombinasi / campuran.",
+      "Kulitku banyak Keringnya.",
+      "Aku punya kulit dengan banyak kering.",
+      "Kulit aku rentan kombinasi / campuran"
+      ],
+      "responses": [
+        "Kulit Kombinasi adalah Perpaduan kulit kering dan berminyak. Biasanya berminyak di area T-zone (dahi, hidung, dagu) dan kering di area lain."
+      ]
+    },
+    {
+      "tag": "jenis kulit saya sensitive",
+      "patterns": [
+      "Kulit saya cenderung sensitive.",
+      "Saya memiliki kulit sensitive.",
+      "Jenis kulitku sensitive.",
+      "Kulit wajahku tipe sensitive.",
+      "Kulit saya termasuk sensitive.",
+      "Saya memiliki tipe kulit sensitive.",
+      "Kulit saya sering sensitive.",
+      "Kulit saya sensitive.",
+      "Saya punya kulit sensitive.",
+      "Jenis kulit saya adalah sensitive.",
+      "Kulit saya gampang sensitive.",
+      "Kulitku sensitive.",
+      "Jenis kulit saya banyak minyaknya.",
+      "Saya memiliki kulit dengan banyak minyak.",
+      "Kulit saya rentan sensitive.",
+      "Jenis kulit aku sensitive.",
+      "Kulit aku cenderung sensitive.",
+      "Aku memiliki kulit sensitive.",
+      "Jenis kulitku sensitive.",
+      "Kulit wajahku tipe sensitive.",
+      "Kulit aku termasuk sensitive.",
+      "Aku punya tipe kulit sensitive.",
+      "Kulitku sering sensitive.",
+      "Kulitku sensitive.",
+      "Aku punya kulit sensitive.",
+      "Jenis kulit aku adalah sensitive.",
+      "Kulitku gampang sensitive.",
+      "Kulitku banyak minyaknya.",
+      "Aku punya kulit dengan banyak minyak.",
+      "Kulit aku rentan sensitive",
+      "Kulit aku rentan sinar matahari",
+      "Kulit aku rentan debu dan polusi",
+      "Kulit aku merah merah kalo di tempat panas",
+      "Kulit aku mudah panas jadi merah merah",
+      "Kulit aku sepertinya tidak cocok di iklim tropis",
+      "Kulit aku cocok di tempat dingin"
+      ],
+      "responses": [
+        "Kulit Sensitif adalah Kulit yang mudah bereaksi terhadap produk atau lingkungan. Sering mengalami kemerahan, gatal, atau iritasi."
       ]
     }
   ]

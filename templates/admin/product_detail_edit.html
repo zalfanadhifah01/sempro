@@ -122,7 +122,7 @@
           console.log(data);
           $("#save_edit").html("Save Edit")
           alert("Product updated successfully!");
-          location.reload();
+          location.href = location.href;
           if (data.image) {
             $("#img_placeholder").attr('src', data.image);
           }
@@ -131,7 +131,7 @@
           console.log("error", error);
           $("#save_edit").html("Save Edit")
           alert("Failed to update product.");
-          location.reload();
+          location.href = location.href;
         }
       });
     });

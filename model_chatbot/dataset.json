@@ -251,7 +251,7 @@
       "Kulit aku rentan berminyak"
       ],
       "responses": [
-        "Kulit Berminyak adalah Produksi minyak berlebih, biasanya mengakibatkan wajah terlihat mengkilap. Rentan terhadap jerawat dan pori-pori besar."
+        "Kulit berminyak disebabkan oleh produksi sebum yang berlebihan, biasanya karena faktor genetik, perubahan hormon, atau penggunaan produk yang salah. Jenis kulit ini sering dihubungkan dengan masalah jerawat karena pori-pori yang tersumbat oleh minyak berlebih dan sel-sel kulit mati. Meski terlihat tidak nyaman, kulit berminyak cenderung mengalami tanda-tanda penuaan lebih lambat karena minyak alami membantu menjaga kelembapan kulit. Perawatan terbaik untuk kulit berminyak meliputi penggunaan produk bebas minyak, eksfoliasi teratur, serta produk yang mengandung bahan seperti salicylic acid atau benzoyl peroxide."
       ]
     },
     {
@@ -288,7 +288,7 @@
       "Kulit aku rentan kering"
       ],
       "responses": [
-        "Kulit Kering adalah Kulit yang kekurangan kelembapan, sering terasa kasar, kencang, atau bersisik. Cenderung lebih rentan terhadap kerutan."
+        "Kulit kering terjadi ketika produksi minyak alami kulit kurang, sehingga kelembapan berkurang. Faktor seperti usia, cuaca dingin, dan penggunaan produk perawatan yang keras dapat memperparah kondisi ini. Kulit kering rentan terhadap penuaan dini, sehingga membutuhkan hidrasi yang intensif dan penggunaan pelembap secara teratur. Penggunaan produk dengan bahan seperti hyaluronic acid, glycerin, dan ceramide sering direkomendasikan untuk mengatasi kekeringan ini."
       ]
     },
     {
@@ -326,7 +326,7 @@
       "Kulit aku rentan normal"
       ],
       "responses": [
-        "Kulit Normal adalah Kulit yang seimbang, tidak terlalu berminyak atau kering. Pori-pori kecil, tekstur halus, dan jarang mengalami masalah kulit."
+        "Kulit normal adalah jenis kulit yang ideal karena memiliki keseimbangan yang tepat antara kelembapan dan produksi minyak. Kulit ini memiliki elastisitas yang baik dan sedikit masalah terkait jerawat atau komedo. Meskipun begitu, kulit normal masih memerlukan perawatan untuk menjaga kondisi optimalnya, terutama dalam menjaga hidrasi dan perlindungan dari paparan sinar UV."
       ]
     },    
     {
@@ -344,8 +344,7 @@
       "Jenis kulit saya adalah kombinasi.",
       "Kulit saya gampang kombinasi.",
       "Kulitku kombinasi.",
-      "Jenis kulit saya banyak minyaknya.",
-      "Saya memiliki kulit dengan banyak minyak.",
+      "Saya memiliki kulit pipi berminyak dan kulit dahi sampe hidung kering.",
       "Kulit saya rentan kombinasi.",
       "Jenis kulit aku kombinasi.",
       "Kulit aku cenderung kombinasi.",
@@ -359,8 +358,8 @@
       "Aku punya kulit kombinasi.",
       "Jenis kulit aku adalah kombinasi.",
       "Kulitku gampang kombinasi.",
-      "Kulitku banyak minyaknya.",
-      "Aku punya kulit dengan banyak minyak.",
+      "Kulitku di pipi kering tapi di area dahi dan hidung berminyak.",
+      "Aku punya kulit wajah yang kadang berminyak kadang kering.",
       "Kulit aku rentan kombinasi",
       
       "Kulit saya cenderung campuran.",
@@ -426,7 +425,7 @@
       "Kulit aku rentan kombinasi / campuran"
       ],
       "responses": [
-        "Kulit Kombinasi adalah Perpaduan kulit kering dan berminyak. Biasanya berminyak di area T-zone (dahi, hidung, dagu) dan kering di area lain."
+        "Kulit kombinasi menggabungkan ciri-ciri dari kulit berminyak dan kulit kering. Area wajah seperti T-zone cenderung lebih berminyak karena produksi sebum yang lebih tinggi, sedangkan bagian lain seperti pipi lebih kering. Perawatan kulit kombinasi memerlukan produk yang seimbang, di mana area T-zone diatasi dengan produk kontrol minyak, sementara area kering diberi pelembap yang sesuai. Penggunaan produk ringan seperti toner yang seimbang dan pelembap non-komedogenik seringkali dianjurkan."
       ]
     },
     {
@@ -444,8 +443,6 @@
       "Jenis kulit saya adalah sensitive.",
       "Kulit saya gampang sensitive.",
       "Kulitku sensitive.",
-      "Jenis kulit saya banyak minyaknya.",
-      "Saya memiliki kulit dengan banyak minyak.",
       "Kulit saya rentan sensitive.",
       "Jenis kulit aku sensitive.",
       "Kulit aku cenderung sensitive.",
@@ -459,8 +456,6 @@
       "Aku punya kulit sensitive.",
       "Jenis kulit aku adalah sensitive.",
       "Kulitku gampang sensitive.",
-      "Kulitku banyak minyaknya.",
-      "Aku punya kulit dengan banyak minyak.",
       "Kulit aku rentan sensitive",
       "Kulit aku rentan sinar matahari",
       "Kulit aku rentan debu dan polusi",
@@ -470,7 +465,7 @@
       "Kulit aku cocok di tempat dingin"
       ],
       "responses": [
-        "Kulit Sensitif adalah Kulit yang mudah bereaksi terhadap produk atau lingkungan. Sering mengalami kemerahan, gatal, atau iritasi."
+        "Kulit sensitif mudah bereaksi terhadap faktor eksternal seperti polusi, perubahan suhu, dan bahan kimia dalam produk perawatan kulit. Kulit ini sering mengalami iritasi, kemerahan, dan rasa perih, terutama setelah menggunakan produk yang tidak sesuai. Penyebab kulit sensitif bisa bervariasi, termasuk kondisi seperti rosacea, dermatitis, atau reaksi alergi. Produk yang mengandung bahan alami dan bebas pewangi biasanya lebih cocok untuk kulit sensitif. Penting untuk selalu melakukan patch test sebelum mencoba produk baru untuk menghindari reaksi yang lebih buruk."
       ]
     }
   ]

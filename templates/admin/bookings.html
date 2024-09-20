@@ -25,6 +25,8 @@
               <th>Customer</th>
               <th>Treatment</th>
               <th>No Hp</th>
+              <th>Status</th>
+              <th>Aksi</th>
           </tr>
       </thead>
       <tbody>
@@ -35,6 +37,23 @@
               <td>{{ booking.nama_client }}</td>
               <td>{{ booking.product_name }}</td>
               <td>{{ booking.no_hp }}</td>
+              <td>{{ booking.status }}</td>
+              <td> <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownStatusButton" data-bs-toggle="dropdown" aria-expanded="false">
+      Ubah Status
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownStatusButton">
+      <li><a class="dropdown-item" href="#">Pending</a></li>
+      <li><a class="dropdown-item" href="#">Confirmed</a></li>
+      <li><a class="dropdown-item" href="#">Processing</a></li>
+      <li><a class="dropdown-item" href="#">Ongoing</a></li>
+      <li><a class="dropdown-item" href="#">Completed</a></li>
+      <li><a class="dropdown-item" href="#">Cancelled</a></li>
+    </ul>
+  </div>
+              <a href="https://api.whatsapp.com/send/?phone={{ booking.no_hp }}&text=">
+              <button type="button" class="btn btn-success">Chat ke User</button></a>
+              </td>
           </tr>
           {% endfor %}
       </tbody>

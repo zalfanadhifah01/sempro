@@ -108,7 +108,7 @@
                       .then(response => {
                           if (response.ok) {
                               alert("Produk berhasil dihapus");
-                              window.location.reload();
+                              window.location.href = location.href;
                           } else {
                               alert("Gagal menghapus produk");
                           }

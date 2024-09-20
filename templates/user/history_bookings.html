@@ -26,6 +26,8 @@
               <th>Customer</th>
               <th>Treatment</th>
               <th>No Hp</th>
+              <th>Status</th>
+              <th>Aksi</th>
           </tr>
       </thead>
       <tbody>
@@ -36,13 +38,17 @@
               <td>{{ booking.nama_client }}</td>
               <td>{{ booking.product_name }}</td>
               <td>{{ booking.no_hp }}</td>
+              <td>{{ booking.status }}</td>
+              <td><button type="button" class="btn btn-danger">Cancel</button>
+              <a href="https://api.whatsapp.com/send/?phone=62882003875404&text=Hallo, Saya mau Konfirmsi Booking {{ booking.product_name }} pada {{booking.tanggal}} jam {{booking.jam}}.%0ANama Saya: {{booking.nama_client}}%0AAlamat: {{booking.alamat}}%0ANo HP: {{booking.no_hp}}">
+              <button type="button" class="btn btn-success">Konfirmasi WA</button></a>
+              </td>
           </tr>
           {% endfor %}
       </tbody>
   </table>
-  </div>
-
- 
+  </div> 
+  <h4 class="mb-4">Untuk Informasi lebih lanjut bisa hubungi Nomor WA +62882003875404</h4>
 </div>
 
 <script>

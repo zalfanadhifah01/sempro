@@ -221,7 +221,7 @@
       var jenis = localStorage.getItem("jenis_kulit");
       console.log(jenis)
       appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
-    
+      botResponse("Jenis kulit saya " + jenis);
     }
     $("#btn-berminyak").on("click", function () {
       jenis_kulit("berminyak")

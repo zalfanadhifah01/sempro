@@ -1,7 +1,6 @@
 {% extends 'root/base.html' %}
 {% block head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.css">
 <style>
     .form-inline .form-group {
         display: flex;
@@ -143,8 +142,7 @@
 
 {% endblock %}
 {% block js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
 <script>
     const bookings = JSON.parse('{{ bookings|tojson|safe }}');
 
@@ -155,40 +153,66 @@
             autoclose: true
         });
 
-        $('#time').timepicker({
-            minuteStep: 30,
-            showMeridian: false,
-            defaultTime: false
+        flatpickr("time", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true,
         });
-
+    });
+</script>
+{%  if current_user.is_authenticated: %}
+  {% if current_user.role == "admin": %}
+    <script>
+      $(document).ready(function () {
+      $('#checkBookingButton').on('click', function () {
+      alert("anda login sebagai admin. anda tidak bisa booking treatment silahkan logout ")
+      });
+      });    
+    </script>    
+  {% elif current_user.role == 'user': %}
+    <script>
+      $(document).ready(function () {
         $('#checkBookingButton').on('click', function () {
-            var date = $('#date').val();
-            var time = $('#time').val();
-            console.log(date)
-            if (date && time) {
-                if (bookings === ""||bookings==="[]"){
-
-                }
-                else{
-                var isBooked = bookings.some(function (booking) {
-                    console.log("db :",booking.tanggal)
-                    console.log("db :",booking.jam)
-                    console.log("user input:",date)
-                    console.log("user input:",time)
-                    return booking.tanggal === date && booking.jam === time;
-                });
+          var date = $('#date').val();
+          var time = $('#time').val();
+          console.log(date)
+          if (date && time) {
+            if (bookings === ""||bookings==="[]"){ }
+            else{
+              var isBooked = bookings.some(function (booking) {
+                  console.log("db :",booking.tanggal)
+                  console.log("db :",booking.jam)
+                  console.log("user input:",date)
+                  console.log("user input:",time)
+                  return booking.tanggal === date && booking.jam === time;
+              });
             }
-
-                if (isBooked) {
-                    alert('The selected slot is already booked. Please choose another time.');
-                } else {
-                    $('#bookingModal').modal('show');
-                }
+            if (isBooked) {
+              alert('Maaf Tanggal dan Jam tersebut sudah di Booking orang lain. Silahkan Pilih Tanggal / Jam lainnya.');
             } else {
-                alert('Please select both date and time.');
+              $('#bookingModal').modal('show');
             }
+          } else {
+            alert('Tolong pilih Tanggal dan Jam nya.');
+          }
         });
-
+      });    
+    </script>
+       
+{% endif %}
+  {% else %}
+    <script>
+      $(document).ready(function () {
+      $('#checkBookingButton').on('click', function () {
+      alert("anda Belum Login Silahkan login terlebih dahulu")
+      window.location.href="/login?next_url="+location.href
+      });
+      });    
+    </script> 
+    {% endif %}
+<script>
+$(document).ready(function () {
         $('#modalBookingForm').on('submit', function (e) {
             e.preventDefault();
 
@@ -216,21 +240,21 @@
                         alert("Terima Kasih Telah Booking Treatment dari Kami :) ")
                         //var message = `Hallo, Saya mau Konfirmsi Booking {{ product.nama }} pada ${date} jam ${time}.\nNama: ${name}\nAlamat: ${address}\nNo HP: ${phone}`;
                         //var whatsappUrl = `https://api.whatsapp.com/send/?phone=62882003875404&text=${encodeURIComponent(message)}`;
-                        //window.location.href = whatsappUrl;
+                        window.location.href = "/user/bookings";
                     },
                     error: function(xhr) {
                         if (xhr.responseJSON.message !== null) {
                             alert(xhr.responseJSON.message);
-                            location.reload();
+                            window.location.href = location.href;
                         } else {
-                            alert('Failed to book. Please try again.');
-                            location.reload();
+                            alert('Please try again.');
+                            window.location.href = location.href;
                         }
                     }
                 });
             } else {
-                alert('Please fill in all fields.');
-                location.reload();
+                alert('Tolong Isi Semuanya.');
+                window.location.href = location.href;
             }
         });
     });

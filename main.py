@@ -22,6 +22,10 @@ from flask_socketio import SocketIO, emit
 from flask_bcrypt import Bcrypt
 from functools import wraps
 from flask_cors import CORS
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+logging.debug("Ini log dari debug")
 # Konfigurasi Aplikasi Flask
 app = Flask(__name__)
 
@@ -95,7 +99,7 @@ def load_user(user_id):
 
 # Variabel Global untuk Chatbot
 global responses, lemmatizer, tokenizer, le, model, input_shape
-input_shape = 11
+input_shape = 189  # Sesuaikan dengan jumlah kata unik hasil tokenisasi
 
 # Load response dataset
 def load_response():
@@ -116,7 +120,7 @@ def preparation():
         tokenizer = pickle.load(f)
     le_path = os.path.join(project_directory,'model_chatbot','le.pkl')
     le = pickle.load(open(le_path, 'rb'))
-    model_path = os.path.join(project_directory,'model_chatbot2','chatbot_model.h5')
+    model_path = os.path.join(project_directory,'model_chatbot','chat_model.h5')
     model = load_model(model_path)
     #model = load_model('model_chatbot2/chatbot_model.h5')
     lemmatizer = WordNetLemmatizer()
@@ -133,7 +137,7 @@ def vectorization(text):
     text = remove_punctuation(text)
     vector = tokenizer.texts_to_sequences([text])
     vector = np.array(vector).reshape(-1)
-    vector = pad_sequences([vector], maxlen=input_shape)
+    vector = pad_sequences([vector], maxlen=input_shape)  # Gunakan input_shape yang sesuai (189)
     return vector
 
 # Function to predict response tag
@@ -268,7 +272,7 @@ def get_penjelasan_singkat(skin_type):
     if  skin_type == "berminyak":
      return  "Kulit Berminyak adalah Produksi minyak berlebih, biasanya mengakibatkan wajah terlihat mengkilap. Rentan terhadap jerawat dan pori-pori besar."
     if  skin_type == "kombinasi":
-     return "Kulit Kombinasi adalah Perpaduan kulit kering dan berminyak. Biasanya berminyak di area T-zone (dahi, hidung, dagu: dan kering di area lain."
+     return "Kulit Kombinasi adalah Perpaduan kulit kering dan berminyak. Biasanya berminyak di area T-zone (dahi, hidung, dagu) dan kering di area lain."
     if  skin_type == "sensitive":
         return "Kulit Sensitif adalah Kulit yang mudah bereaksi terhadap produk atau lingkungan. Sering mengalami kemerahan, gatal, atau iritasi."
 
@@ -302,13 +306,13 @@ def skin_detection_submit():
         # Bebaskan RAM setelah prediksi
         del img
         gc.collect()
-        print("1")
+        logging.debug("1")
         # penjelasan singkat
         penjelasan_singkat = get_penjelasan_singkat(hasil)
-        print(penjelasan_singkat)
+        logging.debug(penjelasan_singkat)
         #rekomenadasi
         rekomendasi = get_rekomendasi(hasil)
-        print(rekomendasi)
+        logging.debug(rekomendasi)
         if current_user.is_authenticated:
             new_history_deteksi = HistoryDeteksi(
                 username=current_user.username,
@@ -318,11 +322,11 @@ def skin_detection_submit():
             )
             db.session.add(new_history_deteksi)
             db.session.commit()
-            print("2")
+            logging.debug("2")
             return jsonify({"msg": "SUKSES_simpan", "hasil": hasil, "img": random_name,"penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
         else:
             
-            print("3")
+            logging.debug("3")
             return jsonify({"msg": "SUKSES", "hasil": hasil, "img": random_name,"penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
 
     except Exception as e:
@@ -365,7 +369,11 @@ def login():
                 if user.role == "admin":
                     return redirect(url_for('history_pemesanan'))
                 else:
-                    return redirect(url_for('user_get_bookings'))
+                    next_url = request.args.get('next_url')
+                    if next_url:
+                        return redirect(next_url)
+                    else:
+                        return redirect(url_for('user_get_bookings'))
             else:
                 flash('password salah', 'danger')
         else:
@@ -414,8 +422,22 @@ def products_detail(id):
     if not product:
         return jsonify({"error": "Product not found"}), 404
     bookings = Booking.query.filter_by(product_id=id).all()
-    list_bookings = [book for book in bookings]
-    return render_template("product_detail.html", product=product, bookings=list_bookings)
+    # Ubah booking menjadi list of dictionaries
+    bookings_data = []
+    for booking in bookings:
+        bookings_data.append({
+            "id": booking.id,
+            "product_id": booking.product_id,
+            "user_id": booking.user_id,
+            "status": booking.status,
+            "product_name": booking.product_name,
+            "nama_client": booking.nama_client,
+            "alamat": booking.alamat,
+            "no_hp": booking.no_hp,
+            "tanggal": booking.tanggal,
+            "jam": booking.jam
+        })
+    return render_template("product_detail.html", product=product, bookings=bookings_data)
 
 # Route untuk daftar produk lama
 @app.route("/products_old")
@@ -758,7 +780,7 @@ def get_rekomendasi(skin_type):
     try:
         rekomendasi = f"Rekomendasi Treatment Kulit {skin_type.capitalize()}:<br>"
         recommendations = Recommendation.query.filter_by(type=skin_type).order_by(Recommendation.priority).all()
-        print(recommendations)
+        logging.debug(recommendations)
         if not recommendations:
             rekomendasi = ""
         else:
@@ -768,7 +790,7 @@ def get_rekomendasi(skin_type):
                     rekomendasi += f"{rec.priority}. {product.nama} {product.harga}<br>"
                 else:
                     rekomendasi += f"{rec.priority}. Produk dengan ID {rec.product_id} tidak ditemukan.<br>"
-        print(rekomendasi)
+        logging.debug(rekomendasi)
     except Exception as e:
         rekomendasi = ""
     return rekomendasi
@@ -781,7 +803,7 @@ import signal
 import sys
 
 def graceful_shutdown(signal, frame):
-    print("Shutting down gracefully...")
+    logging.debug("Shutting down gracefully...")
     socketio.stop()
     sys.exit(0)
 
@@ -790,7 +812,7 @@ signal.signal(signal.SIGTERM, graceful_shutdown)
 import atexit
 
 def cleanup():
-    print("Cleaning up resources...")
+    logging.debug("Cleaning up resources...")
 
 atexit.register(cleanup)
 

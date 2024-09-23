@@ -107,6 +107,10 @@
                 <video id="video" width="100%" height="480" autoplay></video>
                 <p>Skin type: <span id="skin_type"></span></p>
                 <button id="stop_camera" class="btn btn-danger mt-2">Stop</button>
+                 <p class="bold text-strong" id="hasil_deteksi_realtime"></p>
+              <p id="penjelasan_singkat_realtime"> </p>
+              <p id="rekomendasi_realtime"> </p>
+              <button id="ke_chatbot_realtime" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
               </div>
             </div>
           </div>
@@ -171,6 +175,11 @@
   // Receive prediction from server
   socket.on('prediction', function(data) {
     skinTypeSpan.innerText = data.skin_type;
+    $("#ke_chatbot_realtime").show();
+    $("#hasil_deteksi_realtime").html("<p style='margin-top:5px'>Terdeteksi:</p><h2 color='green'>" + data.hasil + "</h2>");
+    $("#penjelasan_singkat_realtime").html(data.penjelasan_singkat);
+    $("#rekomendasi_realtime").html(data.rekomendasi);
+    localStorage.setItem("jenis_kulit", data.hasil);
   });
 </script>
 

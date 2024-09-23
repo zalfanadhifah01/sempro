@@ -202,7 +202,12 @@ def handle_image(data_image):
     del frame
     gc.collect()
     # Send the prediction result back to the client
-    emit('prediction', {'skin_type': result})
+    penjelasan_singkat = get_penjelasan_singkat(result)
+    logging.debug(penjelasan_singkat)
+    #rekomenadasi
+    rekomendasi = get_rekomendasi(result)
+    logging.debug(rekomendasi)
+    emit('prediction', {'skin_type': result,"hasil": result, "penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
 
 label_index = {"dry": 0, "normal": 1, "oily": 2, "kombinasi": 3, "sensitive": 4}
 index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sensitive"}

@@ -273,8 +273,10 @@
         }).done(function (data) {
           console.log(rawText);
           console.log(data);
-            const msgText = data;
-            appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          const msgText = data;
+          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
+          // pesan closing alamat dan no hp 
+          appendMessage(BOT_NAME,BOT_IMG,"left","info lebih lanjut 081398957791. Kunjungi Kami di  Bulak, Babakan, Kramat, Tegal")
           
         });
     }

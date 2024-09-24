@@ -191,11 +191,20 @@ def get_bot_response():
 socketio = SocketIO(app, async_mode='eventlet')
 
 @socketio.on('image_frame')
-def handle_image(data_image):
+def handle_image(data):
     # Decode base64 image data
-    sbuf = io.BytesIO(base64.b64decode(data_image))
+    image_data = data.get('image')  # Ambil data gambar (base64 format)
+    sbuf = io.BytesIO(base64.b64decode(image_data))
     frame = np.array(Image.open(sbuf))
-
+    stop_status = data.get('stop',False)
+    random_name = ""
+    if stop_status:
+        random_name = uuid.uuid4().hex + ".jpg"
+        destination = os.path.join(app.config['UPLOAD_FOLDER'], random_name)
+        img = Image.open(sbuf)
+        img.save(destination)
+        print("Camera stopped. Processing last frame.")
+    
     # Predict skin type from the frame
     result = predict_skin(frame)
     # Bebaskan RAM setelah prediksi
@@ -207,7 +216,7 @@ def handle_image(data_image):
     #rekomenadasi
     rekomendasi = get_rekomendasi(result)
     logging.debug(rekomendasi)
-    emit('prediction', {'skin_type': result,"hasil": result, "penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
+    emit('prediction', {'skin_type': result,"hasil": result, "img": random_name, "penjelasan_singkat":penjelasan_singkat,"rekomendasi":rekomendasi})
 
 label_index = {"dry": 0, "normal": 1, "oily": 2, "kombinasi": 3, "sensitive": 4}
 index_label = {0: "kering", 1: "normal", 2: "berminyak", 3: "kombinasi", 4: "sensitive"}

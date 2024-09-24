@@ -15,12 +15,12 @@
     #video_container {
       display: none;
     }
-    #img_placeholder{
+    .img_custom{
       width: 300px; 
       height: 300px;
     }
      @media only screen and (max-width: 850px) {
-      #img_placeholder{
+      .img_custom{
         width:250px;
         height:250px;
       }
@@ -39,7 +39,7 @@
     }
   }
     @media only screen and (max-width: 400px) {
-      #img_placeholder{
+      .img_custom{
         width:200px;
         height:200px;
       }
@@ -82,7 +82,7 @@
                 <button id="kirim" class="btn btn-success mt-2" type="submit">Kirim</button>
               </form>
             <div class="hasil text-center align-items-center d-block">
-              <img id="img_placeholder" class="img img-responsive hidden" src="">
+              <img id="img_placeholder" class="img img_custom img-responsive hidden" src="">
               <p class="bold text-strong" id="hasil_deteksi"></p>
               <p id="penjelasan_singkat"> </p>
               <p id="rekomendasi"> </p>
@@ -107,11 +107,12 @@
                 <video id="video" width="100%" height="480" autoplay></video>
                 <p>Skin type: <span id="skin_type"></span></p>
                 <button id="stop_camera" class="btn btn-danger mt-2">Stop</button>
-                 <p class="bold text-strong" id="hasil_deteksi_realtime"></p>
+              </div>
+              <br><img id="img_placeholder_realtime" class="img img_custom img-responsive hidden" src="">
+              <p class="bold text-strong" id="hasil_deteksi_realtime"></p>
               <p id="penjelasan_singkat_realtime"> </p>
               <p id="rekomendasi_realtime"> </p>
               <button id="ke_chatbot_realtime" class="btn btn-success hidden mb-2" onclick="window.location.href = '/bot'">Lanjut ke Chatbot</button>
-              </div>
             </div>
           </div>
         </div>
@@ -133,6 +134,7 @@
 
   const stopCameraButton = document.getElementById('stop_camera');
   let stream;
+  let intervalId;  // Variabel untuk menyimpan interval ID
 
   // Start camera on button click
   startCameraButton.addEventListener('click', function() {
@@ -148,20 +150,27 @@
     }
 
     // Capture and send frames to server every 500ms
-    setInterval(captureFrame, 500);
+    intervalId = setInterval(captureFrame, 500);  // Simpan interval ID
   });
 
   // Stop camera on button click
   stopCameraButton.addEventListener('click', function() {
     if (stream) {
+      // Clear interval to stop sending frames
+      clearInterval(intervalId);
+      // Send the last frame with stop status set to true
+      captureFrame(true);
       // Stop all video tracks
-      stream.getTracks().forEach(track => track.stop());
-      videoContainer.style.display = 'none';
-    }
+      setInterval(function(){
+        stream.getTracks().forEach(track => track.stop());
+        videoContainer.style.display = 'none';
+      }, 300);
+      
+      }
   });
 
   // Capture frame from video and send to server
-  function captureFrame() {
+  function captureFrame(stop = false) {
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -169,12 +178,28 @@
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataURL = canvas.toDataURL('image/jpeg');
     const base64Data = dataURL.replace(/^data:image\/jpeg;base64,/, '');
-    socket.emit('image_frame', base64Data);
+    if (stop==true){
+      $("#img_placeholder_realtime").attr('src',dataURL).show();
+    }
+    // Send frame to server with "stop" flag
+    socket.emit('image_frame', {
+      image: base64Data,
+      stop: stop
+    });
   }
 
   // Receive prediction from server
   socket.on('prediction', function(data) {
     skinTypeSpan.innerText = data.skin_type;
+    console.log(data)
+    if (data.img =="" ){
+      $("#img_placeholder_realtime").hide();
+    }
+    else{
+      //var img_path = "/static/upload/" + data.img;
+      //$("#img_placeholder_realtime").attr('src', img_path).show();
+      //$("#img_placeholder_realtime").show();
+    }
     $("#ke_chatbot_realtime").show();
     $("#hasil_deteksi_realtime").html("<p style='margin-top:5px'>Terdeteksi:</p><h2 color='green'>" + data.hasil + "</h2>");
     $("#penjelasan_singkat_realtime").html(data.penjelasan_singkat);

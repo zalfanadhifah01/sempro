@@ -3,28 +3,27 @@
     {
       "tag": "greeting",
       "patterns": [
-        "hallo",
-        "hai",
-        "hei",
+        "Hallo",
+        "Hai",
+        "Hei",
         "Hi",
-        "hi",
-        "hi, apa yang bisa saya bantu",
-        "Hi apa kabar",
-        "start",
-        "apa kabar",
-        "hy",
-        "pagi",
-        "morning",
-        "siang",
-        "afternoon",
-        "sore",
-        "malam"
+        "Hi, apa yang bisa saya bantu?",
+        "Hi, apa kabar?",
+        "Start",
+        "Apa kabar?",
+        "Hy",
+        "Pagi",
+        "Morning",
+        "Siang",
+        "Afternoon",
+        "Sore",
+        "Malam"
       ],
       "responses": [
-        "Hi, Apa ada yang bisa saya bantu?",
-        "Hai, adakah yang perlu saya bantu?",
-        "Selamat datang di chatbot era beauty care",
-        "Halo, kami ada di sini!"
+        "Hi, ada yang bisa saya bantu?",
+        "Hai, apa yang bisa saya bantu?",
+        "Selamat datang di chatbot Era Beauty Care.",
+        "Halo, ada yang bisa kami bantu?"
       ]
     },
     {
@@ -32,20 +31,20 @@
       "patterns": [
         "Dah",
         "Dadah",
-        "see u",
-        "bye",
-        "selamat tinggal",
-        "see u next time",
-        "bye bye",
-        "See you"
+        "See you",
+        "Bye",
+        "Selamat tinggal",
+        "See you next time",
+        "Bye bye",
+        "Sampai jumpa"
       ],
       "responses": [
         "Bye!",
         "Dadah!",
-        "Good bye!",
-        "Semoga hari-harimu menyenangkan",
-        "Sehat-sehat terus ya",
-        "Semoga happy terus"
+        "Goodbye!",
+        "Semoga hari-harimu menyenangkan!",
+        "Sehat-sehat terus ya!",
+        "Semoga tetap bahagia!"
       ]
     },
     {
@@ -55,74 +54,73 @@
         "Selamat pagi/siang/sore/malam, bagaimana kabarmu?",
         "Hey, apa kabar akhir-akhir ini?",
         "Halo, apa kabar di duniamu?",
-        "Assalamualaikum, bagaimana kabarmu sekarang?",
+        "Assalamualaikum, bagaimana kabarmu?",
         "Hai, apa kabar minggu ini?",
         "Halo, apa kabar di sana?",
         "Apa kabar, sahabat? Semoga baik-baik saja ya!",
         "Selamat datang, bagaimana kabar Anda hari ini?",
-        "Halo, apa kabar terkini dari mu?"
+        "Halo, apa kabar terkini?"
       ],
       "responses": [
-        "Hi, Selamat datang! Apa ada yang bisa saya bantu?"
+        "Hi, selamat datang! Apa yang bisa saya bantu?"
       ]
     },
     {
       "tag": "thanks",
       "patterns": [
-        "thank you",
-        "thanks",
-        "thanks a lot"
+        "Thank you",
+        "Thanks",
+        "Thanks a lot"
       ],
       "responses": [
-        "You are welcome",
-        "Of course"
+        "You're welcome!",
+        "Of course!"
       ]
     },
     {
       "tag": "terimakasih",
       "patterns": [
-        "terimakasih",
-        "terima kasih",
-        "terimakasih banyak",
-        "terima kasih banyak",
-        "makasih",
-        "terimakasih atas infonya",
-        "terima kasih atas infonya"
+        "Terimakasih",
+        "Terima kasih",
+        "Terimakasih banyak",
+        "Terima kasih banyak",
+        "Makasih",
+        "Terimakasih atas infonya",
+        "Terima kasih atas infonya"
       ],
       "responses": [
         "Tentu saja :)",
-        "Sama-sama",
-        "Sama-sama, semoga membantu",
-        "Silakan mampir lagi"
+        "Sama-sama!",
+        "Sama-sama, semoga membantu.",
+        "Silakan mampir lagi!"
       ]
     },
     {
       "tag": "tips_memilih_krim_pemutih_wajah",
       "patterns": [
-        "krim pemutih wajah",
-        "pemutih wajah",
-        "krim wajah",
-        "Tips Memilih Krim Pemutih Wajah",
+        "Krim pemutih wajah",
+        "Pemutih wajah",
+        "Krim wajah",
+        "Tips memilih krim pemutih wajah",
         "Trik memilih krim pemutih wajah",
-        "tips dan trik memilih krim pemutih wajah"
+        "Tips dan trik memilih krim pemutih wajah"
       ],
       "responses": [
-        "1. Periksa bahan aktif seperti vitamin C atau arbutin yang membantu mencerahkan kulit.\n2. Hindari krim yang mengandung bahan pemutih berbahaya seperti mercury.\n3. Pilih krim dengan SPF untuk melindungi kulit dari sinar UV."
+        "1. Periksa bahan aktif seperti vitamin C atau arbutin yang membantu mencerahkan kulit.\n2. Hindari krim yang mengandung bahan berbahaya seperti mercury.\n3. Pilih krim dengan SPF untuk melindungi kulit dari sinar UV."
       ]
     },
     {
       "tag": "trik_merawat_kulit_berminyak",
       "patterns": [
-        "wajah berminyak",
-        "kulit berminyak",
-        "kulit wajah berminyak",
-        "trik merawat kulit berminyak",
-        "apakah ada saran untuk ku",
-        "cara merawat kulit berminyak",
-        "treatment kulit berminyak",
-        "tips treatment kulit wajah berminyak",
-        "cara menangani kulit wajah berminyak",
-        "cara merawat kulit wajah berminyak"
+        "Wajah berminyak",
+        "Kulit berminyak",
+        "Kulit wajah berminyak",
+        "Trik merawat kulit berminyak",
+        "Cara merawat kulit berminyak",
+        "Treatment kulit berminyak",
+        "Tips treatment kulit wajah berminyak",
+        "Cara menangani kulit berminyak",
+        "Cara merawat kulit wajah berminyak"
       ],
       "responses": [
         "1. Gunakan pembersih wajah yang lembut dan tidak mengandung alkohol.\n2. Gunakan pelembap berbasis gel atau serum ringan.\n3. Gunakan masker lumpur sekali seminggu untuk mengontrol produksi minyak."
@@ -137,7 +135,7 @@
         "Cara menjaga kulit wajah agar tetap sehat?"
       ],
       "responses": [
-        "Beberapa tips untuk menjaga kesehatan kulit wajah adalah:\n1. Bersihkan wajah secara teratur dengan pembersih yang lembut.\n2. Gunakan pelembap yang cocok untuk jenis kulit Anda.\n3. Lindungi kulit dari sinar matahari dengan tabir surya.\n4. Minum air yang cukup dan makan makanan bergizi.\n5. Hindari merokok dan konsumsi alkohol yang berlebihan."
+        "Beberapa tips untuk menjaga kesehatan kulit wajah adalah:\n1. Bersihkan wajah secara teratur dengan pembersih yang lembut.\n2. Gunakan pelembap yang cocok untuk jenis kulit Anda.\n3. Lindungi kulit dari sinar matahari dengan tabir surya.\n4. Minum air yang cukup dan makan makanan bergizi.\n5. Hindari merokok dan konsumsi alkohol berlebihan."
       ]
     },
     {
@@ -146,7 +144,7 @@
         "Apa itu pigmentasi kulit?"
       ],
       "responses": [
-        "Pigmentasi merupakan proses di mana warna kulit dipengaruhi oleh pigmen melanin yang diproduksi oleh sel-sel kulit yang disebut melanosit. Melanin adalah pigmen alami yang memberikan warna pada kulit, rambut, dan mata. Proses pigmentasi terjadi ketika melanosit menghasilkan melanin dan mentransfernya ke sel-sel di lapisan epidermis, yang mengatur warna kulit."
+        "Pigmentasi adalah proses di mana warna kulit dipengaruhi oleh pigmen melanin yang diproduksi oleh sel-sel kulit yang disebut melanosit. Melanin adalah pigmen alami yang memberikan warna pada kulit, rambut, dan mata."
       ]
     },
     {
@@ -155,7 +153,7 @@
         "Faktor apa yang mempengaruhi pigmentasi kulit?"
       ],
       "responses": [
-        "Pigmentasi kulit dapat dipengaruhi oleh beberapa faktor, termasuk:\n- Paparan sinar matahari yang berlebihan.\n- Perubahan hormon, seperti selama kehamilan atau menopause.\n- Penggunaan obat-obatan tertentu."
+        "Pigmentasi kulit dipengaruhi oleh beberapa faktor, termasuk:\n- Paparan sinar matahari yang berlebihan.\n- Perubahan hormon, seperti selama kehamilan atau menopause.\n- Penggunaan obat-obatan tertentu."
       ]
     },
     {
@@ -165,308 +163,119 @@
         "Saya memiliki masalah pigmentasi kulit, ada yang bisa membantu?"
       ],
       "responses": [
-        "Untuk mengatasi pigmentasi kulit, Anda dapat mencoba beberapa metode, termasuk:\n- Menggunakan tabir surya setiap hari untuk melindungi kulit dari sinar matahari.\n- Menggunakan produk perawatan kulit yang mengandung bahan seperti vitamin C atau asam kojic.\n- Melakukan perawatan kecantikan seperti microneedling DNA salmon. ✨\nMicroneedling DNA salmon tidak hanya dapat mengatasi masalah pigmentasi kulit, tetapi juga dapat membantu mengurangi kerutan halus, kulit kendur, kulit kering & kusam, serta penuaan dini. Kandungan yang ada dalam DNA salmon juga memberikan banyak manfaat lainnya untuk kulit."
+        "Untuk mengatasi pigmentasi kulit, Anda bisa mencoba:\n1. Menggunakan tabir surya setiap hari.\n2. Menggunakan produk yang mengandung bahan seperti vitamin C atau asam kojic.\n3. Melakukan perawatan kecantikan seperti microneedling DNA salmon."
       ]
     },
     {
       "tag": "mengatasi_flek_hitam",
       "patterns": [
-        "flek hitam",
-        "hiperpigmentasi",
-        "melasma",
-        "Apa tips untuk mengatasi flek hitam?",
+        "Flek hitam",
+        "Hiperpigmentasi",
+        "Melasma",
         "Bagaimana cara mengatasi flek hitam?",
-        "Saya ingin tahu tips mengatasi flek hitam",
         "Apa tips untuk mengatasi hiperpigmentasi?",
-        "Bagaimana cara mengatasi hiperpigmentasi?",
-        "Saya ingin tahu tips mengatasi hiperpigmentasi",
-        "Apa tips untuk mengatasi melasma?",
-        "Bagaimana cara mengatasi melasma?",
-        "Saya ingin tahu tips mengatasi melasma",
         "Cara menjaga kulit flek hitam"
       ],
       "responses": [
-        "Flek hitam, yang juga dikenal sebagai hiperpigmentasi, adalah kondisi di mana terjadi penumpukan pigmen melanin di kulit, yang mengakibatkan area kulit menjadi gelap atau berwarna lebih gelap dari kulit sekitarnya. Ini biasanya terjadi sebagai respons terhadap berbagai faktor, termasuk paparan sinar matahari, perubahan hormon, dan luka atau peradangan pada kulit. Ada 3 cara ampuh bebas flek hitam:\n1. Microneedling mengatasi flek hitam, mengatasi scar, pori-pori besar, membantu pembentukan kolagen baru, menginvasi kulit hingga lapisan dermis.\n2. Messo Needle mencerahkan kulit, memudarkan flek hitam/melasma, mengatasi bekas jerawat.\n3. Chemical Peeling mengangkat sel kulit mati, mengatasi bekas jerawat PIE & PIH, memudarkan flek hitam, mengatasi kerutan halus."
+        "Flek hitam atau hiperpigmentasi adalah kondisi di mana terjadi penumpukan pigmen melanin di kulit, biasanya akibat sinar matahari atau perubahan hormon. Tiga cara ampuh untuk bebas flek hitam adalah:\n1. Microneedling.\n2. Messo Needle.\n3. Chemical Peeling."
       ]
     },
     {
       "tag": "jerawat",
       "patterns": [
-        "jerawat",
+        "Jerawat",
         "Apa yang menyebabkan jerawat muncul?",
         "Bagaimana cara mengatasi jerawat?",
         "Apa perbedaan antara komedo dan jerawat?",
         "Bagaimana cara mencegah jerawat?",
-        "Apakah faktor genetik mempengaruhi perkembangan jerawat?",
         "Apa yang harus saya hindari agar tidak memperburuk jerawat?",
-        "Bagaimana cara merawat jerawat yang sedang meradang?",
-        "Apa yang sebaiknya saya gunakan untuk membersihkan wajah jika memiliki jerawat?",
+        "Bagaimana cara merawat jerawat yang meradang?",
         "Apakah jerawat bisa diobati?",
-        "Apa yang dimaksud dengan jerawat hormonal dan bagaimana cara mengatasinya?",
-        "Bagaimana cara merawat kulit yang berjerawat agar tidak meninggalkan bekas?",
-        "Apakah ada tips perawatan khusus untuk kulit yang cenderung berjerawat?",
-        "Bagaimana cara merawat kulit berjerawat secara alami?",
-        "Apa saja bahan alami yang bisa digunakan untuk mengatasi jerawat?",
-        "Apakah pola makan mempengaruhi kemunculan jerawat?",
-        "Bagaimana cara menghilangkan jerawat batu?",
-        "Apa perbedaan antara jerawat batu dan jerawat biasa?",
-        "Apakah stres bisa mempengaruhi kemunculan jerawat?"
+        "Bagaimana cara menghilangkan jerawat batu?"
       ],
       "responses": [
-        "Jerawat adalah masalah kulit yang umum terjadi dan bisa disebabkan oleh berbagai faktor seperti hormon, bakteri, produksi minyak berlebih, dan pori-pori tersumbat. Untuk mengatasi jerawat, Anda bisa mencoba beberapa langkah berikut:\n1. Bersihkan wajah dua kali sehari dengan pembersih yang lembut dan sesuai dengan jenis kulit.\n2. Hindari memencet atau memecahkan jerawat, karena bisa menyebabkan peradangan dan bekas luka.\n3. Gunakan produk yang mengandung bahan aktif seperti asam salisilat, benzoyl peroxide, atau retinoid.\n4. Jaga pola makan yang sehat dan seimbang, hindari makanan yang bisa memicu jerawat seperti makanan berlemak dan tinggi gula.\n5. Kelola stres dengan baik, karena stres bisa mempengaruhi kesehatan kulit.\n6. Konsultasikan dengan dokter kulit jika jerawat tidak kunjung membaik atau semakin parah."
+        "Jerawat disebabkan oleh banyak faktor, termasuk hormon, produksi minyak berlebih, dan pori-pori tersumbat. Untuk mengatasinya:\n1. Bersihkan wajah secara rutin.\n2. Gunakan produk dengan bahan aktif seperti asam salisilat atau benzoyl peroxide.\n3. Jaga pola makan dan kelola stres."
       ]
-    },
+    },    
     {
       "tag": "jenis kulit saya berminyak",
       "patterns": [
-      "Kulit saya cenderung berminyak.",
-      "Saya memiliki kulit berminyak.",
-      "Jenis kulitku berminyak.",
-      "Kulit wajahku tipe berminyak.",
-      "Kulit saya termasuk berminyak.",
-      "Saya memiliki tipe kulit berminyak.",
-      "Kulit saya sering berminyak.",
-      "Kulit saya berminyak.",
-      "Saya punya kulit berminyak.",
-      "Jenis kulit saya adalah berminyak.",
-      "Kulit saya gampang berminyak.",
-      "Kulitku berminyak.",
-      "Jenis kulit saya banyak minyaknya.",
-      "Saya memiliki kulit dengan banyak minyak.",
-      "Kulit saya rentan berminyak.",
-      "Jenis kulit aku berminyak.",
-      "Kulit aku cenderung berminyak.",
-      "Aku memiliki kulit berminyak.",
-      "Jenis kulitku berminyak.",
-      "Kulit wajahku tipe berminyak.",
-      "Kulit aku termasuk berminyak.",
-      "Aku punya tipe kulit berminyak.",
-      "Kulitku sering berminyak.",
-      "Kulitku berminyak.",
-      "Aku punya kulit berminyak.",
-      "Jenis kulit aku adalah berminyak.",
-      "Kulitku gampang berminyak.",
-      "Kulitku banyak minyaknya.",
-      "Aku punya kulit dengan banyak minyak.",
-      "Kulit aku rentan berminyak"
+        "Kulit saya cenderung berminyak.",
+        "Saya punya kulit yang berminyak.",
+        "Jenis kulit saya adalah berminyak.",
+        "Kulit wajah saya sering berminyak.",
+        "Kulitku tipe berminyak.",
+        "Aku memiliki kulit yang berminyak.",
+        "Kulit saya mudah berminyak.",
+        "Kulit saya rentan terhadap minyak."
       ],
       "responses": [
-        "Kulit berminyak disebabkan oleh produksi sebum yang berlebihan, biasanya karena faktor genetik, perubahan hormon, atau penggunaan produk yang salah. Jenis kulit ini sering dihubungkan dengan masalah jerawat karena pori-pori yang tersumbat oleh minyak berlebih dan sel-sel kulit mati. Meski terlihat tidak nyaman, kulit berminyak cenderung mengalami tanda-tanda penuaan lebih lambat karena minyak alami membantu menjaga kelembapan kulit. Perawatan terbaik untuk kulit berminyak meliputi penggunaan produk bebas minyak, eksfoliasi teratur, serta produk yang mengandung bahan seperti salicylic acid atau benzoyl peroxide."
+        "Kulit berminyak disebabkan oleh produksi sebum yang berlebihan. Faktor genetik, hormon, atau produk yang tidak cocok bisa jadi penyebabnya. Kulit jenis ini lebih rentan terhadap jerawat, namun juga lebih lambat menunjukkan tanda-tanda penuaan. Pastikan untuk menggunakan produk yang dapat mengendalikan minyak seperti salicylic acid atau benzoyl peroxide, serta menjaga kebersihan kulit secara teratur."
       ]
-    },
+    },    
     {
       "tag": "jenis kulit saya kering",
       "patterns": [
-      "Kulit saya cenderung kering.",
-      "Saya memiliki kulit kering.",
-      "Jenis kulitku kering.",
-      "Kulit wajahku tipe kering.",
-      "Kulit saya termasuk kering.",
-      "Saya memiliki tipe kulit kering.",
-      "Kulit saya sering kering.",
-      "Kulit saya kering.",
-      "Saya punya kulit kering.",
-      "Jenis kulit saya adalah kering.",
-      "Kulit saya gampang kering.",
-      "Kulitku kering.",
-      "Saya memiliki kulit yang kasar.",
-      "Kulit saya rentan kering.",
-      "Jenis kulit aku kering.",
-      "Kulit aku cenderung kering.",
-      "Aku memiliki kulit kering.",
-      "Jenis kulitku kering.",
-      "Kulit wajahku tipe kering.",
-      "Kulit aku termasuk kering.",
-      "Aku punya tipe kulit kering.",
-      "Kulitku sering kering.",
-      "Kulitku kering.",
-      "Aku punya kulit kering.",
-      "Jenis kulit aku adalah kering.",
-      "Kulitku gampang kering.",
-      "Kulitku banyak retakan atau pecahan kulit.",
-      "Aku punya kulit dengan banyak retakan atau pecahan kulit.",
-      "Kulit aku rentan kering"
+        "Kulit saya cenderung kering.",
+        "Saya memiliki kulit kering.",
+        "Jenis kulitku kering.",
+        "Kulit wajahku tipe kering.",
+        "Kulit saya termasuk kering.",
+        "Saya punya kulit kering.",
+        "Kulit saya rentan kering.",
+        "Jenis kulit aku kering."
       ],
       "responses": [
-        "Kulit kering terjadi ketika produksi minyak alami kulit kurang, sehingga kelembapan berkurang. Faktor seperti usia, cuaca dingin, dan penggunaan produk perawatan yang keras dapat memperparah kondisi ini. Kulit kering rentan terhadap penuaan dini, sehingga membutuhkan hidrasi yang intensif dan penggunaan pelembap secara teratur. Penggunaan produk dengan bahan seperti hyaluronic acid, glycerin, dan ceramide sering direkomendasikan untuk mengatasi kekeringan ini."
+        "Kulit kering terjadi karena kurangnya produksi minyak alami, sehingga membuat kulit tampak kusam dan terasa kasar. Faktor usia, cuaca, dan produk perawatan tertentu dapat memperburuk kondisi ini. Untuk kulit kering, gunakan produk yang melembapkan seperti hyaluronic acid dan ceramide."
       ]
     },
     {
       "tag": "jenis kulit saya normal",
       "patterns": [
-      "Kulit saya cenderung normal.",
-      "Saya memiliki kulit normal.",
-      "Jenis kulitku normal.",
-      "Kulit wajahku tipe normal.",
-      "Kulit saya termasuk normal.",
-      "Saya memiliki tipe kulit normal.",
-      "Kulit saya sering normal.",
-      "Kulit saya normal.",
-      "Saya punya kulit normal.",
-      "Jenis kulit saya adalah normal.",
-      "Kulit saya gampang normal.",
-      "Kulitku normal.",
-      "Jenis kulit saya banyak minyaknya.",
-      "Saya memiliki kulit dengan banyak minyak.",
-      "Kulit saya rentan normal.",
-      "Jenis kulit aku normal.",
-      "Kulit aku cenderung normal.",
-      "Aku memiliki kulit normal.",
-      "Jenis kulitku normal.",
-      "Kulit wajahku tipe normal.",
-      "Kulit aku termasuk normal.",
-      "Aku punya tipe kulit normal.",
-      "Kulitku sering normal.",
-      "Kulitku normal.",
-      "Aku punya kulit normal.",
-      "Jenis kulit aku adalah normal.",
-      "Kulitku gampang normal.",
-      "Kulitku banyak minyaknya.",
-      "Aku punya kulit dengan banyak minyak.",
-      "Kulit aku rentan normal"
+        "Kulit saya cenderung normal.",
+        "Saya memiliki kulit normal.",
+        "Jenis kulitku normal.",
+        "Kulit wajahku tipe normal.",
+        "Kulit saya termasuk normal.",
+        "Saya punya kulit normal.",
+        "Kulit saya rentan normal.",
+        "Jenis kulit aku normal."
       ],
       "responses": [
-        "Kulit normal adalah jenis kulit yang ideal karena memiliki keseimbangan yang tepat antara kelembapan dan produksi minyak. Kulit ini memiliki elastisitas yang baik dan sedikit masalah terkait jerawat atau komedo. Meskipun begitu, kulit normal masih memerlukan perawatan untuk menjaga kondisi optimalnya, terutama dalam menjaga hidrasi dan perlindungan dari paparan sinar UV."
+        "Kulit normal memiliki keseimbangan yang baik antara kelembapan dan produksi minyak. Jenis kulit ini tidak mudah berminyak atau kering dan memiliki elastisitas yang baik. Perawatan kulit normal lebih bertujuan untuk menjaga keseimbangan ini dengan hidrasi yang cukup dan perlindungan dari sinar UV."
       ]
     },    
     {
       "tag": "jenis kulit saya kombinasi",
       "patterns": [
-      "Kulit saya cenderung kombinasi.",
-      "Saya memiliki kulit kombinasi.",
-      "Jenis kulitku kombinasi.",
-      "Kulit wajahku tipe kombinasi.",
-      "Kulit saya termasuk kombinasi.",
-      "Saya memiliki tipe kulit kombinasi.",
-      "Kulit saya sering kombinasi.",
-      "Kulit saya kombinasi.",
-      "Saya punya kulit kombinasi.",
-      "Jenis kulit saya adalah kombinasi.",
-      "Kulit saya gampang kombinasi.",
-      "Kulitku kombinasi.",
-      "Saya memiliki kulit pipi berminyak dan kulit dahi sampe hidung kering.",
-      "Kulit saya rentan kombinasi.",
-      "Jenis kulit aku kombinasi.",
-      "Kulit aku cenderung kombinasi.",
-      "Aku memiliki kulit kombinasi.",
-      "Jenis kulitku kombinasi.",
-      "Kulit wajahku tipe kombinasi.",
-      "Kulit aku termasuk kombinasi.",
-      "Aku punya tipe kulit kombinasi.",
-      "Kulitku sering kombinasi.",
-      "Kulitku kombinasi.",
-      "Aku punya kulit kombinasi.",
-      "Jenis kulit aku adalah kombinasi.",
-      "Kulitku gampang kombinasi.",
-      "Kulitku di pipi kering tapi di area dahi dan hidung berminyak.",
-      "Aku punya kulit wajah yang kadang berminyak kadang kering.",
-      "Kulit aku rentan kombinasi",
-      
-      "Kulit saya cenderung campuran.",
-      "Saya memiliki kulit campuran.",
-      "Jenis kulitku campuran.",
-      "Kulit wajahku tipe campuran.",
-      "Kulit saya termasuk campuran.",
-      "Saya memiliki tipe kulit campuran.",
-      "Kulit saya sering campuran.",
-      "Kulit saya campuran.",
-      "Saya punya kulit campuran.",
-      "Jenis kulit saya adalah campuran.",
-      "Kulit saya gampang campuran.",
-      "Kulitku campuran.",
-      "Jenis kulit saya banyak Keringnya.",
-      "Saya memiliki kulit dengan banyak retakannya.",
-      "Kulit saya rentan campuran.",
-      "Jenis kulit aku campuran.",
-      "Kulit aku cenderung campuran.",
-      "Aku memiliki kulit campuran.",
-      "Jenis kulitku campuran.",
-      "Kulit wajahku tipe campuran.",
-      "Kulit aku termasuk campuran.",
-      "Aku punya tipe kulit campuran.",
-      "Kulitku sering campuran.",
-      "Kulitku campuran.",
-      "Aku punya kulit campuran.",
-      "Jenis kulit aku adalah campuran.",
-      "Kulitku gampang campuran.",
-      "Kulitku banyak Keringnya.",
-      "Aku punya kulit dengan banyak kering.",
-      "Kulit aku rentan campuran",
-
-      "Kulit saya cenderung kombinasi / campuran.",
-      "Saya memiliki kulit kombinasi / campuran.",
-      "Jenis kulitku kombinasi / campuran.",
-      "Kulit wajahku tipe kombinasi / campuran.",
-      "Kulit saya termasuk kombinasi / campuran.",
-      "Saya memiliki tipe kulit kombinasi / campuran.",
-      "Kulit saya sering kombinasi / campuran.",
-      "Kulit saya kombinasi / campuran.",
-      "Saya punya kulit kombinasi / campuran.",
-      "Jenis kulit saya adalah kombinasi / campuran.",
-      "Kulit saya gampang kombinasi / campuran.",
-      "Kulitku kombinasi / campuran.",
-      "Jenis kulit saya banyak Keringnya.",
-      "Saya memiliki kulit dengan banyak retakannya.",
-      "Kulit saya rentan kombinasi / campuran.",
-      "Jenis kulit aku kombinasi / campuran.",
-      "Kulit aku cenderung kombinasi / campuran.",
-      "Aku memiliki kulit kombinasi / campuran.",
-      "Jenis kulitku kombinasi / campuran.",
-      "Kulit wajahku tipe kombinasi / campuran.",
-      "Kulit aku termasuk kombinasi / campuran.",
-      "Aku punya tipe kulit kombinasi / campuran.",
-      "Kulitku sering kombinasi / campuran.",
-      "Kulitku kombinasi / campuran.",
-      "Aku punya kulit kombinasi / campuran.",
-      "Jenis kulit aku adalah kombinasi / campuran.",
-      "Kulitku gampang kombinasi / campuran.",
-      "Kulitku banyak Keringnya.",
-      "Aku punya kulit dengan banyak kering.",
-      "Kulit aku rentan kombinasi / campuran"
+        "Kulit saya cenderung kombinasi.",
+        "Saya memiliki kulit kombinasi.",
+        "Jenis kulitku kombinasi.",
+        "Kulit wajahku tipe kombinasi.",
+        "Kulit saya termasuk kombinasi.",
+        "Saya punya kulit kombinasi.",
+        "Kulit saya rentan kombinasi.",
+        "Jenis kulit aku kombinasi."
       ],
       "responses": [
-        "Kulit kombinasi menggabungkan ciri-ciri dari kulit berminyak dan kulit kering. Area wajah seperti T-zone cenderung lebih berminyak karena produksi sebum yang lebih tinggi, sedangkan bagian lain seperti pipi lebih kering. Perawatan kulit kombinasi memerlukan produk yang seimbang, di mana area T-zone diatasi dengan produk kontrol minyak, sementara area kering diberi pelembap yang sesuai. Penggunaan produk ringan seperti toner yang seimbang dan pelembap non-komedogenik seringkali dianjurkan."
+        "Kulit kombinasi menggabungkan sifat dari kulit berminyak dan kering. Area T-zone (dahi, hidung, dagu) sering berminyak, sementara bagian pipi cenderung kering. Produk yang digunakan untuk kulit kombinasi harus dapat mengatasi dua kondisi ini, seperti toner ringan dan pelembap non-komedogenik."
       ]
     },
     {
       "tag": "jenis kulit saya sensitive",
       "patterns": [
-      "Kulit saya cenderung sensitive.",
-      "Saya memiliki kulit sensitive.",
-      "Jenis kulitku sensitive.",
-      "Kulit wajahku tipe sensitive.",
-      "Kulit saya termasuk sensitive.",
-      "Saya memiliki tipe kulit sensitive.",
-      "Kulit saya sering sensitive.",
-      "Kulit saya sensitive.",
-      "Saya punya kulit sensitive.",
-      "Jenis kulit saya adalah sensitive.",
-      "Kulit saya gampang sensitive.",
-      "Kulitku sensitive.",
-      "Kulit saya rentan sensitive.",
-      "Jenis kulit aku sensitive.",
-      "Kulit aku cenderung sensitive.",
-      "Aku memiliki kulit sensitive.",
-      "Jenis kulitku sensitive.",
-      "Kulit wajahku tipe sensitive.",
-      "Kulit aku termasuk sensitive.",
-      "Aku punya tipe kulit sensitive.",
-      "Kulitku sering sensitive.",
-      "Kulitku sensitive.",
-      "Aku punya kulit sensitive.",
-      "Jenis kulit aku adalah sensitive.",
-      "Kulitku gampang sensitive.",
-      "Kulit aku rentan sensitive",
-      "Kulit aku rentan sinar matahari",
-      "Kulit aku rentan debu dan polusi",
-      "Kulit aku merah merah kalo di tempat panas",
-      "Kulit aku mudah panas jadi merah merah",
-      "Kulit aku sepertinya tidak cocok di iklim tropis",
-      "Kulit aku cocok di tempat dingin"
+        "Kulit saya cenderung sensitif.",
+        "Saya memiliki kulit sensitif.",
+        "Jenis kulitku sensitif.",
+        "Kulit wajahku tipe sensitif.",
+        "Kulit saya termasuk sensitif.",
+        "Saya punya kulit sensitif.",
+        "Kulit saya rentan sensitif.",
+        "Jenis kulit aku sensitif."
       ],
       "responses": [
-        "Kulit sensitif mudah bereaksi terhadap faktor eksternal seperti polusi, perubahan suhu, dan bahan kimia dalam produk perawatan kulit. Kulit ini sering mengalami iritasi, kemerahan, dan rasa perih, terutama setelah menggunakan produk yang tidak sesuai. Penyebab kulit sensitif bisa bervariasi, termasuk kondisi seperti rosacea, dermatitis, atau reaksi alergi. Produk yang mengandung bahan alami dan bebas pewangi biasanya lebih cocok untuk kulit sensitif. Penting untuk selalu melakukan patch test sebelum mencoba produk baru untuk menghindari reaksi yang lebih buruk."
+        "Kulit sensitif mudah bereaksi terhadap lingkungan, produk perawatan yang keras, dan cuaca ekstrem. Gejala seperti kemerahan, gatal, dan rasa perih sering muncul pada kulit ini. Perawatan yang cocok untuk kulit sensitif termasuk penggunaan produk yang bebas dari wewangian dan bahan kimia agresif, serta menjaga kelembapan kulit dengan bahan seperti aloe vera atau chamomile."
       ]
-    }
+    }    
   ]
 }

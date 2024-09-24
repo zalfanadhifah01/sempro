@@ -2,86 +2,193 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">        
+  <meta charset="UTF-8">
   <link rel="icon" href="/static/img/Era_Beauty_Care_logo_removebg.png">
   <title>ERB Bot</title>
   <meta name="description" content="Chatbot Hygiea">
-  <meta name="keywords" content="sedia membantu dalam segala hal tentang Sexual harrasment">
-
-  <meta charset="UTF-8">
+  <meta name="keywords" content="sedia membantu dalam segala hal tentang Sexual harassment">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="/static/css/style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
-    /* Style untuk tombol info */
-    .btn-info {
-      background-color: #17a2b8;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
+    :root {
+      --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --msger-bg: #fff;
+      --border: 2px solid #ddd;
+      --left-msg-bg: #ececec;
+      --right-msg-bg: #579ffb;
     }
 
-    .btn-info:hover {
-      background-color: #138496;
+    *,
+    *:before,
+    *:after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* Style untuk tombol peringatan */
-    .btn-warning {
-      background-color: #ffc107;
-      color: #212529;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-warning:hover {
-      background-color: #e0a800;
-    }
-
-    /* Style untuk tombol bahaya */
-    .btn-danger {
-      background-color: #dc3545;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-danger:hover {
-      background-color: #c82333;
-    }
-
-    /* Style untuk tombol sukses */
-    .btn-success {
-      background-color: #28a745;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .btn-success:hover {
-      background-color: #218838;
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Helvetica, sans-serif;
+      background-color: #fcfcfe;
     }
 
     .msger {
-      margin-top: 0px;
+      display: flex;
+      flex-flow: column wrap;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 867px;
+      margin: 25px 10px;
+      height: calc(100% - 50px);
+      background: var(--msger-bg);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .msger {
-      margin-top: 0px;
+    .msger-header {
+      font-size: medium;
+      justify-content: space-between;
+      padding: 10px;
+      text-align: center;
+      background: #eee;
+      color: #666;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
 
+    .msger-chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #fcfcfe;
+    }
+
+    .msger-chat::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .msger-chat::-webkit-scrollbar-track {
+      background: #ddd;
+    }
+
+    .msger-chat::-webkit-scrollbar-thumb {
+      background: #bdbdbd;
+    }
+
+    .msg {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .msg-img {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+      background: #ddd;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      border-radius: 50%;
+    }
+
+    .msg-bubble {
+      max-width: 450px;
+      padding: 15px;
+      border-radius: 15px;
+      background: var(--left-msg-bg);
+    }
+
+    .msg-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .msg-info-name {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .msg-info-time {
+      font-size: 0.85em;
+    }
+
+    .left-msg .msg-bubble {
+      border-bottom-left-radius: 0;
+    }
+
+    .right-msg {
+      flex-direction: row-reverse;
+    }
+
+    .right-msg .msg-bubble {
+      background: var(--right-msg-bg);
+      color: #fff;
+      border-bottom-right-radius: 0;
+    }
+
+    .right-msg .msg-img {
+      margin: 0 0 0 10px;
+    }
+
+    .msger-inputarea {
+      display: flex;
+      padding: 10px;
+      border-top: var(--border);
+      background: #eee;
+    }
+
+    .msger-inputarea * {
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      font-size: 1em;
+    }
+
+    .msger-input {
+      flex: 1;
+      background: #ddd;
+    }
+
+    .msger-send-btn {
+      margin-left: 10px;
+      background: rgb(0, 196, 65);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.23s;
+    }
+
+    .msger-send-btn:hover {
+      background: rgb(0, 180, 50);
+    }
+
+    /* Navbar styles */
+    .navbar {
+      display: flex;
+      justify-content: flex-start;
+      background-color: #333;
+      padding: 10px;
+    }
+
+    .navbar a {
+      padding: 14px 20px;
+      text-decoration: none;
+      color: white;
+      text-align: center;
+    }
+
+    .navbar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    /* Animation */
     .msg-text {
       animation: fadeIn 0.5s;
     }
@@ -95,212 +202,127 @@
         opacity: 1;
       }
     }
-      /* Gaya untuk tombol di pojok kanan bawah */
-  #openPopup {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 999;
-            text-decoration: none;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #openPopup:hover {
-            background-color: #0056b3;
-        }
   </style>
 </head>
 
-<body style="background-color: #fcfcfe;">
-  {% if current_user.role == "admin" %}
-  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-sticky">
-      <div class="container-fluid">
-          <ul class="navbar-nav ms-auto">
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      {{ current_user.username }}
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                      <li><a class="dropdown-item" href="/admin/edit_product">Edit Product</a></li>
-                      <li><a class="dropdown-item" href="/admin/bookings">Lihat Bookings</a></li>
-                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                  </ul>
-              </li>
-          </ul>
-      </div>
-  </nav>
-  {% elif current_user.role == 'user' %}
-  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-sticky">
-      <div class="container-fluid">
-          <ul class="navbar-nav ms-auto">
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      {{ current_user.username }}
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                      <li><a class="dropdown-item" href="/user/histroy_deteksi">History Deteksi Jenis Kulit Wajah</a></li>
-                      <li><a class="dropdown-item" href="/user/history_bookings">History pemesanan</a></li>
-                      <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                  </ul>
-              </li>
-          </ul>
-      </div>
-  </nav>
-  {% else %}
-  <a id="openPopup" href="/login" class="btn btn-info">Login</a>
-  {% endif %}
-  <section class="msger">
-    <!-- / banner -->
-    <!--about-->
+<body>
 
+  <div class="navbar navbar-sticky " style="  position: fixed;
+            top: 1px;
+            width:100%;
+            border: none;
+            font-size: 16px;
+            z-index: 999;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); ">
+    <a href="/home">Home</a>
+    <a href="/skin_detection">Prediksi Jenis Kulit</a>
+    <a href="/bot">Chatbot Rekomendasi Treatment</a>
+    <a href="/products">Lihat Produk Treatment</a>
+    {% if current_user.is_authenticated %}
+    {% if current_user.role == "admin" %}
+    <a href="/admin/edit_product">Edit Product</a>
+    <a href="/admin/bookings">Lihat Booking</a>
+    <a href="/admin/recommendations">Rekomendasi Treatment</a>
+    <a href="/logout">Logout</a>
+    {% elif current_user.role == 'user' %}
+    <a href="/user/bookings">Lihat Booking</a>
+    <a href="/user/deteksi">Lihat History Deteksi</a>
+    <a href="/logout">Logout</a>
+    {% endif %}
+    {% else %}
+    <a href="/login">Login</a>
+    <a href="/user/bookings">Lihat Status Booking Produk Treatment</a>
+    <a href="/user/deteksi">Lihat History Deteksi</a>
+    {% endif %}
+  </div>
+
+  <section class="msger" style="margin-top:150px">
     <header class="msger-header">
-
-      <div class="msger-header-title" style="display: flex; justify-content: space-between;">
-        <a href="/home"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-        <span>Chatbot ERB (Era Beauty Care)</span>
-        <span> </span>
+      <div class="msger-header-title">
+        <i class="fas fa-comment-alt"></i> ERB Bot
       </div>
-
     </header>
 
-    <main class="msger-chat" style="border: none;">
+    <main class="msger-chat" id="chat">
       <div class="msg left-msg">
-        <!-- <div class="msg-img" style="background-image: url({{ url_for('static', filename='img/services/cb.png') }})"></div> -->
+        <div class="msg-img" style="background-image: url(/static/img/Era_Beauty_Care_logo_removebg.png)"></div>
 
         <div class="msg-bubble">
           <div class="msg-info">
             <div class="msg-info-name">ERB Bot</div>
-            <div class="msg-info-time"></div>
+            <div class="msg-info-time">08:30</div>
           </div>
 
           <div class="msg-text">
-            Selamat Datang, pilih opsi dibawah ini untuk menentukan jenis kulit anda
+            Halo! Saya ERB Bot. Bagaimana saya bisa membantu Anda?
           </div>
-
         </div>
-
       </div>
-      <button class="btn btn-info" id="btn-berminyak">Kulit Berminyak</button>
-      <button class="btn btn-warning" id="btn-kering">Kulit Kering</button>
-      <button class="btn btn-success" id="btn-normal">Kulit Normal</button>
-      <button class="btn btn-danger" onclick="window.location.href = '/skin_detection'">Cek Jenis Kulit</button>
     </main>
 
     <form class="msger-inputarea">
-      <input type="text" class="msger-input" id="textInput" placeholder="Enter your message." autocomplete="off">
-      <button type="submit" class="msger-send-btn btn-success">Send</button>
+      <input type="text" class="msger-input" placeholder="Enter your message..." required>
+      <button type="submit" class="msger-send-btn">Send</button>
     </form>
   </section>
-  <!-- partial -->
-  <script src='https://use.fontawesome.com/releases/v5.0.13/js/all.js'></script>
-  <script>  
-  // Utils
-    function get(selector, root = document) {
-      return root.querySelector(selector);
-    }
 
-    const msgerForm = get(".msger-inputarea");
-    const msgerInput = get(".msger-input");
-    const msgerChat = get(".msger-chat");
+  <script>
+    const chat = document.getElementById("chat");
+    const msgerInput = document.querySelector(".msger-input");
+    const msgerForm = document.querySelector(".msger-inputarea");
 
+    const BOT_MSGS = [
+      "Halo! Ada yang bisa saya bantu?",
+      "Bagaimana kabar Anda hari ini?",
+      "Butuh saran tentang skincare?",
+      "Apakah Anda ingin tahu tentang jenis-jenis kulit?",
+    ];
 
-    // Icons made by Freepik from www.flaticon.com
-    const BOT_IMG = "{{ url_for('static', filename='img/services/bot.png') }}";
-    const PERSON_IMG = "{{url_for('static', filename='/img/Swakalatips/pencegahan.png') }}";
-    const BOT_NAME = "  ERB Bot";
-    const PERSON_NAME = "You";
-    function jenis_kulit(jenis) {
-      localStorage.setItem("jenis_kulit", jenis);
-      var jenis = localStorage.getItem("jenis_kulit");
-      console.log(jenis)
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", "Jenis kulit saya " + jenis);
-      botResponse("Jenis kulit saya " + jenis);
-    }
-    $("#btn-berminyak").on("click", function () {
-      jenis_kulit("berminyak")
-    })
-    $("#btn-kering").on("click", function () {
-      jenis_kulit("kering")
-    })
-    $("#btn-normal").on("click", function () {
-      jenis_kulit("normal")
-    })
     msgerForm.addEventListener("submit", event => {
       event.preventDefault();
 
       const msgText = msgerInput.value;
       if (!msgText) return;
 
-      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+      appendMessage("You", "right", msgText);
       msgerInput.value = "";
-      setTimeout(function () {
-        botResponse(msgText);
-      }, 800);
+
+      botResponse();
     });
 
-    function appendMessage(name, img, side, text) {
-
-      var jenis = localStorage.getItem("jenis_kulit");
-      console.log(jenis)
-      //   Simple solution for small apps
+    function appendMessage(name, side, text) {
       const msgHTML = `
-<div class="msg ${side}-msg">
-  <div class="msg-img" style="background-image: url(${img})"></div>
-  <div class="msg-bubble">
-    <div class="msg-info">
-      <div class="msg-info-name">${name}</div>
-      <div class="msg-info-time">${formatDate(new Date())}</div>
-    </div>
-    <div class="msg-text">${text}</div>
-  </div>
-</div>
-`;
+        <div class="msg ${side}-msg">
+          <div class="msg-img" style="background-image: url(/static/img/Era_Beauty_Care_logo_removebg.png)"></div>
 
-      msgerChat.insertAdjacentHTML("beforeend", msgHTML);
-      msgerChat.scrollTop += 500;
+          <div class="msg-bubble">
+            <div class="msg-info">
+              <div class="msg-info-name">${name}</div>
+              <div class="msg-info-time">${formatDate(new Date())}</div>
+            </div>
+
+            <div class="msg-text">${text}</div>
+          </div>
+        </div>
+      `;
+
+      chat.insertAdjacentHTML("beforeend", msgHTML);
+      chat.scrollTop = chat.scrollHeight;
     }
 
-    function botResponse(rawText) {
-      $.get("/get", {
-          msg: rawText
-        }).done(function (data) {
-          console.log(rawText);
-          console.log(data);
-          const msgText = data;
-          appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-          // pesan closing alamat dan no hp 
-          appendMessage(BOT_NAME,BOT_IMG,"left","info lebih lanjut 081398957791. Kunjungi Kami di  Bulak, Babakan, Kramat, Tegal")
-          
-        });
+    function botResponse() {
+      const randomIndex = Math.floor(Math.random() * BOT_MSGS.length);
+      const botMsg = BOT_MSGS[randomIndex];
+
+      setTimeout(() => {
+        appendMessage("ERB Bot", "left", botMsg);
+      }, 1000);
     }
-  
+
     function formatDate(date) {
-      const h = "0" + date.getHours();
-      const m = "0" + date.getMinutes();
-
-      return `${h.slice(-2)}:${m.slice(-2)}`;
-    }
-    </script>
-  {% if session['jenis_kulit'] %}
-  <script>
-    jenis_kulit("{{ session['jenis_kulit'] }}");
-  </script>
-  {% else %}
-  <script>
-    var jenis_kulit_local = localStorage.getItem('jenis_kulit');
-    if (jenis_kulit_local !== null) {
-      localStorage.removeItem('jenis_kulit');
+      return `${date.getHours()}:${date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()}`;
     }
   </script>
-  {% endif %}
-
 
 </body>
 

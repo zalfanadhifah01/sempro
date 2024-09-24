@@ -21,32 +21,11 @@
     </head>
 
     <body style="background-color: #e6f4ff">
+    {% include 'root/menu.html' %}
         <!-- ============================================================= -->
         <!-- Topbar header - style you can find in pages.scss -->
         <!-- ============================================================= -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-sticky">
-            <div class="container-fluid">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ current_user.username }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                            {% if current_user.role == "admin" %}
-                            <li><a class="dropdown-item" href="/admin/edit_product">Edit Product</a></li>
-                            <li><a class="dropdown-item" href="/admin/bookings">Lihat Booking</a></li>
-                            <li><a class="dropdown-item" href="/admin/recommendations">Rekomendasi Treatment</a></li>
-                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                            {% elif current_user.role == 'user' %}
-                            <li><a class="dropdown-item" href="/user/bookings">Lihat Booking</a></li>
-                            <li><a class="dropdown-item" href="/user/deteksi">Lihat History Deteksi</a></li>
-                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+
         {% block content %}{% endblock content %}
 
         <div class="container-fluid">

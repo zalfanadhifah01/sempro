@@ -474,25 +474,6 @@ def get_product(product_id):
         return jsonify({'error': 'Product not found'}), 404
     return jsonify(product.serialize)
 
-# Route untuk history pemesanan user
-@app.route('/user/history_booking', methods=['GET'])
-@login_required
-def history_pemesanan():
-    bookings = Booking.query.filter_by(nama_client=current_user.username).order_by(Booking.tanggal.desc()).all()
-    daily_data = defaultdict(int)
-    monthly_data = defaultdict(int)
-    for booking in bookings:
-        date_obj = datetime.strptime(booking.tanggal, '%Y-%m-%d')
-        day = date_obj.day
-        month = date_obj.strftime('%B')
-        daily_data[day] += 1
-        monthly_data[month] += 1
-    daily_chart_data = [daily_data[i] for i in range(1, 32)]
-    monthly_chart_data = [monthly_data[month] for month in [
-        "January", "February", "March", "April", "May", "June", 
-        "July", "August", "September", "October", "November", "December"]]
-    return render_template('admin/bookings.html', bookings=bookings, daily=daily_chart_data, monthly=monthly_chart_data)
-
 # Route untuk melakukan pemesanan
 @app.route('/bookings', methods=['POST'])
 @login_required
@@ -812,7 +793,7 @@ def get_rekomendasi(skin_type):
 # Custom Error Handling
 @app.errorhandler(404)
 def not_found(e):
-    return jsonify({"error": "Page not found"}), 404
+    return render_template("404.html")
 import signal
 import sys
 

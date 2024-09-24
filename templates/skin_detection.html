@@ -192,14 +192,6 @@
   socket.on('prediction', function(data) {
     skinTypeSpan.innerText = data.skin_type;
     console.log(data)
-    if (data.img =="" ){
-      $("#img_placeholder_realtime").hide();
-    }
-    else{
-      //var img_path = "/static/upload/" + data.img;
-      //$("#img_placeholder_realtime").attr('src', img_path).show();
-      //$("#img_placeholder_realtime").show();
-    }
     $("#ke_chatbot_realtime").show();
     $("#hasil_deteksi_realtime").html("<p style='margin-top:5px'>Terdeteksi:</p><h2 color='green'>" + data.hasil + "</h2>");
     $("#penjelasan_singkat_realtime").html(data.penjelasan_singkat);

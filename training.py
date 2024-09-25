@@ -76,5 +76,24 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 # Training the model
 hist = model.fit(x=train_x, y=train_y, epochs=200, batch_size=5, verbose=1)
 model.save('model_chatbot/chat_model_new.h5', hist)
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+# Membagi dataset menjadi train dan test
+train_x, test_x, train_y, test_y = train_test_split(train_x, train_y, test_size=0.2, random_state=42)
+
+# Membangun dan melatih model seperti sebelumnya
+model.fit(x=train_x, y=train_y, epochs=200, batch_size=5, verbose=1)
+
+# Mengevaluasi model
+loss, accuracy = model.evaluate(test_x, test_y, verbose=1)
+print(f'Test Accuracy: {accuracy}')
+
+# Memprediksi hasil dari test set dan mencetak classification report
+predictions = model.predict(test_x)
+predictions = np.argmax(predictions, axis=1)
+true_classes = np.argmax(test_y, axis=1)
+
+print(classification_report(true_classes, predictions, target_names=classes))
 
 print("Model trained and saved as 'chat_model.h5'")

@@ -2,8 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, f
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.utils import secure_filename
 from models import db, User, Product, HistoryDeteksi, Booking,Recommendation
-import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64,sys
-import numpy as np
+import os, uuid, json, random, string, pickle,nltk, eventlet,io,base64,sys,gc,cv2,torch,logging,re, numpy as np
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
@@ -11,10 +10,7 @@ from copy import deepcopy
 from datetime import datetime
 from collections import defaultdict
 from PIL import Image
-import gc
 import tensorflow as tf
-import cv2
-import torch
 from torchvision import transforms
 from torch import nn
 from torchvision.models import resnet50, ResNet50_Weights
@@ -22,13 +18,10 @@ from flask_socketio import SocketIO, emit
 from flask_bcrypt import Bcrypt
 from functools import wraps
 from flask_cors import CORS
-import logging
-
 from flask_mail import Mail, Message
 from itsdangerous import URLSafeTimedSerializer
 from datetime import timedelta, datetime,timezone
 from itsdangerous import BadSignature, SignatureExpired
-import re
 logging.basicConfig(level=logging.DEBUG)
 logging.debug("Ini log dari debug")
 # Konfigurasi Aplikasi Flask
@@ -51,7 +44,7 @@ app.config.update(
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
     MAIL_USERNAME=os.getenv('MAIL_USERNAME', 'znadhifah172@gmail.com'),
-    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD', 'f5fu87uy776yi9okml][]')
+    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD', 'xejgsdhtejxawdgj')
 )
 
 mail = Mail(app)
@@ -96,9 +89,10 @@ def create_tables():
         db.create_all()
 
 class LoginUser(UserMixin):
-    def __init__(self, id, username, password, role):
+    def __init__(self, id, username, email,password, role):
         self.id = id
         self.username = username
+        self.email = email
         self.password = password
         self.role = role
 
@@ -109,8 +103,7 @@ class LoginUser(UserMixin):
 def load_user(user_id):
     user = User.query.get(int(user_id))
     if user:
-        return LoginUser(user.id, user.username, user.password, user.role)
-    
+        return LoginUser(user.id, user.username,user.email, user.password, user.role)    
 # ==========================================================
 # Chatbot Functionality
 # ==========================================================
@@ -411,7 +404,10 @@ def login():
         else:
             flash('username tidak ada', 'danger')
     return render_template('admin/login.html')
-
+# Function to validate email format
+def is_valid_email(email):
+    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
+    return re.match(regex, email)
 # Route untuk halaman register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -422,91 +418,55 @@ def register():
             return redirect(url_for("user_get_bookings"))
     if request.method == 'POST':
         username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists")
             return redirect(url_for('register'))
-        new_user = User(username=username, password=password, role='user')
+        existing_email = User.query.filter_by(email=email).first()
+        if existing_email:
+            flash("email already exists")
+            return redirect(url_for('register'))
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = User(username=username, email=email, password=hashed_password, role='user')
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)
-        return redirect(url_for('get_bookings'))
+            
+        token = s.dumps(email, salt='email-confirm')
+
+        conf_email_url = url_for('confirm_email', token=token, _external=True)
+        email_body = render_template_string('''
+            Hello {{ username }},
+            
+            Anda menerima email ini, karena kami memerlukan verifikasi email untuk akun Anda agar aktif dan dapat digunakan.
+            
+            Silakan klik tautan di bawah ini untuk verifikasi email Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
+            
+            confirm youe email: {{ conf_email_url }}
+            
+            hubungi dukungan jika Anda memiliki pertanyaan.
+            
+            Untuk bantuan lebih lanjut, silakan hubungi tim dukungan kami di developer zulfanisa0103@gmail.com .
+            
+            Salam Hangat,
+            
+            Admin
+        ''', username=username,  conf_email_url=conf_email_url)
+
+        msg = Message('Confirmasi Email Anda',
+                    sender='zulfanisa0103@gmail.com', recipients=[email])
+
+        msg.body = email_body
+        mail.send(msg)
+
+        flash(" Register berhasil silahkan cek email anda.")
+        return redirect(url_for('login'))
     return render_template('admin/register.html')
 
-# Function to validate email format
-def is_valid_email(email):
-    regex = r'^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$'
-    return re.match(regex, email)
 
-@app.route('/bikin_akun_user', methods=['POST'])
-def register_user():
-    data = request.get_json()
-    print(data)
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
-    re_password = data.get('re_password')
 
-    if not username or not email or not password or not re_password:
-        return jsonify({"msg": "All fields are required"}), 400
-
-    if not is_valid_email(email):
-        return jsonify({"msg": "Invalid email format"}), 400
-
-    if password != re_password:
-        return jsonify({"msg": "Passwords do not match"}), 400
-    cek_username = User.query.filter_by(username=username).first()
-    if cek_username:
-        return jsonify({"msg": "Username already exists"}), 400
-    cek_email = User.query.filter_by(email=email).first()
-    if cek_email:
-        return jsonify({"msg": "Username already exists"}), 400
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    # Create a new user
-    new_user = User(username=username, password=hashed_password, verify_email=False, full_name='', address='', email=email, phone_number='')
-    admin_role = Role.query.filter_by(name='user').first()
-    if not admin_role:
-        admin_role = Role(name='user')
-        db.session.add(admin_role)
-        db.session.commit()
-    
-    new_user.roles.append(admin_role)
-    
-    # Add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    token = s.dumps(email, salt='email-confirm')
-
-    conf_email_url = url_for('confirm_email', token=token, _external=True)
-    email_body = render_template_string('''
-        Hello {{ username }},
-        
-        Anda menerima email ini, karena kami memerlukan verifikasi email untuk akun Anda agar aktif dan dapat digunakan.
-        
-        Silakan klik tautan di bawah ini untuk verifikasi email Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
-        
-        confirm youe email: {{ conf_email_url }}
-        
-        hubungi dukungan jika Anda memiliki pertanyaan.
-        
-        Untuk bantuan lebih lanjut, silakan hubungi tim dukungan kami di developer zulfanisa0103@gmail.com .
-        
-        Salam Hangat,
-        
-        Admin
-    ''', username=username,  conf_email_url=conf_email_url)
-
-    msg = Message('Confirmasi Email Anda',
-                  sender='zulfanisa0103@gmail.com', recipients=[email])
-
-    msg.body = email_body
-    mail.send(msg)
-
-    flash(" Register berhasil silahkan cek email anda.")
-
-    return jsonify({"msg":'Register Berhasil silahkan cek email anda '})
 @app.route('/confirm_email/<token>', methods=['GET'])
 def confirm_email(token):
     try:
@@ -913,57 +873,6 @@ def update_product(product_id):
 
     return jsonify({'message': 'Product updated successfully'})
 
-@app.route("/rekomendasi_kering")
-def get_rekomendasi_kering():
-    rekomendasi = "Rekomendasi Treatment Kulit Kering:<br>"
-    list_products = Product.query.all()
-
-    # Pastikan produk yang diakses benar-benar ada
-    try:
-        rekomendasi += f"1. {list_products[18].nama} {list_products[18].harga}<br>"
-        rekomendasi += f"2. {list_products[6].nama} {list_products[6].harga}<br> Paket <br>"
-        rekomendasi += f"1. {list_products[9].nama} {list_products[9].harga}<br>"
-        rekomendasi += f"2. {list_products[21].nama} {list_products[21].harga}<br><br>"
-    except IndexError:
-        return "Error: Produk tidak tersedia atau indeks tidak valid."
-
-    return rekomendasi
-
-
-@app.route("/rekomendasi_berminyak")
-def get_rekomendasi_berminyak():
-    rekomendasi = "Rekomendasi Treatment Kulit Berminyak:<br>"
-    list_products = Product.query.all()
-
-    try:
-        rekomendasi += f"1. {list_products[16].nama} {list_products[16].harga}<br>"
-        rekomendasi += f"2. {list_products[14].nama} {list_products[14].harga}<br> Paket <br>"
-        rekomendasi += f"1. {list_products[10].nama} {list_products[10].harga}<br>"
-        rekomendasi += f"2. {list_products[11].nama} {list_products[11].harga}<br><br>"
-    except IndexError:
-        return "Error: Produk tidak tersedia atau indeks tidak valid."
-
-    return rekomendasi
-
-
-@app.route("/rekomendasi_normal")
-def get_rekomendasi_normal():
-    rekomendasi = "Rekomendasi Treatment Kulit Normal:<br>"
-    list_products = Product.query.all()
-
-    try:
-        rekomendasi += f"1. {list_products[13].nama} {list_products[13].harga}<br>"
-        rekomendasi += f"2. {list_products[6].nama} {list_products[6].harga}<br>"
-        rekomendasi += f"3. {list_products[14].nama} {list_products[14].harga}<br> Paket <br>"
-        rekomendasi += f"1. {list_products[15].nama} {list_products[15].harga}<br>"
-        rekomendasi += f"2. {list_products[19].nama} {list_products[19].harga}<br><br>"
-    except IndexError:
-        return "Error: Produk tidak tersedia atau indeks tidak valid."
-
-    return rekomendasi
-
-
-
 from flask_wtf import FlaskForm
 from wtforms import IntegerField, SelectField, SubmitField
 from wtforms.validators import DataRequired
@@ -1034,10 +943,6 @@ def get_rekomendasi(skin_type):
         rekomendasi = ""
     return rekomendasi
 
-# Custom Error Handling
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("404.html")
 import signal
 import sys
 

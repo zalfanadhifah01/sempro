@@ -3,12 +3,18 @@ from flask_login import UserMixin
 
 db = SQLAlchemy()
 
-class User(UserMixin, db.Model):
+class User(UserMixin,db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    verify_email = db.Column(db.Boolean(), default=False)
     role = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    @property
+    def is_active(self):
+        # Return True if email is verified, otherwise False
+        return self.verify_email
 
 class Product(db.Model):
     __tablename__ = 'products'
@@ -34,8 +40,8 @@ class HistoryDeteksi(db.Model):
 class Booking(db.Model):
     __tablename__ = 'bookings'
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False, default=0)  # Default value 0 for non-logged in users
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)  # Foreign key
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Optional foreign key
     status = db.Column(db.Integer, nullable=False)
     product_name = db.Column(db.String(100), nullable=False)
     nama_client = db.Column(db.String(100), nullable=False)

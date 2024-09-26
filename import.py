@@ -39,6 +39,8 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    verify_email = db.Column(db.Boolean(), default=False)
     role = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
@@ -182,6 +184,8 @@ if __name__ == '__main__':
                 new_user = User(
                     id=record['id'],
                     username=record['username'],
+                    email=record['email'],
+                    verify_email=record['verify_email'],
                     role=record['role'],
                     password=hashed_password
                 )

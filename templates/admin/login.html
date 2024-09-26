@@ -2,45 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <!-- Tambahkan link ke Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px auto;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .login-container {
+                width: 100%;
+                max-width: 600px;
+                padding: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <a class="text-start" href="/"><span>Back to Home</span></a>
-                <h2 class="text-center mb-4">Login</h2>
-                <form method="post">
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
+    <div class="login-container">
+        <a href="/" class="text-start d-block mb-3"><span>Back to Home</span></a>
+        <h2 class="text-center mb-4">Login</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group password-container">
+                <label for="password">Password:</label>
+                <div class="row">
+                    <div class="col-md-11">
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <p>Belum punya akun? <a href="/register" >Daftar</a></p>
-                    <button type="submit" class="btn btn-primary btn-block">Login</button>
-                </form>
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <div class="alert alert-warning mt-3">
-                            <ul class="mb-0">
-                                {% for message in messages %}
-                                    <li>{{ message }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                {% endwith %}
+                    <div class="col-md-1" style="padding:0px"> 
+                        <button id="togglePassword" class="w-100 h-100 btn" type="button"><i id="icon" class="w-100 fas fa-eye"></i></button>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="form-group">
+                <a href="/forgotpassword">Lupa password?</a>
+                <a href="/verif_email">Request Verifikasi Email?</a>
+            </div>
+            <p>Belum punya akun? <a href="/register">Daftar</a></p>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-warning mt-3">
+                    <ul class="mb-0">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
-    <!-- Tambahkan link ke Bootstrap JS dan dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function (e) {
+            const icon = document.getElementById("icon"); // Mendeklarasikan icon di dalam event listener
+            // Jika tipe password adalah 'password', ubah menjadi 'text'
+            if (password.getAttribute('type') === 'password') {
+                password.setAttribute('type', 'text'); // Mengubah tipe input
+                icon.classList.remove('fa-eye'); // Menghapus ikon mata terbuka
+                icon.classList.add('fa-eye-slash'); // Menambahkan ikon mata tertutup
+            } else {
+                password.setAttribute('type', 'password'); // Kembali ke tipe password
+                icon.classList.remove('fa-eye-slash'); // Menghapus ikon mata tertutup
+                icon.classList.add('fa-eye'); // Menambahkan ikon mata terbuka
+            }
+        });
+    </script>
+
 </body>
 </html>

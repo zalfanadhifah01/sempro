@@ -378,7 +378,7 @@ def home_view():
 def login():
     if current_user.is_authenticated:
         if current_user.role == "admin":
-            return redirect(url_for("history_pemesanan"))
+            return redirect(url_for("get_bookings"))
         elif current_user.role == 'user':
             return redirect(url_for("user_get_bookings"))
     if request.method == 'POST':
@@ -392,7 +392,7 @@ def login():
             if bcrypt.check_password_hash(user.password, password):
                 login_user(user)  
                 if user.role == "admin":
-                    return redirect(url_for('history_pemesanan'))
+                    return redirect(url_for('get_bookings'))
                 else:
                     next_url = request.args.get('next_url')
                     if next_url:
@@ -413,7 +413,7 @@ def is_valid_email(email):
 def register():
     if current_user.is_authenticated:
         if current_user.role == "admin":
-            return redirect(url_for("history_pemesanan"))
+            return redirect(url_for("get_bookings"))
         elif current_user.role == 'user':
             return redirect(url_for("user_get_bookings"))
     if request.method == 'POST':

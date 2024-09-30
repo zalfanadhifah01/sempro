@@ -565,7 +565,7 @@ def forgot_password():
         email_body = render_template_string('''
             Hello {{ user["name"] }},
             
-            Anda menerima email ini, karena kami menerima permintaan untuk mengatur ulang kata sandi akun Anda.
+            Anda menerima email ini, karena kami menerima permintaan untuk mengatur ulang kata sandi akun Anda dengan username = {{ user["username"] }}.
             
             Silakan klik tautan di bawah ini untuk mengatur ulang kata sandi Anda. Tautan ini akan kedaluwarsa dalam 1 jam.
             

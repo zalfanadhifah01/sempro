@@ -498,8 +498,7 @@ def confirm_email(token):
 @app.route("/verif_email",methods=["GET","POST"])
 def verif_email():
     if request.method == 'POST':
-        data = request.get_json()
-        email = data.get("email")
+        email = request.form['email']
 
         if not email:
             return jsonify({"msg": "Email harus diisi"})
@@ -550,8 +549,7 @@ def verif_email():
 @app.route("/forgotpassword",methods=["GET","POST"])
 def forgot_password():
     if request.method == 'POST':
-        data = request.get_json()
-        email = data.get("email")
+        email = request.form["email"]
 
         if not email:
             return jsonify({"msg": "Email harus diisi"})
@@ -608,8 +606,7 @@ def reset_password(token):
     if not user:
         return jsonify({"msg": "User not found"}), 404
     if request.method == 'POST':
-        data = request.get_json()
-        password = data.get('password')
+        password = request.form['password']
 
         # Hash the new password and update it in the database
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')

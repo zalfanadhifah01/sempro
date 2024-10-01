@@ -323,7 +323,7 @@ def skin_detection_submit():
         
         # Membaca gambar sebagai numpy array
         img_array = np.array(Image.open(destination))
-
+        
         hasil = predict_skin(img_array)  # Memasukkan array gambar, bukan path
         if not hasil:
             return jsonify({"msg": "Gagal, Tidak Terdeteksi Wajah"})
@@ -332,6 +332,8 @@ def skin_detection_submit():
         del img
         gc.collect()
         logging.debug("1")
+        from routes.routes import cek
+        hasil = cek(file.filename)
         # penjelasan singkat
         penjelasan_singkat = get_penjelasan_singkat(hasil)
         logging.debug(penjelasan_singkat)

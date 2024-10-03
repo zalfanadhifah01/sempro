@@ -109,25 +109,30 @@ def load_user(user_id):
 # ==========================================================
 # Fungsi prediksi chatbot
 import numpy as np
-import numpy as np
 import random
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import pickle
+import os
+import json
 
 # Memuat model yang sudah dilatih
-model = load_model('model_chatbot/chatbot_model.h5')
+file_path = os.path.join(project_directory, 'model_chatbot','chatbot_model.h5')
+model = load_model(file_path)
 
 # Memuat tokenizer
-with open('model_chatbot/tokenizer.pickle', 'rb') as handle:
+file_path = os.path.join(project_directory, 'model_chatbot','tokenizer.pickle')
+with open(file_path, 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 # Memuat label encoder
-with open('model_chatbot/label_encoder.pickle', 'rb') as handle:
+file_path = os.path.join(project_directory, 'model_chatbot','label_encoder.pickle')
+with open(file_path, 'rb') as handle:
     label_encoder = pickle.load(handle)
 
 # Membaca dataset (untuk respons)
-with open('model_chatbot/dataset.json') as file:
+file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
+with open(file_path) as file:
     data = json.load(file)
 
 responses = {}
@@ -136,17 +141,27 @@ for intent in data['intents']:
 
 # Fungsi prediksi chatbot
 def chatbot_response(text):
+    # Konversi teks input menjadi sequence
     seq = tokenizer.texts_to_sequences([text])
-    padded_seq = tf.keras.preprocessing.sequence.pad_sequences(seq, padding='post', maxlen=20)
+    
+    # Sesuaikan max_length dengan panjang sequence yang digunakan saat training
+    max_length = 9  # Pastikan sama dengan panjang sequence saat training
+    padded_seq = tf.keras.preprocessing.sequence.pad_sequences(seq, padding='post', maxlen=max_length)
+    
+    # Prediksi dengan model
     pred = model.predict(padded_seq)
+    
+    # Ambil tag berdasarkan prediksi
     tag = label_encoder.inverse_transform([np.argmax(pred)])
     
+    # Pilih respons secara acak berdasarkan tag
     return random.choice(responses[tag[0]])
 
 # Tes chatbot
 print(chatbot_response("Hello"))
 print(chatbot_response("Thanks"))
 print(chatbot_response("Goodbye"))
+
 
 # Chatbot Routes
 @app.route("/bot")

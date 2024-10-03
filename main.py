@@ -107,77 +107,46 @@ def load_user(user_id):
 # ==========================================================
 # Chatbot Functionality
 # ==========================================================
+# Fungsi prediksi chatbot
+import numpy as np
+import numpy as np
+import random
+import tensorflow as tf
+from tensorflow.keras.models import load_model
+import pickle
 
-# Variabel Global untuk Chatbot
-global responses, lemmatizer, tokenizer, le, model, input_shape
-input_shape = 189  # Sesuaikan dengan jumlah kata unik hasil tokenisasi
+# Memuat model yang sudah dilatih
+model = load_model('model_chatbot/chatbot_model.h5')
 
-# Load response dataset
-def load_response():
-    global responses
-    responses = {}
-    file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
-    with open(file_path,encoding='utf-8') as file:
-        data = json.load(file)
-    for intent in data['intents']:
-        responses[intent['tag']] = intent['responses']
+# Memuat tokenizer
+with open('model_chatbot/tokenizer.pickle', 'rb') as handle:
+    tokenizer = pickle.load(handle)
 
-# Preparation function
-def preparation():
-    load_response()
-    global lemmatizer, tokenizer, le, model
-    file_path = os.path.join(project_directory, 'model_chatbot','tokenizers.pkl')
-    with open(file_path, 'rb') as f:
-        tokenizer = pickle.load(f)
-    le_path = os.path.join(project_directory,'model_chatbot','le.pkl')
-    le = pickle.load(open(le_path, 'rb'))
-    model_path = os.path.join(project_directory,'model_chatbot','chat_model.h5')
-    model = load_model(model_path)
-    #model = load_model('model_chatbot2/chatbot_model.h5')
-    lemmatizer = WordNetLemmatizer()
-    nltk.download('punkt', quiet=True)
-    nltk.download('wordnet', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
+# Memuat label encoder
+with open('model_chatbot/label_encoder.pickle', 'rb') as handle:
+    label_encoder = pickle.load(handle)
 
-# Function to remove punctuation
-def remove_punctuation(text):
-    return ''.join([char.lower() for char in text if char not in string.punctuation])
+# Membaca dataset (untuk respons)
+with open('model_chatbot/dataset.json') as file:
+    data = json.load(file)
 
-# Function to convert text to vector
-def vectorization(text):
-    text = remove_punctuation(text)
-    vector = tokenizer.texts_to_sequences([text])
-    vector = np.array(vector).reshape(-1)
-    vector = pad_sequences([vector], maxlen=input_shape)  # Gunakan input_shape yang sesuai (189)
-    return vector
+responses = {}
+for intent in data['intents']:
+    responses[intent['tag']] = intent['responses']
 
-# Function to predict response tag
-def predict(vector):
-    output = model.predict(vector)
-    output = output.argmax()
-    response_tag = le.inverse_transform([output])[0]
-    return response_tag
+# Fungsi prediksi chatbot
+def chatbot_response(text):
+    seq = tokenizer.texts_to_sequences([text])
+    padded_seq = tf.keras.preprocessing.sequence.pad_sequences(seq, padding='post', maxlen=20)
+    pred = model.predict(padded_seq)
+    tag = label_encoder.inverse_transform([np.argmax(pred)])
+    
+    return random.choice(responses[tag[0]])
 
-# Function to generate response
-def generate_response(text):
-    vector = vectorization(text)
-    response_tag = predict(vector)
-    if response_tag == "jenis kulit saya normal":
-        session["jenis_kulit"]="normal"
-        return response_tag
-    elif response_tag == "jenis kulit saya berminyak":
-        session["jenis_kulit"]="berminyak"
-        return response_tag
-    elif response_tag == "jenis kulit saya kering":
-        session["jenis_kulit"]="kering"
-        return response_tag
-    elif response_tag not in responses:
-        return "Sorry, I didn't understand."
-    answer = random.choice(responses[response_tag])
-    return answer
-
-# Persiapan Chatbot
-preparation()
+# Tes chatbot
+print(chatbot_response("Hello"))
+print(chatbot_response("Thanks"))
+print(chatbot_response("Goodbye"))
 
 # Chatbot Routes
 @app.route("/bot")
@@ -187,7 +156,7 @@ def chatbot():
 @app.route("/get")
 def get_bot_response():
     user_input = str(request.args.get('msg'))
-    result = generate_response(user_input)
+    result = chatbot_response(user_input)
     return str(result)
 
 # ==============================================
@@ -424,11 +393,11 @@ def register():
         password = request.form['password']
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash("Username already exists")
+            flash("Error Username sudah ada")
             return redirect(url_for('register'))
         existing_email = User.query.filter_by(email=email).first()
         if existing_email:
-            flash("email already exists")
+            flash("Error Email sudah ada")
             return redirect(url_for('register'))
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = User(username=username, email=email, password=hashed_password, role='user')

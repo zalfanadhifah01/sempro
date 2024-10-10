@@ -108,59 +108,93 @@ def load_user(user_id):
 # Chatbot Functionality
 # ==========================================================
 # Fungsi prediksi chatbot
-import numpy as np
-import random
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-import pickle
-import os
-import json
 
-# Memuat model yang sudah dilatih
-file_path = os.path.join(project_directory, 'model_chatbot','chatbot_model.h5')
-model = load_model(file_path)
+# Variabel Global untuk Chatbot
+global responses, lemmatizer, tokenizer, le, model
 
-# Memuat tokenizer
-file_path = os.path.join(project_directory, 'model_chatbot','tokenizer.pickle')
-with open(file_path, 'rb') as handle:
-    tokenizer = pickle.load(handle)
+# Load response dataset
+def load_response():
+    global responses
+    responses = {}
+    file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
+    with open(file_path,encoding='utf-8') as file:
+        data = json.load(file)
+    for intent in data['intents']:
+        responses[intent['tag']] = intent['responses']
 
-# Memuat label encoder
-file_path = os.path.join(project_directory, 'model_chatbot','label_encoder.pickle')
-with open(file_path, 'rb') as handle:
-    label_encoder = pickle.load(handle)
+# Preparation function
+def preparation():
+    load_response()
+    global lemmatizer, tokenizer, le, model
+    file_path = os.path.join(project_directory, 'model_chatbot','tokenizer.pickle')
+    with open(file_path, 'rb') as f:
+        tokenizer = pickle.load(f)  # 'tokenizer' here is actually 'words'
+    le_path = os.path.join(project_directory,'model_chatbot','label_encoder.pickle')
+    le = pickle.load(open(le_path, 'rb'))
+    model_path = os.path.join(project_directory,'model_chatbot','best_model.h5')
+    model = load_model(model_path)
+    lemmatizer = WordNetLemmatizer()
+    nltk.download('punkt', quiet=True)
+    nltk.download('wordnet', quiet=True)
 
-# Membaca dataset (untuk respons)
-file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
-with open(file_path) as file:
-    data = json.load(file)
+# Function to remove punctuation and lemmatize
+def clean_text(text):
+    text = ''.join([char.lower() for char in text if char not in string.punctuation])
+    text = [lemmatizer.lemmatize(word) for word in text.split()]
+    return text
 
-responses = {}
-for intent in data['intents']:
-    responses[intent['tag']] = intent['responses']
+# Function to convert text to vector
+def vectorization(text):
+    text = clean_text(text)
+    vector = [1 if word in text else 0 for word in tokenizer]  # 'tokenizer' is 'words'
+    vector = np.array(vector).reshape(-1)
+    vector = pad_sequences([vector], maxlen=len(tokenizer))  # Use 'maxlen' as the same length used in training
+    return vector
 
-# Fungsi prediksi chatbot
-def chatbot_response(text):
-    # Konversi teks input menjadi sequence
-    seq = tokenizer.texts_to_sequences([text])
+# Function to predict response tag
+def predict(vector):
+    output = model.predict(vector)
+    output = output.argmax()
+    response_tag = le.inverse_transform([output])[0]
+    return response_tag
+
+# Function to generate response
+def generate_response(text):
+    vector = vectorization(text)
+    response_tag = predict(vector)
     
-    # Sesuaikan max_length dengan panjang sequence yang digunakan saat training
-    max_length = 9  # Pastikan sama dengan panjang sequence saat training
-    padded_seq = tf.keras.preprocessing.sequence.pad_sequences(seq, padding='post', maxlen=max_length)
+    if response_tag == "jenis kulit saya normal":
+        session["jenis_kulit"] = "normal"
+    elif response_tag == "jenis kulit saya berminyak":
+        session["jenis_kulit"] = "berminyak"
+    elif response_tag == "jenis kulit saya kering":
+        session["jenis_kulit"] = "kering"
+        
+    if response_tag not in responses:
+        return "Sorry, I didn't understand."
     
-    # Prediksi dengan model
-    pred = model.predict(padded_seq)
-    
-    # Ambil tag berdasarkan prediksi
-    tag = label_encoder.inverse_transform([np.argmax(pred)])
-    
-    # Pilih respons secara acak berdasarkan tag
-    return random.choice(responses[tag[0]])
+    answer = random.choice(responses[response_tag])
+    return answer
 
-# Tes chatbot
-print(chatbot_response("Hello"))
-print(chatbot_response("Thanks"))
-print(chatbot_response("Goodbye"))
+# Persiapan Chatbot
+preparation()
+# Function to test chatbot on all classes (intents) in dataset
+def test_all_classes():
+    file_path = os.path.join(project_directory, 'model_chatbot','dataset.json')
+    with open(file_path,encoding='utf-8') as file:
+        data = json.load(file)
+    for intent in responses.keys():
+        print(f"Testing intent: {intent}")
+        for pattern in data['intents']:
+            if pattern['tag'] == intent:
+                for example in pattern['patterns']:
+                    print(f"Input: {example}")
+                    response = generate_response(example)
+                    print(f"Response: {response}")
+                    print("-" * 40)
+
+# Memanggil fungsi test_all_classes()
+test_all_classes()
 
 
 # Chatbot Routes
@@ -171,7 +205,7 @@ def chatbot():
 @app.route("/get")
 def get_bot_response():
     user_input = str(request.args.get('msg'))
-    result = chatbot_response(user_input)
+    result = generate_response(user_input)
     return str(result)
 
 # ==============================================

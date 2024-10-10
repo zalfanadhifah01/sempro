@@ -1,35 +1,58 @@
 {
   "intents": [
     {
-      "tag": "greeting",
+      "tag": "greeting_en",
       "patterns": [
-        "Hi", "Hello", "Hey", "How are you?", "Good morning", 
+        "Hi", "Hello", "Hey", "How are you?", "Good morning"
+      ],
+      "responses": [
+        "Hi, how can I help you?", "Hello, how can I assist you?"
+      ]
+    },
+    {
+      "tag": "greeting_id",
+      "patterns": [
         "Halo, bagaimana kabarmu?", "Selamat pagi, ada yang bisa saya bantu?",
         "Hai, senang bertemu denganmu!", "Apa kabar?", "Selamat datang, apa yang bisa saya bantu?"
       ],
       "responses": [
-        "Hi, ada yang bisa saya bantu?", "Hai, apa yang bisa saya bantu?", 
-        "Selamat datang di chatbot Era Beauty Care.", "Halo, ada yang bisa kami bantu?"
+        "Hai, ada yang bisa saya bantu?", "Selamat datang di chatbot Era Beauty Care."
       ]
     },
     {
-      "tag": "goodbye",
+      "tag": "goodbye_en",
       "patterns": [
-        "Bye", "See you later", "Goodbye", "Take care", 
+        "Bye", "See you later", "Goodbye", "Take care"
+      ],
+      "responses": [
+        "Goodbye!", "See you soon!"
+      ]
+    },
+    {
+      "tag": "goodbye_id",
+      "patterns": [
         "Sampai jumpa lagi!", "Selamat tinggal!", "Dadah!", "Sampai ketemu lagi!"
       ],
       "responses": [
-        "Goodbye!", "See you soon!", "Take care!", "Sampai jumpa lagi!"
+        "Sampai jumpa lagi!"
       ]
     },
     {
-      "tag": "thanks",
+      "tag": "thanks_en",
       "patterns": [
-        "Thanks", "Thank you", "I appreciate it", "Terima kasih", "Saya sangat berterima kasih",
-        "Makasih", "Terima kasih atas bantuanmu", "Saya hargai bantuanmu"
+        "Thanks", "Thank you", "I appreciate it"
       ],
       "responses": [
-        "You're welcome!", "No problem!", "Happy to help!", "Tentu saja!", "Sama-sama!"
+        "You're welcome!", "No problem!"
+      ]
+    },
+    {
+      "tag": "thanks_id",
+      "patterns": [
+        "Terima kasih", "Saya sangat berterima kasih", "Makasih"
+      ],
+      "responses": [
+        "Sama-sama!", "Tentu saja!"
       ]
     },
     {
